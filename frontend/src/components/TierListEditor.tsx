@@ -10,6 +10,9 @@ import {
   type DragStartEvent,
   DragOverlay,
   useDroppable,
+  TouchSensor,
+  pointerWithin,
+  defaultDropAnimationSideEffects,
 } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -49,7 +52,7 @@ function SortableItem({ item, onDelete }: { item: TierItem; onDelete: () => void
       style={style}
       {...attributes}
       {...listeners}
-      className={`group relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden cursor-grab active:cursor-grabbing
+      className={`group relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden cursor-grab active:cursor-grabbing touch-none select-none
                  border-2 ${isDragging ? 'border-accent-500 shadow-xl' : 'border-surface-700 hover:border-accent-500/50'} 
                  bg-surface-800 transition-all duration-200`}
     >
@@ -198,8 +201,16 @@ export default function TierListEditor({ tiers, unrankedItems = [], onChange }: 
 
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 5 } }),
+    useSensor(TouchSensor, { activationConstraint: { delay: 250, tolerance: 5 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
+
+  const dropAnimationConfig = {
+    sideEffects: defaultDropAnimationSideEffects({
+      styles: { active: { opacity: '0.4' } },
+    }),
+    duration: 150,
+  };
 
   const findContainerByItemId = (itemId: string): string | null => {
     if (unrankedItems.some(i => i.id === itemId)) return 'unranked';
@@ -314,7 +325,7 @@ export default function TierListEditor({ tiers, unrankedItems = [], onChange }: 
     <div className="space-y-2">
       <DndContext
         sensors={sensors}
-        collisionDetection={closestCenter}
+        collisionDetection={pointerWithin}
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
@@ -357,9 +368,9 @@ export default function TierListEditor({ tiers, unrankedItems = [], onChange }: 
           onAddItem={() => setShowItemForm('unranked')} 
         />
 
-        <DragOverlay>
+        <DragOverlay dropAnimation={dropAnimationConfig}>
           {activeItem && (
-            <div className="w-20 h-20 rounded-lg overflow-hidden border-4 border-accent-500 shadow-2xl shadow-accent-500/50 rotate-6 scale-110 flex items-center justify-center bg-surface-700">
+            <div className="w-20 h-20 rounded-lg overflow-hidden border-4 border-accent-500 shadow-2xl shadow-accent-500/50 flex items-center justify-center bg-surface-700">
               {activeItem.imageUrl ? (
                 <img src={activeItem.imageUrl} alt={activeItem.title} className="w-full h-full object-cover" />
               ) : (
