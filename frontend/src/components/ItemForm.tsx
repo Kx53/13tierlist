@@ -1,17 +1,18 @@
 import { useState, useRef, useEffect } from 'react';
-import { uploadImage } from '../lib/api';
+import { uploadImage, type TierItem } from '../lib/api';
 
 interface Props {
   tierId: string;
-  onAdd: (tierId: string, title: string, imageUrl?: string) => void;
+  initialItem?: TierItem;
+  onSubmit: (tierId: string, title: string, imageUrl?: string) => void;
   onClose: () => void;
 }
 
-export default function ItemForm({ tierId, onAdd, onClose }: Props) {
-  const [mode, setMode] = useState<'image' | 'text'>('image');
-  const [title, setTitle] = useState('');
+export default function ItemForm({ tierId, initialItem, onSubmit, onClose }: Props) {
+  const [mode, setMode] = useState<'image' | 'text'>(initialItem && !initialItem.imageUrl ? 'text' : 'image');
+  const [title, setTitle] = useState(initialItem?.title || '');
   const [file, setFile] = useState<File | null>(null);
-  const [previewUrl, setPreviewUrl] = useState<string>('');
+  const [previewUrl, setPreviewUrl] = useState<string>(initialItem?.imageUrl || '');
   const [isUploading, setIsUploading] = useState(false);
   const [error, setError] = useState('');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -41,11 +42,11 @@ export default function ItemForm({ tierId, onAdd, onClose }: Props) {
     if (!title.trim()) return;
 
     if (mode === 'text') {
-      onAdd(tierId, title.trim());
+      onSubmit(tierId, title.trim());
       return;
     }
 
-    if (!file) {
+    if (!file && !previewUrl) {
       setError('Please upload an image or switch to Text mode.');
       return;
     }
@@ -54,12 +55,15 @@ export default function ItemForm({ tierId, onAdd, onClose }: Props) {
     setError('');
 
     try {
-      const uploadedUrl = await uploadImage(file);
-      const fullUrl = import.meta.env.PUBLIC_API_URL 
-        ? `${import.meta.env.PUBLIC_API_URL}${uploadedUrl}`
-        : `http://localhost:3001${uploadedUrl}`;
+      let fullUrl = previewUrl || undefined;
+      if (file) {
+        const uploadedUrl = await uploadImage(file);
+        fullUrl = import.meta.env.PUBLIC_API_URL 
+          ? `${import.meta.env.PUBLIC_API_URL}${uploadedUrl}`
+          : `http://localhost:3001${uploadedUrl}`;
+      }
         
-      onAdd(tierId, title.trim(), fullUrl);
+      onSubmit(tierId, title.trim(), fullUrl);
     } catch (err: any) {
       setError(err.message || 'Failed to upload image. Is the backend running?');
       setIsUploading(false);
@@ -75,7 +79,7 @@ export default function ItemForm({ tierId, onAdd, onClose }: Props) {
     return () => window.removeEventListener('keydown', handleEsc);
   }, [onClose]);
 
-  const isFormValid = mode === 'text' ? !!title.trim() : !!(title.trim() && file);
+  const isFormValid = mode === 'text' ? !!title.trim() : !!(title.trim() && (file || previewUrl));
 
   return (
     <div className="fixed inset-0 z-100 flex items-center justify-center p-4">
@@ -88,7 +92,7 @@ export default function ItemForm({ tierId, onAdd, onClose }: Props) {
       {/* Modal */}
       <div className="relative bg-surface-800 border-2 border-surface-700 p-6 rounded-2xl w-full max-w-sm shadow-2xl animate-scale-in">
         <h3 className="text-xl font-bold text-white mb-5">
-          {tierId === 'unranked' ? 'Add New Item' : 'Add Item to Tier'}
+          {initialItem ? 'Edit Item' : tierId === 'unranked' ? 'Add New Item' : 'Add Item to Tier'}
         </h3>
 
         {/* Mode Tabs */}
@@ -202,10 +206,10 @@ export default function ItemForm({ tierId, onAdd, onClose }: Props) {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                   </svg>
-                  Uploading...
+                  {initialItem ? 'Saving...' : 'Uploading...'}
                 </span>
               ) : (
-                'Add Item'
+                initialItem ? 'Save Changes' : 'Add Item'
               )}
             </button>
           </div>

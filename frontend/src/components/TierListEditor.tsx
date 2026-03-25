@@ -34,7 +34,7 @@ interface Props {
 }
 
 // Sortable Item component
-function SortableItem({ item, onDelete }: { item: TierItem; onDelete: () => void }) {
+function SortableItem({ item, onDelete, onEdit }: { item: TierItem; onDelete: () => void; onEdit: () => void }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: item.id,
     data: { item },
@@ -77,6 +77,17 @@ function SortableItem({ item, onDelete }: { item: TierItem; onDelete: () => void
         </div>
       )}
       <button
+        onClick={(e) => { e.stopPropagation(); onEdit(); }}
+        className="absolute top-0.5 right-6 w-5 h-5 rounded-full bg-blue-500/80 text-white
+                   text-[10px] flex items-center justify-center
+                   opacity-100 xl:opacity-0 xl:group-hover:opacity-100 transition-opacity duration-200
+                   hover:bg-blue-500 z-10"
+        onPointerDown={(e) => e.stopPropagation()}
+        title="Edit item"
+      >
+        ✏️
+      </button>
+      <button
         onClick={(e) => { e.stopPropagation(); onDelete(); }}
         className="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-red-500/80 text-white
                    text-xs flex items-center justify-center
@@ -94,6 +105,7 @@ function SortableItem({ item, onDelete }: { item: TierItem; onDelete: () => void
 function DroppableTier({
   tier,
   onDeleteItem,
+  onEditItem,
   onLabelChange,
   onColorChange,
   onDeleteTier,
@@ -101,6 +113,7 @@ function DroppableTier({
 }: {
   tier: Tier;
   onDeleteItem: (itemId: string) => void;
+  onEditItem: (itemId: string) => void;
   onLabelChange: (label: string) => void;
   onColorChange: (color: string) => void;
   onDeleteTier: () => void;
@@ -150,6 +163,7 @@ function DroppableTier({
               key={item.id}
               item={item}
               onDelete={() => onDeleteItem(item.id)}
+              onEdit={() => onEditItem(item.id)}
             />
           ))}
         </div>
@@ -159,7 +173,7 @@ function DroppableTier({
 }
 
 // Droppable Unranked Pool
-function DroppableUnranked({ items, onDeleteItem, onAddItem }: { items: TierItem[], onDeleteItem: (itemId: string) => void, onAddItem: () => void }) {
+function DroppableUnranked({ items, onDeleteItem, onEditItem, onAddItem }: { items: TierItem[], onDeleteItem: (itemId: string) => void, onEditItem: (itemId: string) => void, onAddItem: () => void }) {
   const itemIds = items.map(i => i.id);
   const { setNodeRef } = useDroppable({ id: 'unranked', data: { type: 'Container' } });
 
@@ -181,6 +195,7 @@ function DroppableUnranked({ items, onDeleteItem, onAddItem }: { items: TierItem
               key={item.id}
               item={item}
               onDelete={() => onDeleteItem(item.id)}
+              onEdit={() => onEditItem(item.id)}
             />
           ))}
           {items.length === 0 && (
@@ -197,6 +212,7 @@ function DroppableUnranked({ items, onDeleteItem, onAddItem }: { items: TierItem
 
 export default function TierListEditor({ tiers, unrankedItems = [], onChange }: Props) {
   const [showItemForm, setShowItemForm] = useState<string | null>(null);
+  const [editItem, setEditItem] = useState<TierItem | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
 
   const sensors = useSensors(
@@ -303,18 +319,38 @@ export default function TierListEditor({ tiers, unrankedItems = [], onChange }: 
     }
   };
 
-  const handleAddItem = (tierId: string, title: string, imageUrl?: string) => {
-    const newItem: TierItem = { id: crypto.randomUUID().slice(0, 8), title, ...(imageUrl ? { imageUrl } : {}) };
-    if (tierId === 'unranked') {
-      onChange(tiers, [...unrankedItems, newItem]);
+  const handleEditItemClick = (itemId: string) => {
+    const item = [...unrankedItems, ...tiers.flatMap(t => t.items)].find(i => i.id === itemId);
+    if (item) setEditItem(item);
+  };
+
+  const handleSubmitItem = (tierId: string, title: string, imageUrl?: string) => {
+    if (editItem) {
+      const updatedItem = { ...editItem, title, ...(imageUrl ? { imageUrl } : { imageUrl: undefined }) };
+      if (!imageUrl) delete updatedItem.imageUrl;
+
+      if (tierId === 'unranked') {
+        onChange(tiers, unrankedItems.map(i => i.id === editItem.id ? updatedItem : i));
+      } else {
+        onChange(tiers.map(t => t.id === tierId ? {
+          ...t,
+          items: t.items.map(i => i.id === editItem.id ? updatedItem : i)
+        } : t), unrankedItems);
+      }
+      setEditItem(null);
     } else {
-      const newTiers = tiers.map((tier) => {
-        if (tier.id !== tierId) return tier;
-        return { ...tier, items: [...tier.items, newItem] };
-      });
-      onChange(newTiers, unrankedItems);
+      const newItem: TierItem = { id: crypto.randomUUID().slice(0, 8), title, ...(imageUrl ? { imageUrl } : {}) };
+      if (tierId === 'unranked') {
+        onChange(tiers, [...unrankedItems, newItem]);
+      } else {
+        const newTiers = tiers.map((tier) => {
+          if (tier.id !== tierId) return tier;
+          return { ...tier, items: [...tier.items, newItem] };
+        });
+        onChange(newTiers, unrankedItems);
+      }
+      setShowItemForm(null);
     }
-    setShowItemForm(null);
   };
 
   const activeItem = activeId
@@ -334,6 +370,7 @@ export default function TierListEditor({ tiers, unrankedItems = [], onChange }: 
             key={tier.id}
             tier={tier}
             onDeleteItem={handleDeleteItem}
+            onEditItem={handleEditItemClick}
             onLabelChange={(label) => onChange(tiers.map(t => t.id === tier.id ? { ...t, label } : t), unrankedItems)}
             onColorChange={(color) => onChange(tiers.map(t => t.id === tier.id ? { ...t, color } : t), unrankedItems)}
             onDeleteTier={() => {
@@ -365,6 +402,7 @@ export default function TierListEditor({ tiers, unrankedItems = [], onChange }: 
         <DroppableUnranked 
           items={unrankedItems} 
           onDeleteItem={handleDeleteItem} 
+          onEditItem={handleEditItemClick}
           onAddItem={() => setShowItemForm('unranked')} 
         />
 
@@ -382,11 +420,15 @@ export default function TierListEditor({ tiers, unrankedItems = [], onChange }: 
       </DndContext>
 
       {/* Item Form Modal */}
-      {showItemForm && (
+      {(showItemForm || editItem) && (
         <ItemForm
-          tierId={showItemForm}
-          onAdd={handleAddItem}
-          onClose={() => setShowItemForm(null)}
+          tierId={(showItemForm || (editItem ? findContainerByItemId(editItem.id) : null)) as string}
+          initialItem={editItem || undefined}
+          onSubmit={handleSubmitItem}
+          onClose={() => {
+            setShowItemForm(null);
+            setEditItem(null);
+          }}
         />
       )}
     </div>
