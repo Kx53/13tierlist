@@ -84,6 +84,7 @@ export const tierListRoutes = new Elysia({ prefix: '/api/tier-lists' })
       try {
         const tierList = await TierList.findOne({ slug: params.slug })
           .select('-editTokenHash -__v')
+          .lean()
 
         if (!tierList) {
           set.status = 404
