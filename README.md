@@ -1,15 +1,15 @@
 <div align="center">
-  <h1>🏆 13TierList</h1>
+  <h1>🏆 13TierList 🏆</h1>
   <p><strong>A modern, minimalist, and beautifully animated Tier List maker.</strong></p>
 
   <br />
 
-  [🇹🇭 อ่านภาษาไทย (Read in Thai)](README.th.md)
+[🇹🇭 ภาษาไทย (Thai)](README.th.md)
 
   <br />
 
-  [![Built by Kx53](https://img.shields.io/badge/Built_by-Kx53-8b5cf6?style=for-the-badge&logoColor=white)](https://github.com/Kx53)
-  [![Powered by](https://img.shields.io/badge/Powered_by-13room.space-0f172a?style=for-the-badge)](https://13room.space)
+[![Built by Kx53](https://img.shields.io/badge/Built_by-Kx53-8b5cf6?style=for-the-badge&logoColor=white)](https://github.com/Kx53)
+[![Powered by](https://img.shields.io/badge/Powered_by-13room.space-0f172a?style=for-the-badge)](https://www.13room.space)
 
 </div>
 
@@ -28,6 +28,7 @@
 ## 🛠️ Tech Stack
 
 ### Frontend
+
 - **Framework:** Astro (for lightning-fast static routing)
 - **UI:** React 19 (Islands functionality)
 - **Styling:** Tailwind CSS (v4)
@@ -35,6 +36,7 @@
 - **State Management:** React Hooks + LocalStorage (Drafts & Tokens)
 
 ### Backend
+
 - **Runtime:** Bun
 - **Framework:** Express.js
 - **Database:** MongoDB (Native Mongoose ODM)
@@ -43,17 +45,20 @@
 ## 🚀 Quick Start (Local Development)
 
 ### Prerequisites
+
 - [Node.js](https://nodejs.org/)
 - [Bun](https://bun.sh/)
 - [MongoDB](https://www.mongodb.com/) (running locally or via Atlas)
 
 ### 1. Clone the repository
+
 ```bash
 git clone https://github.com/Kx53/13tierlist.git
 cd 13tierlist
 ```
 
 ### 2. Setup the Backend
+
 ```bash
 cd backend
 bun install
@@ -68,6 +73,7 @@ bun run dev
 ```
 
 ### 3. Setup the Frontend
+
 ```bash
 # In a new terminal window
 cd frontend
@@ -76,9 +82,11 @@ npm install
 # Run the frontend
 npm run dev
 ```
+
 Open `http://localhost:4321` in your browser.
 
 ## 🔒 Security & Architecture
+
 - Instead of traditional user accounts, 13TierList uses **Edit Tokens**.
 - When a list is created, the server generates a crypto-random 32-character token.
 - The server stores only the `bcrypt` hash of this token.

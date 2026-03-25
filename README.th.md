@@ -1,15 +1,15 @@
 <div align="center">
-  <h1>🏆 13TierList</h1>
+  <h1>🏆 13TierList 🏆</h1>
   <p><strong>โปรแกรมสร้าง Tier List ส่วนตัวสไตล์มินิมอล ที่โมเดิร์นและแอนิเมชันสวยงาม</strong></p>
 
   <br />
 
-[🇬🇧 Read in English (อ่านภาษาอังกฤษ)](README.md)
+[🇬🇧 English (ภาษาอังกฤษ)](README.md)
 
   <br />
   
   [![Built by Kx53](https://img.shields.io/badge/Built_by-Kx53-8b5cf6?style=for-the-badge&logoColor=white)](https://github.com/Kx53)
-  [![Powered by](https://img.shields.io/badge/Powered_by-13room.space-0f172a?style=for-the-badge)](https://13room.space)
+  [![Powered by](https://img.shields.io/badge/Powered_by-13room.space-0f172a?style=for-the-badge)](https://www.13room.space)
 
 </div>
 
@@ -25,9 +25,9 @@
 - **บันทึกอัตโนมัติ (Auto-Save):** ไม่ต้องกลัวงานหาย ระบบจะเซฟ Draft ลงเบราว์เซอร์ของคุณอัตโนมัติ
 - **แชร์ลิงก์ง่ายๆ:** ส่ง URL ให้เพื่อนเข้ามาดูผลงานแบบ Read-only ได้แบบสวยๆ
 
-## 🛠️ เทคโนโลยีที่ใช้ (Tech Stack)
+## 🛠️ เทคโนโลยีที่ใช้
 
-### หน้าบ้าน (Frontend)
+### หน้าบ้าน
 
 - **Framework:** Astro (เพื่อเว็บไซต์ที่เบาและโหลดไวที่สุด)
 - **UI:** React 19 (สำหรับความลื่นไหลในหน้า Editor)
@@ -35,14 +35,14 @@
 - **Drag & Drop:** `@dnd-kit/core` และ `@dnd-kit/sortable`
 - **State Management:** React Hooks + LocalStorage (Drafts & Tokens)
 
-### หลังบ้าน (Backend)
+### หลังบ้าน
 
 - **Runtime:** Bun
 - **Framework:** Express.js
 - **Database:** MongoDB (Native Mongoose ODM)
 - **Storage:** Local Disk Storage ระบบอัปโหลดรูปผ่าน `multer`
 
-## 🚀 คู่มือการรันโปรเจกต์ (Quick Start)
+## 🚀 คู่มือการรันโปรเจกต์
 
 ### สิ่งที่ต้องเตรียม
 
