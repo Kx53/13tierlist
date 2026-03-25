@@ -44,7 +44,7 @@ export async function uploadImage(file: File): Promise<string> {
   const formData = new FormData();
   formData.append('image', file);
 
-  const res = await fetch(`${API_URL}/api/upload`, {
+  const res = await fetch(`${API_URL}/api/tier-lists/upload`, {
     method: 'POST',
     body: formData,
   });
