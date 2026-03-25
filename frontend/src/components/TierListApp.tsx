@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { getTierList, updateTierList } from '@/lib/api';
-import { SearchX, Eye } from 'lucide-react';
+import { SearchX, Eye, Download } from 'lucide-react';
 import { getToken, hasToken, saveDraft, getDraft, removeDraft } from '@/lib/token';
 import TierListEditor from '@/components/TierListEditor';
 import TierListViewer from '@/components/TierListViewer';
@@ -8,10 +8,12 @@ import type { TierListData, Tier, TierItem } from '@/lib/api';
 import { useStore } from '@nanostores/react';
 import { i18n } from '@/lib/i18n';
 import { Button, Card } from '@heroui/react';
+import html2canvas from 'html2canvas';
 
 export const appEditorDict = i18n('editor', {
     viewOnly: "View only",
     copyLink: "Copy Link",
+    download: "Download Image",
     save: "Save",
     saving: "Saving",
     saved: "✓ Saved",
@@ -43,6 +45,29 @@ export default function TierListApp({ slug }: Props) {
   const [saveStatus, setSaveStatus] = useState<'idle' | 'saved' | 'error'>('idle');
   const [showDraftRestore, setShowDraftRestore] = useState(false);
   const draftRef = useRef<unknown>(null);
+  const exportRef = useRef<HTMLDivElement>(null);
+  const [isExporting, setIsExporting] = useState(false);
+
+  const handleExport = async () => {
+    if (!exportRef.current || !data) return;
+    setIsExporting(true);
+    try {
+      const canvas = await html2canvas(exportRef.current, {
+        useCORS: true,
+        backgroundColor: '#020617', // slate-950 to match dark theme flawlessly
+        scale: 2,
+      });
+      const dataUrl = canvas.toDataURL('image/png');
+      const link = document.createElement('a');
+      link.download = `${data.title || 'tier-list'}.png`;
+      link.href = dataUrl;
+      link.click();
+    } catch (err) {
+      console.error('Failed to export image:', err);
+    } finally {
+      setIsExporting(false);
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -166,36 +191,43 @@ export default function TierListApp({ slug }: Props) {
         </div>
       )}
 
-      {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
-        <div className="flex-1">
-          {isOwner ? (
-            <input
-              type="text"
-              value={data.title}
-              onChange={(e) => handleChange(e.target.value, data.tiers, data.unrankedItems)}
-              className="text-2xl sm:text-3xl font-bold bg-transparent border-none outline-none text-surface-100 w-full
-                         focus:ring-0 placeholder-surface-600"
-              placeholder="Tier List Title"
-            />
-          ) : (
-            <h1 className="text-2xl sm:text-3xl font-bold text-surface-100">{data.title}</h1>
-          )}
-          {!isOwner && (
-            <p className="text-sm text-surface-500 mt-1 flex items-center justify-center sm:justify-start gap-1">
-              <Eye className="w-4 h-4" /> {editorTexts.viewOnly}
-            </p>
-          )}
-        </div>
+      {/* Exportable Area */}
+      <div ref={exportRef} className="bg-surface-950 p-2 sm:p-4 rounded-xl -mx-2 sm:mx-0 mt-4">
+        {/* Header */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 sm:mb-8">
+          <div className="flex-1 w-full">
+            {isOwner ? (
+              <input
+                type="text"
+                value={data.title}
+                onChange={(e) => handleChange(e.target.value, data.tiers, data.unrankedItems)}
+                className="text-2xl sm:text-3xl font-bold bg-transparent border-none outline-none text-surface-100 w-full
+                           focus:ring-0 placeholder-surface-600"
+                placeholder="Tier List Title"
+              />
+            ) : (
+              <h1 className="text-2xl sm:text-3xl font-bold text-surface-100 break-words">{data.title}</h1>
+            )}
+            {!isOwner && (
+              <p className="text-sm text-surface-500 mt-1 flex items-center justify-start gap-1">
+                <Eye className="w-4 h-4" /> {editorTexts.viewOnly}
+              </p>
+            )}
+          </div>
 
-        <div className="flex items-center gap-3">
-          <Button size="sm" variant="secondary" onPress={handleCopyLink}>
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-              <path d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5z" />
-              <path d="M7.414 15.414a2 2 0 01-2.828-2.828l3-3a2 2 0 012.828 0 1 1 0 001.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 005.656 5.656l1.5-1.5a1 1 0 00-1.414-1.414l-1.5 1.5z" />
-            </svg>
-            {editorTexts.copyLink}
-          </Button>
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap" data-html2canvas-ignore="true">
+            <Button size="sm" variant="secondary" onPress={handleExport} isPending={isExporting}>
+              <Download className="w-4 h-4" />
+              <span className="hidden sm:inline">{editorTexts.download}</span>
+            </Button>
+
+            <Button size="sm" variant="secondary" onPress={handleCopyLink}>
+              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5z" />
+                <path d="M7.414 15.414a2 2 0 01-2.828-2.828l3-3a2 2 0 012.828 0 1 1 0 001.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 005.656 5.656l1.5-1.5a1 1 0 00-1.414-1.414l-1.5 1.5z" />
+              </svg>
+              <span className="hidden sm:inline">{editorTexts.copyLink}</span>
+            </Button>
 
           {isOwner && (
             <Button
@@ -226,6 +258,7 @@ export default function TierListApp({ slug }: Props) {
           unrankedItems={data.unrankedItems || []} 
         />
       )}
+      </div>
     </div>
   );
 }
