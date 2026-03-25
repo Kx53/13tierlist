@@ -80,7 +80,7 @@ function SortableItem({ item, onDelete }: { item: TierItem; onDelete: () => void
         onClick={(e) => { e.stopPropagation(); onDelete(); }}
         className="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-red-500/80 text-white
                    text-xs flex items-center justify-center
-                   opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-200
+                   opacity-100 xl:opacity-0 xl:group-hover:opacity-100 transition-opacity duration-200
                    hover:bg-red-500 z-10"
         onPointerDown={(e) => e.stopPropagation()}
       >
@@ -124,7 +124,7 @@ function DroppableTier({
           style={{ color: tier.color }}
           maxLength={20}
         />
-        <div className="flex gap-1 opacity-100 md:opacity-0 md:group-hover/tier:opacity-100 transition-opacity">
+        <div className="flex gap-1 opacity-100 xl:opacity-0 xl:group-hover/tier:opacity-100 transition-opacity">
           <input
             type="color"
             value={tier.color}
