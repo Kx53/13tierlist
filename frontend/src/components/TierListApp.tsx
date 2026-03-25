@@ -57,11 +57,23 @@ export default function TierListApp({ slug }: Props) {
         backgroundColor: '#020617', // slate-950 to match dark theme flawlessly
         scale: 2,
       });
-      const dataUrl = canvas.toDataURL('image/png');
-      const link = document.createElement('a');
-      link.download = `${data.title || 'tier-list'}.png`;
-      link.href = dataUrl;
-      link.click();
+      
+      canvas.toBlob((blob) => {
+        if (!blob) return;
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.download = `${data.title || 'tier-list'}.png`;
+        link.href = url;
+        document.body.appendChild(link);
+        link.click();
+        
+        // Cleanup memory
+        setTimeout(() => {
+          document.body.removeChild(link);
+          URL.revokeObjectURL(url);
+        }, 100);
+      }, 'image/png');
+      
     } catch (err) {
       console.error('Failed to export image:', err);
     } finally {
