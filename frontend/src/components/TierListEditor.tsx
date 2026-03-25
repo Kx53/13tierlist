@@ -384,21 +384,23 @@ export default function TierListEditor({ tiers, unrankedItems = [], onChange }: 
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        {tiers.map((tier) => (
-          <DroppableTier
-            key={tier.id}
-            tier={tier}
-            onDeleteItem={handleDeleteItem}
-            onEditItem={handleEditItemClick}
-            onLabelChange={(label) => onChange(tiers.map(t => t.id === tier.id ? { ...t, label } : t), unrankedItems)}
-            onColorChange={(color) => onChange(tiers.map(t => t.id === tier.id ? { ...t, color } : t), unrankedItems)}
-            onDeleteTier={() => {
-              if (tiers.length <= 1) return;
-              onChange(tiers.filter((t) => t.id !== tier.id), unrankedItems);
-            }}
-            onAddItem={() => setShowItemForm(tier.id)}
-          />
-        ))}
+        <div id="tier-list-capture-area" className="flex flex-col gap-2 bg-surface-950 pb-2 rounded-xl">
+          {tiers.map((tier) => (
+            <DroppableTier
+              key={tier.id}
+              tier={tier}
+              onDeleteItem={handleDeleteItem}
+              onEditItem={handleEditItemClick}
+              onLabelChange={(label) => onChange(tiers.map(t => t.id === tier.id ? { ...t, label } : t), unrankedItems)}
+              onColorChange={(color) => onChange(tiers.map(t => t.id === tier.id ? { ...t, color } : t), unrankedItems)}
+              onDeleteTier={() => {
+                if (tiers.length <= 1) return;
+                onChange(tiers.filter((t) => t.id !== tier.id), unrankedItems);
+              }}
+              onAddItem={() => setShowItemForm(tier.id)}
+            />
+          ))}
+        </div>
 
         <Button
           fullWidth

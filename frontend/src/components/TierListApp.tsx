@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback, useRef } from 'react';
 import { getTierList, updateTierList } from '@/lib/api';
-import { SearchX, Eye, Download } from 'lucide-react';
+import { SearchX, Eye, Download, Check } from 'lucide-react';
 import { getToken, hasToken, saveDraft, getDraft, removeDraft } from '@/lib/token';
 import TierListEditor from '@/components/TierListEditor';
 import TierListViewer from '@/components/TierListViewer';
@@ -48,11 +48,14 @@ export default function TierListApp({ slug }: Props) {
   const exportRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
 
+  const [copied, setCopied] = useState(false);
+
   const handleExport = async () => {
-    if (!exportRef.current || !data) return;
+    const targetElement = document.getElementById('tier-list-capture-area');
+    if (!targetElement || !data) return;
     setIsExporting(true);
     try {
-      const canvas = await html2canvas(exportRef.current, {
+      const canvas = await html2canvas(targetElement, {
         useCORS: true,
         backgroundColor: '#020617', // slate-950 to match dark theme flawlessly
         scale: 2,
@@ -155,6 +158,8 @@ export default function TierListApp({ slug }: Props) {
 
   const handleCopyLink = () => {
     navigator.clipboard.writeText(shareUrl);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
   };
 
   if (loading) {
@@ -203,8 +208,8 @@ export default function TierListApp({ slug }: Props) {
         </div>
       )}
 
-      {/* Exportable Area */}
-      <div ref={exportRef} className="bg-surface-950 p-2 sm:p-4 rounded-xl -mx-2 sm:mx-0 mt-4">
+      {/* Exportable Area removed from wrapper into child components */}
+      <div className="mt-4">
         {/* Header */}
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 sm:mb-8">
           <div className="flex-1 w-full">
@@ -227,18 +232,20 @@ export default function TierListApp({ slug }: Props) {
             )}
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3 flex-wrap" data-html2canvas-ignore="true">
+          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
             <Button size="sm" variant="secondary" onPress={handleExport} isPending={isExporting}>
               <Download className="w-4 h-4" />
               <span className="hidden sm:inline">{editorTexts.download}</span>
             </Button>
 
-            <Button size="sm" variant="secondary" onPress={handleCopyLink}>
-              <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
-                <path d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5z" />
-                <path d="M7.414 15.414a2 2 0 01-2.828-2.828l3-3a2 2 0 012.828 0 1 1 0 001.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 005.656 5.656l1.5-1.5a1 1 0 00-1.414-1.414l-1.5 1.5z" />
-              </svg>
-              <span className="hidden sm:inline">{editorTexts.copyLink}</span>
+            <Button size="sm" variant={copied ? "flat" : "secondary"} className={copied ? "text-emerald-400 bg-emerald-500/10" : ""} onPress={handleCopyLink}>
+              {copied ? <Check className="w-4 h-4" /> : (
+                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
+                  <path d="M12.586 4.586a2 2 0 112.828 2.828l-3 3a2 2 0 01-2.828 0 1 1 0 00-1.414 1.414 4 4 0 005.656 0l3-3a4 4 0 00-5.656-5.656l-1.5 1.5a1 1 0 101.414 1.414l1.5-1.5z" />
+                  <path d="M7.414 15.414a2 2 0 01-2.828-2.828l3-3a2 2 0 012.828 0 1 1 0 001.414-1.414 4 4 0 00-5.656 0l-3 3a4 4 0 005.656 5.656l1.5-1.5a1 1 0 00-1.414-1.414l-1.5 1.5z" />
+                </svg>
+              )}
+              <span className="hidden sm:inline">{copied ? "Copied" : editorTexts.copyLink}</span>
             </Button>
 
           {isOwner && (
