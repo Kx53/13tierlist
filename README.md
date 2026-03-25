@@ -3,7 +3,11 @@
   <p><strong>A modern, minimalist, and beautifully animated Tier List maker.</strong></p>
 
   <br />
-  
+
+  [🇹🇭 อ่านภาษาไทย (Read in Thai)](README.th.md)
+
+  <br />
+
   [![Built by Kx53](https://img.shields.io/badge/Built_by-Kx53-8b5cf6?style=for-the-badge&logoColor=white)](https://github.com/Kx53)
   [![Powered by](https://img.shields.io/badge/Powered_by-13room.space-0f172a?style=for-the-badge)](https://13room.space)
 
