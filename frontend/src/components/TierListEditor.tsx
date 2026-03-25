@@ -78,7 +78,7 @@ function SortableItem({ item, onDelete, onEdit }: { item: TierItem; onDelete: ()
       )}
       <button
         onClick={(e) => { e.stopPropagation(); onEdit(); }}
-        className="absolute top-0.5 right-6 w-5 h-5 rounded-full bg-blue-500/80 text-white
+        className="absolute top-0.5 left-0.5 w-5 h-5 rounded-full bg-blue-500/80 text-white
                    text-[10px] flex items-center justify-center
                    opacity-100 xl:opacity-0 xl:group-hover:opacity-100 transition-opacity duration-200
                    hover:bg-blue-500 z-10"
