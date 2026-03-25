@@ -3,7 +3,7 @@ import { getTierList, updateTierList } from '../lib/api';
 import { getToken, hasToken, saveDraft, getDraft, removeDraft } from '../lib/token';
 import TierListEditor from './TierListEditor';
 import TierListViewer from './TierListViewer';
-import type { TierListData, Tier } from '../lib/api';
+import type { TierListData, Tier, TierItem } from '../lib/api';
 
 interface Props {
   slug: string;
@@ -43,11 +43,12 @@ export default function TierListApp({ slug }: Props) {
 
   const handleRestoreDraft = () => {
     if (draftRef.current && data) {
-      const draft = draftRef.current as { title?: string; tiers?: Tier[] };
+      const draft = draftRef.current as { title?: string; tiers?: Tier[]; unrankedItems?: TierItem[] };
       setData({
         ...data,
         title: draft.title || data.title,
         tiers: draft.tiers || data.tiers,
+        unrankedItems: draft.unrankedItems || data.unrankedItems || [],
       });
     }
     setShowDraftRestore(false);
@@ -58,9 +59,9 @@ export default function TierListApp({ slug }: Props) {
     setShowDraftRestore(false);
   };
 
-  const handleChange = useCallback((title: string, tiers: Tier[]) => {
-    setData(prev => prev ? { ...prev, title, tiers } : prev);
-    saveDraft(slug, { title, tiers });
+  const handleChange = useCallback((title: string, tiers: Tier[], unrankedItems?: TierItem[]) => {
+    setData(prev => prev ? { ...prev, title, tiers, unrankedItems } : prev);
+    saveDraft(slug, { title, tiers, unrankedItems });
     setSaveStatus('idle');
   }, [slug]);
 
@@ -75,6 +76,7 @@ export default function TierListApp({ slug }: Props) {
       await updateTierList(slug, token, {
         title: data.title,
         tiers: data.tiers,
+        unrankedItems: data.unrankedItems,
       });
       removeDraft(slug);
       setSaveStatus('saved');
@@ -144,7 +146,7 @@ export default function TierListApp({ slug }: Props) {
             <input
               type="text"
               value={data.title}
-              onChange={(e) => handleChange(e.target.value, data.tiers)}
+              onChange={(e) => handleChange(e.target.value, data.tiers, data.unrankedItems)}
               className="text-2xl sm:text-3xl font-bold bg-transparent border-none outline-none text-surface-100 w-full
                          focus:ring-0 placeholder-surface-600"
               placeholder="Tier List Title"
@@ -202,11 +204,15 @@ export default function TierListApp({ slug }: Props) {
       {isOwner ? (
         <TierListEditor
           tiers={data.tiers}
-          onChange={(tiers) => handleChange(data.title, tiers)}
+          unrankedItems={data.unrankedItems || []}
+          onChange={(tiers, unrankedItems) => handleChange(data.title, tiers, unrankedItems)}
           slug={slug}
         />
       ) : (
-        <TierListViewer tiers={data.tiers} />
+        <TierListViewer 
+          tiers={data.tiers} 
+          unrankedItems={data.unrankedItems || []} 
+        />
       )}
     </div>
   );

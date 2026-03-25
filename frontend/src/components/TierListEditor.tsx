@@ -9,6 +9,7 @@ import {
   type DragEndEvent,
   type DragStartEvent,
   DragOverlay,
+  useDroppable,
 } from '@dnd-kit/core';
 import {
   SortableContext,
@@ -24,7 +25,8 @@ import ItemForm from './ItemForm';
 
 interface Props {
   tiers: Tier[];
-  onChange: (tiers: Tier[]) => void;
+  unrankedItems?: TierItem[];
+  onChange: (tiers: Tier[], unrankedItems?: TierItem[]) => void;
   slug: string;
 }
 
@@ -32,6 +34,7 @@ interface Props {
 function SortableItem({ item, onDelete }: { item: TierItem; onDelete: () => void }) {
   const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({
     id: item.id,
+    data: { item },
   });
 
   const style = {
@@ -46,9 +49,9 @@ function SortableItem({ item, onDelete }: { item: TierItem; onDelete: () => void
       style={style}
       {...attributes}
       {...listeners}
-      className="group relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden cursor-grab active:cursor-grabbing
-                 border border-surface-700 bg-surface-800 hover:border-accent-500/50
-                 hover:shadow-lg hover:shadow-accent-500/10 transition-all duration-200"
+      className={`group relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden cursor-grab active:cursor-grabbing
+                 border-2 ${isDragging ? 'border-accent-500 shadow-xl' : 'border-surface-700 hover:border-accent-500/50'} 
+                 bg-surface-800 transition-all duration-200`}
     >
       <img
         src={item.imageUrl}
@@ -93,6 +96,7 @@ function DroppableTier({
   onAddItem: (tierId: string) => void;
 }) {
   const itemIds = tier.items.map((item) => item.id);
+  const { setNodeRef } = useDroppable({ id: tier.id, data: { type: 'Container' } });
 
   return (
     <div className="flex rounded-xl overflow-hidden border border-surface-800 bg-surface-900/50 group/tier transition-all duration-200 hover:border-surface-700">
@@ -129,7 +133,7 @@ function DroppableTier({
 
       {/* Items dropzone */}
       <SortableContext items={itemIds} strategy={rectSortingStrategy}>
-        <div className="flex-1 flex flex-wrap gap-2 p-2 min-h-[80px] items-start" data-tier-id={tier.id}>
+        <div ref={setNodeRef} className="flex-1 flex flex-wrap gap-2 p-2 min-h-[80px] items-start" data-tier-id={tier.id}>
           {tier.items.map((item) => (
             <SortableItem
               key={item.id}
@@ -137,24 +141,50 @@ function DroppableTier({
               onDelete={() => onDeleteItem(item.id)}
             />
           ))}
-          <button
-            onClick={() => onAddItem(tier.id)}
-            className="w-16 h-16 sm:w-20 sm:h-20 rounded-lg border-2 border-dashed border-surface-700
-                       flex items-center justify-center text-surface-600 hover:text-surface-400
-                       hover:border-surface-500 hover:bg-surface-800/50 transition-all duration-200"
-            title="Add item to this tier"
-          >
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-            </svg>
-          </button>
         </div>
       </SortableContext>
     </div>
   );
 }
 
-export default function TierListEditor({ tiers, onChange }: Props) {
+// Droppable Unranked Pool
+function DroppableUnranked({ items, onDeleteItem, onAddItem }: { items: TierItem[], onDeleteItem: (itemId: string) => void, onAddItem: () => void }) {
+  const itemIds = items.map(i => i.id);
+  const { setNodeRef } = useDroppable({ id: 'unranked', data: { type: 'Container' } });
+
+  return (
+    <div className="mt-8 rounded-xl border border-surface-700 bg-surface-800/50 overflow-hidden">
+      <div className="bg-surface-800 border-b border-surface-700 p-3 flex justify-between items-center">
+        <h3 className="font-bold text-surface-200 flex items-center gap-2">
+          <svg className="w-5 h-5 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+          Item Bank (Unranked)
+        </h3>
+        <button onClick={onAddItem} className="btn-primary py-1.5 text-sm">
+          + Upload Item
+        </button>
+      </div>
+      <SortableContext items={itemIds} strategy={rectSortingStrategy}>
+        <div ref={setNodeRef} className="p-4 min-h-[120px] flex flex-wrap gap-3 items-start">
+          {items.map((item) => (
+            <SortableItem
+              key={item.id}
+              item={item}
+              onDelete={() => onDeleteItem(item.id)}
+            />
+          ))}
+          {items.length === 0 && (
+            <div className="w-full flex flex-col items-center justify-center py-8 text-surface-500 opacity-70">
+              <span className="text-3xl mb-2">📥</span>
+              <p>Upload items to start dragging them into tiers</p>
+            </div>
+          )}
+        </div>
+      </SortableContext>
+    </div>
+  );
+}
+
+export default function TierListEditor({ tiers, unrankedItems = [], onChange }: Props) {
   const [showItemForm, setShowItemForm] = useState<string | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
 
@@ -163,8 +193,15 @@ export default function TierListEditor({ tiers, onChange }: Props) {
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates })
   );
 
-  const findTierByItemId = (itemId: string) => {
-    return tiers.find((tier) => tier.items.some((item) => item.id === itemId));
+  const findContainerByItemId = (itemId: string): string | null => {
+    if (unrankedItems.some(i => i.id === itemId)) return 'unranked';
+    const tier = tiers.find(t => t.items.some(i => i.id === itemId));
+    return tier ? tier.id : null;
+  };
+
+  const getContainerItems = (containerId: string): TierItem[] => {
+    if (containerId === 'unranked') return unrankedItems;
+    return tiers.find(t => t.id === containerId)?.items || [];
   };
 
   const handleDragStart = (event: DragStartEvent) => {
@@ -175,94 +212,94 @@ export default function TierListEditor({ tiers, onChange }: Props) {
     const { active, over } = event;
     setActiveId(null);
 
+    // Drop outside or on active item
     if (!over || active.id === over.id) return;
 
-    const activeTier = findTierByItemId(active.id as string);
-    const overTier = findTierByItemId(over.id as string);
+    const activeContainerId = findContainerByItemId(active.id as string);
+    // Find if over a container or another item
+    const overContainerId = over.data.current?.type === 'Container' 
+      ? over.id as string 
+      : findContainerByItemId(over.id as string);
 
-    if (!activeTier) return;
+    if (!activeContainerId || !overContainerId) return;
 
     const newTiers = [...tiers];
+    let newUnranked = [...unrankedItems];
 
-    if (activeTier === overTier && overTier) {
-      // Same tier — reorder
-      const tierIndex = newTiers.findIndex((t) => t.id === activeTier.id);
-      const items = [...newTiers[tierIndex].items];
-      const oldIndex = items.findIndex((i) => i.id === active.id);
-      const newIndex = items.findIndex((i) => i.id === over.id);
+    if (activeContainerId === overContainerId) {
+      // Reordering within the same container
+      const items = [...getContainerItems(activeContainerId)];
+      const oldIndex = items.findIndex(i => i.id === active.id);
+      let newIndex = items.findIndex(i => i.id === over.id);
+      if (newIndex === -1) newIndex = items.length; // Drop on empty container space
 
-      newTiers[tierIndex] = {
-        ...newTiers[tierIndex],
-        items: arrayMove(items, oldIndex, newIndex),
-      };
-    } else if (overTier) {
-      // Different tier — move item
-      const fromIndex = newTiers.findIndex((t) => t.id === activeTier.id);
-      const toIndex = newTiers.findIndex((t) => t.id === overTier.id);
-      const item = activeTier.items.find((i) => i.id === active.id)!;
-      const insertIndex = overTier.items.findIndex((i) => i.id === over.id);
+      const movedItems = arrayMove(items, oldIndex, newIndex);
 
-      newTiers[fromIndex] = {
-        ...newTiers[fromIndex],
-        items: newTiers[fromIndex].items.filter((i) => i.id !== active.id),
-      };
-      const newItems = [...newTiers[toIndex].items];
-      newItems.splice(insertIndex, 0, item);
-      newTiers[toIndex] = { ...newTiers[toIndex], items: newItems };
+      if (activeContainerId === 'unranked') {
+        newUnranked = movedItems;
+      } else {
+        const tierIndex = newTiers.findIndex(t => t.id === activeContainerId);
+        if (tierIndex !== -1) newTiers[tierIndex] = { ...newTiers[tierIndex], items: movedItems };
+      }
+    } else {
+      // Moving between containers
+      let activeItems = [...getContainerItems(activeContainerId)];
+      let overItems = [...getContainerItems(overContainerId)];
+
+      const itemTomove = activeItems.find(i => i.id === active.id)!;
+      activeItems = activeItems.filter(i => i.id !== active.id);
+
+      let insertIndex = overItems.findIndex(i => i.id === over.id);
+      if (insertIndex === -1) insertIndex = overItems.length;
+
+      overItems.splice(insertIndex, 0, itemTomove);
+
+      // Apply updates to the source and destination containers
+      [
+        { id: activeContainerId, items: activeItems },
+        { id: overContainerId, items: overItems }
+      ].forEach(({ id, items }) => {
+        if (id === 'unranked') {
+          newUnranked = items;
+        } else {
+          const tierIndex = newTiers.findIndex(t => t.id === id);
+          if (tierIndex !== -1) newTiers[tierIndex] = { ...newTiers[tierIndex], items };
+        }
+      });
     }
 
-    onChange(newTiers);
+    onChange(newTiers, newUnranked);
   };
 
   const handleDeleteItem = (itemId: string) => {
-    const newTiers = tiers.map((tier) => ({
-      ...tier,
-      items: tier.items.filter((item) => item.id !== itemId),
-    }));
-    onChange(newTiers);
+    const isUnranked = unrankedItems.some(i => i.id === itemId);
+    if (isUnranked) {
+      onChange(tiers, unrankedItems.filter(i => i.id !== itemId));
+    } else {
+      const newTiers = tiers.map(tier => ({
+        ...tier,
+        items: tier.items.filter(item => item.id !== itemId)
+      }));
+      onChange(newTiers, unrankedItems);
+    }
   };
 
   const handleAddItem = (tierId: string, title: string, imageUrl: string) => {
-    const newTiers = tiers.map((tier) => {
-      if (tier.id !== tierId) return tier;
-      return {
-        ...tier,
-        items: [
-          ...tier.items,
-          { id: crypto.randomUUID().slice(0, 8), title, imageUrl },
-        ],
-      };
-    });
-    onChange(newTiers);
+    const newItem: TierItem = { id: crypto.randomUUID().slice(0, 8), title, imageUrl };
+    if (tierId === 'unranked') {
+      onChange(tiers, [...unrankedItems, newItem]);
+    } else {
+      const newTiers = tiers.map((tier) => {
+        if (tier.id !== tierId) return tier;
+        return { ...tier, items: [...tier.items, newItem] };
+      });
+      onChange(newTiers, unrankedItems);
+    }
     setShowItemForm(null);
   };
 
-  const handleLabelChange = (tierId: string, label: string) => {
-    onChange(tiers.map((t) => (t.id === tierId ? { ...t, label } : t)));
-  };
-
-  const handleColorChange = (tierId: string, color: string) => {
-    onChange(tiers.map((t) => (t.id === tierId ? { ...t, color } : t)));
-  };
-
-  const handleDeleteTier = (tierId: string) => {
-    if (tiers.length <= 1) return;
-    onChange(tiers.filter((t) => t.id !== tierId));
-  };
-
-  const handleAddTier = () => {
-    const colors = ['#FF7F7F', '#FFBF7F', '#FFDF7F', '#FFFF7F', '#BFFF7F', '#7FFF7F', '#7FFFFF', '#7F7FFF', '#FF7FFF'];
-    const newTier: Tier = {
-      id: crypto.randomUUID().slice(0, 8),
-      label: 'New',
-      color: colors[tiers.length % colors.length],
-      items: [],
-    };
-    onChange([...tiers, newTier]);
-  };
-
   const activeItem = activeId
-    ? tiers.flatMap((t) => t.items).find((i) => i.id === activeId)
+    ? [...unrankedItems, ...tiers.flatMap(t => t.items)].find((i) => i.id === activeId)
     : null;
 
   return (
@@ -278,31 +315,48 @@ export default function TierListEditor({ tiers, onChange }: Props) {
             key={tier.id}
             tier={tier}
             onDeleteItem={handleDeleteItem}
-            onLabelChange={(label) => handleLabelChange(tier.id, label)}
-            onColorChange={(color) => handleColorChange(tier.id, color)}
-            onDeleteTier={() => handleDeleteTier(tier.id)}
-            onAddItem={(tierId) => setShowItemForm(tierId)}
+            onLabelChange={(label) => onChange(tiers.map(t => t.id === tier.id ? { ...t, label } : t), unrankedItems)}
+            onColorChange={(color) => onChange(tiers.map(t => t.id === tier.id ? { ...t, color } : t), unrankedItems)}
+            onDeleteTier={() => {
+              if (tiers.length <= 1) return;
+              onChange(tiers.filter((t) => t.id !== tier.id), unrankedItems);
+            }}
+            onAddItem={() => setShowItemForm(tier.id)}
           />
         ))}
 
+        <button
+          onClick={() => {
+            const colors = ['#FF7F7F', '#FFBF7F', '#FFDF7F', '#FFFF7F', '#BFFF7F', '#7FFF7F', '#7FFFFF', '#7F7FFF', '#FF7FFF'];
+            const newTier: Tier = {
+              id: crypto.randomUUID().slice(0, 8),
+              label: 'New',
+              color: colors[tiers.length % colors.length],
+              items: [],
+            };
+            onChange([...tiers, newTier], unrankedItems);
+          }}
+          className="w-full py-3 rounded-xl border-2 border-dashed border-surface-700
+                     text-surface-500 hover:text-surface-300 hover:border-surface-500
+                     hover:bg-surface-900/50 transition-all duration-200 text-sm font-medium"
+        >
+          + Add Tier
+        </button>
+
+        <DroppableUnranked 
+          items={unrankedItems} 
+          onDeleteItem={handleDeleteItem} 
+          onAddItem={() => setShowItemForm('unranked')} 
+        />
+
         <DragOverlay>
           {activeItem && (
-            <div className="w-20 h-20 rounded-lg overflow-hidden border-2 border-accent-500 shadow-2xl shadow-accent-500/30 rotate-3">
+            <div className="w-20 h-20 rounded-lg overflow-hidden border-4 border-accent-500 shadow-2xl shadow-accent-500/50 rotate-6 scale-110">
               <img src={activeItem.imageUrl} alt={activeItem.title} className="w-full h-full object-cover" />
             </div>
           )}
         </DragOverlay>
       </DndContext>
-
-      {/* Add Tier button */}
-      <button
-        onClick={handleAddTier}
-        className="w-full py-3 rounded-xl border-2 border-dashed border-surface-700
-                   text-surface-500 hover:text-surface-300 hover:border-surface-500
-                   hover:bg-surface-900/50 transition-all duration-200 text-sm font-medium"
-      >
-        + Add Tier
-      </button>
 
       {/* Item Form Modal */}
       {showItemForm && (

@@ -2,11 +2,28 @@ import { Router } from 'express';
 import { body, param } from 'express-validator';
 import bcrypt from 'bcryptjs';
 import { nanoid } from 'nanoid';
+import multer from 'multer';
+import path from 'path';
 import TierList from '../models/TierList.js';
 import { handleValidation } from '../middleware/validate.js';
 import { createLimiter } from '../middleware/rateLimit.js';
 
 const router = Router();
+
+// Multer Setup
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, path.join(process.cwd(), 'uploads'));
+  },
+  filename: function (req, file, cb) {
+    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
+    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
+  }
+});
+const upload = multer({ 
+  storage,
+  limits: { fileSize: 5 * 1024 * 1024 } // 5MB limit
+});
 
 // Default tiers for new tier lists
 const DEFAULT_TIERS = [
@@ -114,7 +131,18 @@ router.put(
       .isLength({ max: 100 }).withMessage('Item title too long'),
     body('tiers.*.items.*.imageUrl')
       .optional()
-      .isURL().withMessage('Invalid image URL')
+      .isString().withMessage('Invalid image URL')
+      .isLength({ max: 2048 }).withMessage('Image URL too long'),
+    body('unrankedItems')
+      .optional()
+      .isArray().withMessage('Unranked items must be an array'),
+    body('unrankedItems.*.title')
+      .optional()
+      .trim()
+      .isLength({ max: 100 }).withMessage('Item title too long'),
+    body('unrankedItems.*.imageUrl')
+      .optional()
+      .isString().withMessage('Invalid image URL')
       .isLength({ max: 2048 }).withMessage('Image URL too long'),
   ],
   handleValidation,
@@ -129,6 +157,7 @@ router.put(
 
       if (req.body.title !== undefined) tierList.title = req.body.title;
       if (req.body.tiers !== undefined) tierList.tiers = req.body.tiers;
+      if (req.body.unrankedItems !== undefined) tierList.unrankedItems = req.body.unrankedItems;
 
       await tierList.save();
 
@@ -136,6 +165,7 @@ router.put(
         slug: tierList.slug,
         title: tierList.title,
         tiers: tierList.tiers,
+        unrankedItems: tierList.unrankedItems,
         updatedAt: tierList.updatedAt,
       });
     } catch (error) {
@@ -158,7 +188,7 @@ router.post(
     body('imageUrl')
       .trim()
       .notEmpty().withMessage('Image URL is required')
-      .isURL().withMessage('Invalid image URL')
+      .isString().withMessage('Invalid image URL')
       .isLength({ max: 2048 }).withMessage('Image URL too long'),
   ],
   handleValidation,
@@ -171,18 +201,22 @@ router.post(
 
       if (!(await verifyToken(req, res, tierList))) return;
 
-      const tier = tierList.tiers.find(t => t.id === req.body.tierId);
-      if (!tier) {
-        return res.status(404).json({ error: 'Tier not found' });
-      }
-
       const newItem = {
         id: nanoid(8),
         title: req.body.title,
         imageUrl: req.body.imageUrl,
       };
 
-      tier.items.push(newItem);
+      if (req.body.tierId === 'unranked') {
+        tierList.unrankedItems.push(newItem);
+      } else {
+        const tier = tierList.tiers.find(t => t.id === req.body.tierId);
+        if (!tier) {
+          return res.status(404).json({ error: 'Tier not found' });
+        }
+        tier.items.push(newItem);
+      }
+
       await tierList.save();
 
       res.status(201).json(newItem);
@@ -211,12 +245,18 @@ router.delete(
       if (!(await verifyToken(req, res, tierList))) return;
 
       let found = false;
-      for (const tier of tierList.tiers) {
-        const idx = tier.items.findIndex(item => item.id === req.params.itemId);
-        if (idx !== -1) {
-          tier.items.splice(idx, 1);
-          found = true;
-          break;
+      const unrankedIdx = tierList.unrankedItems.findIndex(item => item.id === req.params.itemId);
+      if (unrankedIdx !== -1) {
+        tierList.unrankedItems.splice(unrankedIdx, 1);
+        found = true;
+      } else {
+        for (const tier of tierList.tiers) {
+          const idx = tier.items.findIndex(item => item.id === req.params.itemId);
+          if (idx !== -1) {
+            tier.items.splice(idx, 1);
+            found = true;
+            break;
+          }
         }
       }
 
@@ -232,5 +272,14 @@ router.delete(
     }
   }
 );
+
+// POST /api/upload — Upload image
+router.post('/upload', upload.single('image'), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ error: 'No image file provided' });
+  }
+  const imageUrl = `/uploads/${req.file.filename}`;
+  res.status(201).json({ imageUrl });
+});
 
 export default router;

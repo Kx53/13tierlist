@@ -17,6 +17,7 @@ export interface TierListData {
   slug: string;
   title: string;
   tiers: Tier[];
+  unrankedItems?: TierItem[];
   createdAt: string;
   updatedAt: string;
 }
@@ -39,6 +40,22 @@ export async function createTierList(title: string): Promise<CreateResponse> {
   return res.json();
 }
 
+export async function uploadImage(file: File): Promise<string> {
+  const formData = new FormData();
+  formData.append('image', file);
+
+  const res = await fetch(`${API_URL}/api/upload`, {
+    method: 'POST',
+    body: formData,
+  });
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    throw new Error(err.error || 'Failed to upload image');
+  }
+  const data = await res.json();
+  return data.imageUrl;
+}
+
 export async function getTierList(slug: string): Promise<TierListData> {
   const res = await fetch(`${API_URL}/api/tier-lists/${slug}`);
   if (!res.ok) {
@@ -51,7 +68,7 @@ export async function getTierList(slug: string): Promise<TierListData> {
 export async function updateTierList(
   slug: string,
   editToken: string,
-  data: { title?: string; tiers?: Tier[] }
+  data: { title?: string; tiers?: Tier[]; unrankedItems?: TierItem[] }
 ): Promise<TierListData> {
   const res = await fetch(`${API_URL}/api/tier-lists/${slug}`, {
     method: 'PUT',

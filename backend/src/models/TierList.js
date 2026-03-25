@@ -33,6 +33,10 @@ const tierListSchema = new mongoose.Schema({
     type: [tierSchema],
     default: [],
   },
+  unrankedItems: {
+    type: [itemSchema],
+    default: [],
+  },
 }, {
   timestamps: true,
 });

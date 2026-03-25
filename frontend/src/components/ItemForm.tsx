@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useState, useRef, useEffect } from 'react';
+import { uploadImage } from '../lib/api';
 
 interface Props {
   tierId: string;
@@ -8,83 +9,173 @@ interface Props {
 
 export default function ItemForm({ tierId, onAdd, onClose }: Props) {
   const [title, setTitle] = useState('');
-  const [imageUrl, setImageUrl] = useState('');
-  const [previewError, setPreviewError] = useState(false);
+  const [file, setFile] = useState<File | null>(null);
+  const [previewUrl, setPreviewUrl] = useState<string>('');
+  const [isUploading, setIsUploading] = useState(false);
+  const [error, setError] = useState('');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
-  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-    if (!title.trim() || !imageUrl.trim()) return;
-    onAdd(tierId, title.trim(), imageUrl.trim());
+  // Cleanup object URLs to avoid memory leaks
+  useEffect(() => {
+    return () => {
+      if (previewUrl) URL.revokeObjectURL(previewUrl);
+    };
+  }, [previewUrl]);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selected = e.target.files?.[0];
+    if (selected) {
+      if (selected.size > 5 * 1024 * 1024) {
+        setError('File size must be less than 5MB');
+        return;
+      }
+      setFile(selected);
+      setPreviewUrl(URL.createObjectURL(selected));
+      setError('');
+    }
   };
 
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!title.trim() || !file) return;
+
+    setIsUploading(true);
+    setError('');
+
+    try {
+      // 1. Upload to backend
+      const uploadedUrl = await uploadImage(file);
+      // 2. Pass complete URL back to parent
+      // Note: backend returns relative URL like /uploads/123.jpg
+      const fullUrl = import.meta.env.PUBLIC_API_URL 
+        ? `${import.meta.env.PUBLIC_API_URL}${uploadedUrl}`
+        : `http://localhost:3001${uploadedUrl}`;
+        
+      onAdd(tierId, title.trim(), fullUrl);
+    } catch (err: any) {
+      setError(err.message || 'Failed to upload image. Is the backend running?');
+      setIsUploading(false);
+    }
+  };
+
+  // Close on Escape key
+  useEffect(() => {
+    const handleEsc = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleEsc);
+    return () => window.removeEventListener('keydown', handleEsc);
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/60 backdrop-blur-sm" onClick={onClose}></div>
+      <div 
+        className="absolute inset-0 bg-black/60 backdrop-blur-sm transition-opacity" 
+        onClick={(!isUploading) ? onClose : undefined}
+      ></div>
 
       {/* Modal */}
-      <div className="relative glass p-6 w-full max-w-md animate-scale-in">
-        <h3 className="text-lg font-semibold text-surface-100 mb-4">Add Item</h3>
+      <div className="relative bg-surface-800 border-2 border-surface-700 p-6 rounded-2xl w-full max-w-sm shadow-2xl animate-scale-in">
+        <h3 className="text-xl font-bold text-white mb-5">
+          {tierId === 'unranked' ? 'Add New Item' : 'Add Item to Tier'}
+        </h3>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-surface-300 mb-1.5">Title</label>
+            <label className="block text-sm font-medium text-surface-300 mb-1.5 focus-within:text-accent-400">Title</label>
             <input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Item name"
-              className="input-field"
+              className="input-field w-full"
               maxLength={100}
               autoFocus
               required
+              disabled={isUploading}
             />
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-surface-300 mb-1.5">Image URL</label>
+            <label className="block text-sm font-medium text-surface-300 mb-1.5">Image Upload</label>
             <input
-              type="url"
-              value={imageUrl}
-              onChange={(e) => {
-                setImageUrl(e.target.value);
-                setPreviewError(false);
-              }}
-              placeholder="https://example.com/image.jpg"
-              className="input-field"
-              required
+              type="file"
+              accept="image/*"
+              className="hidden"
+              ref={fileInputRef}
+              onChange={handleFileChange}
+              disabled={isUploading}
             />
+            
+            {!previewUrl ? (
+              <button
+                type="button"
+                onClick={() => fileInputRef.current?.click()}
+                disabled={isUploading}
+                className={`w-full h-40 rounded-xl border-2 border-dashed flex flex-col items-center justify-center transition-all duration-200
+                  ${error ? 'border-red-500/50 text-red-400 bg-red-500/5' : 'border-surface-600 text-surface-400 hover:text-surface-200 hover:border-accent-500 hover:bg-surface-700/50 focus:outline-none focus:ring-2 focus:ring-accent-500/50'}`}
+              >
+                <svg className="w-10 h-10 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+                <span className="font-medium">Click to upload image</span>
+                <span className="text-xs mt-1 opacity-70">PNG, JPG, WEBP up to 5MB</span>
+              </button>
+            ) : (
+              <div className="relative flex justify-center p-3 rounded-xl bg-surface-900 border-2 border-surface-700 group">
+                <img
+                  src={previewUrl}
+                  alt="Preview"
+                  className="max-h-[160px] rounded-lg object-contain"
+                />
+                {!isUploading && (
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setFile(null);
+                      setPreviewUrl('');
+                      if (fileInputRef.current) fileInputRef.current.value = '';
+                    }}
+                    className="absolute -top-3 -right-3 w-8 h-8 rounded-full bg-surface-700 border-2 border-surface-600 text-white flex items-center justify-center hover:bg-red-500 hover:border-red-500 transition-colors shadow-lg"
+                    title="Remove image"
+                  >
+                    ×
+                  </button>
+                )}
+              </div>
+            )}
+            {error && <p className="text-red-400 text-xs font-medium mt-2 flex items-center gap-1">
+              <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+              {error}
+            </p>}
           </div>
 
-          {/* Preview */}
-          {imageUrl && (
-            <div className="flex items-center justify-center p-4 rounded-xl bg-surface-900 border border-surface-700">
-              {previewError ? (
-                <div className="text-center text-surface-500 text-sm">
-                  <p>⚠️ Cannot preview image</p>
-                  <p className="text-xs mt-1">The image will still be saved</p>
-                </div>
-              ) : (
-                <img
-                  src={imageUrl}
-                  alt="Preview"
-                  className="max-w-[120px] max-h-[120px] rounded-lg object-cover"
-                  onError={() => setPreviewError(true)}
-                />
-              )}
-            </div>
-          )}
-
-          <div className="flex gap-3 pt-2">
-            <button type="button" onClick={onClose} className="btn-secondary flex-1">
+          <div className="flex gap-3 pt-4">
+            <button 
+              type="button" 
+              onClick={onClose} 
+              className="btn-secondary flex-1 border-surface-600 bg-surface-700 hover:bg-surface-600"
+              disabled={isUploading}
+            >
               Cancel
             </button>
             <button
               type="submit"
-              disabled={!title.trim() || !imageUrl.trim()}
-              className="btn-primary flex-1"
+              disabled={!title.trim() || !file || isUploading}
+              className="btn-primary flex-1 py-2.5 relative overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Add Item
+              {isUploading ? (
+                <span className="flex items-center justify-center gap-2">
+                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                  </svg>
+                  Uploading...
+                </span>
+              ) : (
+                'Add Item'
+              )}
             </button>
           </div>
         </form>
