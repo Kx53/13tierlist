@@ -1,0 +1,16 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import TierListApp from '../../components/TierListApp';
+
+const { slug } = Astro.params;
+
+if (!slug) {
+  return Astro.redirect('/');
+}
+---
+
+<Layout title="Tier List — 13TierList" description="View and edit this tier list">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <TierListApp client:load slug={slug} />
+  </div>
+</Layout>
