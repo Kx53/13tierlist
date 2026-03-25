@@ -1,82 +1,87 @@
-Build an MVP web app for creating and sharing image-based tier lists.
+<div align="center">
+  <h1>🏆 13TierList</h1>
+  <p><strong>A modern, minimalist, and beautifully animated Tier List maker.</strong></p>
 
-Tech stack:
+  <br />
+  
+  [![Built by Kx53](https://img.shields.io/badge/Built_by-Kx53-8b5cf6?style=for-the-badge&logoColor=white)](https://github.com/Kx53)
+  [![Powered by](https://img.shields.io/badge/Powered_by-13room.space-0f172a?style=for-the-badge)](https://13room.space)
 
-- Frontend: Astro + Tailwind CSS
-- Interactive components: React islands inside Astro
-- Backend: Node.js API on a private server
-- Database: MongoDB
-- Frontend deploy target: Vercel
+</div>
 
-Requirements:
+<br />
 
-- No user login/signup
-- Use anonymous ownership with edit token
-- On tier list creation, generate a unique slug and an edit token
-- Store only a hashed version of the edit token in MongoDB
-- Return raw edit token to frontend once, and store it in localStorage
-- Public users can open shared links in read-only mode
-- Owner on the same browser can edit using saved token
+## ✨ Features
 
-Core features:
+- **No Sign-up Required:** Jump right in and create tier lists anonymously using a secure edit token system.
+- **Drag & Drop:** Fluid and native-feeling drag-and-drop interactions powered by `dnd-kit`.
+- **Hybrid Items:** Support for both Image Uploads (up to 5MB) and Text-Only items.
+- **Item Bank (Unranked Pool):** A dedicated staging area for your uploaded items before you rank them.
+- **Customizable Tiers:** Add, rename, or recolor your tiers on the fly.
+- **Auto-Save & Drafts:** Your progress is automatically saved to your browser so you never lose your work.
+- **Shareable Links:** Send your tier list URL to anyone. They get a beautiful read-only view.
 
-- Create a new tier list
-- Default tiers: S, A, B, C, D
-- Rename, add, and delete tiers
-- Add image-based items with title and image URL
-- Drag and drop items between tiers
-- Reorder items within the same tier
-- Save tier list to MongoDB
-- Share tier list via public URL like /list/[slug]
-- Autosave draft state to localStorage
-- Restore draft/editor state from localStorage when appropriate
+## 🛠️ Tech Stack
 
-API:
+### Frontend
+- **Framework:** Astro (for lightning-fast static routing)
+- **UI:** React 19 (Islands functionality)
+- **Styling:** Tailwind CSS (v4)
+- **Drag & Drop:** `@dnd-kit/core` and `@dnd-kit/sortable`
+- **State Management:** React Hooks + LocalStorage (Drafts & Tokens)
 
-- POST /api/tier-lists
-- GET /api/tier-lists/:slug
-- PUT /api/tier-lists/:slug
-- POST /api/tier-lists/:slug/items
-- DELETE /api/tier-lists/:slug/items/:itemId
-- POST /api/upload
+### Backend
+- **Runtime:** Bun
+- **Framework:** Express.js
+- **Database:** MongoDB (Native Mongoose ODM)
+- **Storage:** Local Disk Storage via `multer`
 
-Constraints:
+## 🚀 Quick Start (Local Development)
 
-- Do not store image binaries or large base64 blobs in MongoDB
-- Store image URLs only
-- Validate input on all endpoints
-- Add basic rate limiting
-- Use CORS correctly for Vercel frontend -> private backend
-- Hash edit tokens before storing
+### Prerequisites
+- [Node.js](https://nodejs.org/)
+- [Bun](https://bun.sh/)
+- [MongoDB](https://www.mongodb.com/) (running locally or via Atlas)
 
-Pages:
+### 1. Clone the repository
+```bash
+git clone https://github.com/Kx53/13tierlist.git
+cd 13tierlist
+```
 
-- /
-- /create
-- /list/[slug]
+### 2. Setup the Backend
+```bash
+cd backend
+bun install
 
-Deliver:
+# Create a .env file
+echo "MONGODB_URI=mongodb://localhost:27017/13tierlist" > .env
+echo "PORT=3001" >> .env
+echo "CORS_ORIGIN=http://localhost:4321" >> .env
 
-- Project structure
-- MongoDB schema
-- API route implementation plan
-- Frontend page/component plan
-- Ownership/edit-token flow
-- Deployment notes for Vercel frontend + private backend + private MongoDB
+# Run the backend
+bun run dev
+```
 
-Use this stack:
+### 3. Setup the Frontend
+```bash
+# In a new terminal window
+cd frontend
+npm install
 
-- Frontend: Astro + Tailwind CSS + React islands
-- Frontend deployment: Vercel
-- Backend runtime: Bun (self-hosted on homelab)
-- Backend style: Node-compatible code
-- Database: MongoDB (private/self-hosted)
+# Run the frontend
+npm run dev
+```
+Open `http://localhost:4321` in your browser.
 
-Important constraints:
+## 🔒 Security & Architecture
+- Instead of traditional user accounts, 13TierList uses **Edit Tokens**.
+- When a list is created, the server generates a crypto-random 32-character token.
+- The server stores only the `bcrypt` hash of this token.
+- The frontend stores the raw token in `localStorage`.
+- Anyone with the link can view the list, but only the browser with the token can edit or upload images to it.
 
-- Backend must run under Bun on a homelab machine
-- Avoid Bun-specific APIs unless necessary
-- Prefer standard Node-compatible packages
-- Use official MongoDB driver or Mongoose
-- Put Nginx/Caddy in front of the Bun app for HTTPS and reverse proxy
-- Frontend communicates with backend over HTTPS
+## 👨‍💻 Author
+
+Built with ❤️ by **[Kx53](https://github.com/Kx53)**  
+Part of the **13room.space** ecosystem.
