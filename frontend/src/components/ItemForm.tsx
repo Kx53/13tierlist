@@ -34,7 +34,7 @@ export default function ItemForm({ tierId, onAdd, onClose }: Props) {
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="Item name"
-              className="input"
+              className="input-field"
               maxLength={100}
               autoFocus
               required
@@ -51,7 +51,7 @@ export default function ItemForm({ tierId, onAdd, onClose }: Props) {
                 setPreviewError(false);
               }}
               placeholder="https://example.com/image.jpg"
-              className="input"
+              className="input-field"
               required
             />
           </div>

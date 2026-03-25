@@ -10,7 +10,7 @@ interface Props {
 
 export default function TierControls({ tiers, onAddTier, onRenameTier, onDeleteTier, onChangeColor }: Props) {
   return (
-    <div className="card">
+    <div className="card-base">
       <h3 className="text-sm font-semibold text-surface-300 mb-3">Manage Tiers</h3>
       <div className="space-y-2">
         {tiers.map((tier) => (

@@ -74,55 +74,53 @@
   }
 }
 
-/* === Component styles === */
-@layer components {
-  .btn {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5
-           font-medium text-sm rounded-xl
-           transition-all duration-200 ease-out
-           focus:outline-none focus:ring-2 focus:ring-accent-500/50 focus:ring-offset-2 focus:ring-offset-surface-950
-           disabled:opacity-50 disabled:cursor-not-allowed
-           active:scale-[0.98];
-  }
+/* === Component styles (Tailwind v4 syntax) === */
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 px-4 py-2.5
+         font-medium text-sm rounded-xl
+         transition-all duration-200 ease-out
+         focus:outline-none focus:ring-2 focus:ring-accent-500/50 focus:ring-offset-2 focus:ring-offset-surface-950
+         disabled:opacity-50 disabled:cursor-not-allowed
+         active:scale-[0.98];
+}
 
-  .btn-primary {
-    @apply btn bg-accent-500 hover:bg-accent-600 text-white shadow-lg shadow-accent-500/25
-           hover:shadow-accent-600/30;
-  }
+@utility btn-primary {
+  @apply btn bg-accent-500 hover:bg-accent-600 text-white shadow-lg shadow-accent-500/25
+         hover:shadow-accent-600/30;
+}
 
-  .btn-secondary {
-    @apply btn bg-surface-800 hover:bg-surface-700 text-surface-200
-           border border-surface-600 hover:border-surface-500;
-  }
+@utility btn-secondary {
+  @apply btn bg-surface-800 hover:bg-surface-700 text-surface-200
+         border border-surface-600 hover:border-surface-500;
+}
 
-  .btn-danger {
-    @apply btn bg-red-500/10 hover:bg-red-500/20 text-red-400
-           border border-red-500/30 hover:border-red-500/50;
-  }
+@utility btn-danger {
+  @apply btn bg-red-500/10 hover:bg-red-500/20 text-red-400
+         border border-red-500/30 hover:border-red-500/50;
+}
 
-  .btn-ghost {
-    @apply btn bg-transparent hover:bg-surface-800 text-surface-400 hover:text-surface-200;
-  }
+@utility btn-ghost {
+  @apply btn bg-transparent hover:bg-surface-800 text-surface-400 hover:text-surface-200;
+}
 
-  .btn-sm {
-    @apply px-3 py-1.5 text-xs rounded-lg;
-  }
+@utility btn-sm {
+  @apply px-3 py-1.5 text-xs rounded-lg;
+}
 
-  .input {
-    @apply w-full px-4 py-2.5 bg-surface-900 border border-surface-700
-           rounded-xl text-surface-100 placeholder-surface-500
-           transition-all duration-200
-           focus:outline-none focus:ring-2 focus:ring-accent-500/50 focus:border-accent-500
-           hover:border-surface-600;
-  }
+@utility input-field {
+  @apply w-full px-4 py-2.5 bg-surface-900 border border-surface-700
+         rounded-xl text-surface-100 placeholder-surface-500
+         transition-all duration-200
+         focus:outline-none focus:ring-2 focus:ring-accent-500/50 focus:border-accent-500
+         hover:border-surface-600;
+}
 
-  .card {
-    @apply bg-surface-900/50 backdrop-blur-sm border border-surface-800
-           rounded-2xl p-6 transition-all duration-200;
-  }
+@utility card-base {
+  @apply bg-surface-900/50 backdrop-blur-sm border border-surface-800
+         rounded-2xl p-6 transition-all duration-200;
+}
 
-  .glass {
-    @apply bg-surface-900/30 backdrop-blur-xl border border-surface-700/50
-           rounded-2xl shadow-2xl;
-  }
+@utility glass-panel {
+  @apply bg-surface-900/30 backdrop-blur-xl border border-surface-700/50
+         rounded-2xl shadow-2xl;
 }
