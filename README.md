@@ -18,10 +18,11 @@
 ## ✨ Features
 
 - **No Sign-up Required:** Jump right in and create tier lists anonymously using a secure edit token system.
-- **Drag & Drop:** Fluid and native-feeling drag-and-drop interactions powered by `dnd-kit`.
+- **Drag & Drop:** Fluid and native-feeling drag-and-drop interactions powered by `@dnd-kit`.
 - **Hybrid Items:** Support for both Image Uploads (up to 5MB) and Text-Only items.
-- **Item Bank (Unranked Pool):** A dedicated staging area for your uploaded items before you rank them.
-- **Customizable Tiers:** Add, rename, or recolor your tiers on the fly.
+- **Item Bank:** A dedicated staging area for your uploaded items before you rank them.
+- **Mobile Optimized:** Optimized touch sensors for effortless use on iPhones, iPads, and Android devices.
+- **Real-time i18n:** Seamlessly switch between **Thai** and **English** without page reloads.
 - **Auto-Save & Drafts:** Your progress is automatically saved to your browser so you never lose your work.
 - **Shareable Links:** Send your tier list URL to anyone. They get a beautiful read-only view.
 
@@ -29,16 +30,18 @@
 
 ### Frontend
 
-- **Framework:** Astro (for lightning-fast static routing)
+- **Framework:** Astro 6 (Lightning-fast static routing)
 - **UI:** React 19 (Islands functionality)
 - **Styling:** Tailwind CSS (v4)
+- **Localization:** `@nanostores/i18n` (Zero-latency TH/EN switching)
+- **Type Safety:** **Eden RPC** (End-to-end type safety with the backend)
 - **Drag & Drop:** `@dnd-kit/core` and `@dnd-kit/sortable`
-- **State Management:** React Hooks + LocalStorage (Drafts & Tokens)
 
 ### Backend
 
 - **Runtime:** Bun
-- **Framework:** Express.js
+- **Framework:** **Elysia.js** (High-performance web framework for Bun)
+- **Language:** TypeScript
 - **Database:** MongoDB (Native Mongoose ODM)
 - **Storage:** Local Disk Storage via `multer`
 
@@ -46,7 +49,6 @@
 
 ### Prerequisites
 
-- [Node.js](https://nodejs.org/)
 - [Bun](https://bun.sh/)
 - [MongoDB](https://www.mongodb.com/) (running locally or via Atlas)
 
@@ -77,10 +79,10 @@ bun run dev
 ```bash
 # In a new terminal window
 cd frontend
-npm install
+bun install
 
 # Run the frontend
-npm run dev
+bun run dev
 ```
 
 Open `http://localhost:4321` in your browser.
@@ -90,8 +92,8 @@ Open `http://localhost:4321` in your browser.
 - Instead of traditional user accounts, 13TierList uses **Edit Tokens**.
 - When a list is created, the server generates a crypto-random 32-character token.
 - The server stores only the `bcrypt` hash of this token.
-- The frontend stores the raw token in `localStorage`.
-- Anyone with the link can view the list, but only the browser with the token can edit or upload images to it.
+- The backend is fully built with **Elysia.js** and communicates with the frontend via **Eden RPC**, ensuring that every API request is type-safe and performant.
+- All file uploads are restricted to 5MB and validated against supported mime types.
 
 ## 👨‍💻 Author
 
