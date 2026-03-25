@@ -4,8 +4,8 @@
 
   <br />
 
-  [🇬🇧 Read in English (อ่านภาษาอังกฤษ)](README.md)
-  
+[🇬🇧 Read in English (อ่านภาษาอังกฤษ)](README.md)
+
   <br />
   
   [![Built by Kx53](https://img.shields.io/badge/Built_by-Kx53-8b5cf6?style=for-the-badge&logoColor=white)](https://github.com/Kx53)
@@ -28,6 +28,7 @@
 ## 🛠️ เทคโนโลยีที่ใช้ (Tech Stack)
 
 ### หน้าบ้าน (Frontend)
+
 - **Framework:** Astro (เพื่อเว็บไซต์ที่เบาและโหลดไวที่สุด)
 - **UI:** React 19 (สำหรับความลื่นไหลในหน้า Editor)
 - **Styling:** Tailwind CSS (v4)
@@ -35,6 +36,7 @@
 - **State Management:** React Hooks + LocalStorage (Drafts & Tokens)
 
 ### หลังบ้าน (Backend)
+
 - **Runtime:** Bun
 - **Framework:** Express.js
 - **Database:** MongoDB (Native Mongoose ODM)
@@ -43,17 +45,20 @@
 ## 🚀 คู่มือการรันโปรเจกต์ (Quick Start)
 
 ### สิ่งที่ต้องเตรียม
+
 - [Node.js](https://nodejs.org/)
 - [Bun](https://bun.sh/)
 - [MongoDB](https://www.mongodb.com/) (รันในเครื่องหรือใช้ Cloud Atlas ก็ได้)
 
-### 1. โคลนคลังข้อมูล
+### 1. โคลน
+
 ```bash
 git clone https://github.com/Kx53/13tierlist.git
 cd 13tierlist
 ```
 
 ### 2. ตั้งค่า Backend
+
 ```bash
 cd backend
 bun install
@@ -68,6 +73,7 @@ bun run dev
 ```
 
 ### 3. ตั้งค่า Frontend
+
 ```bash
 # เปิด Terminal หน้าต่างใหม่
 cd frontend
@@ -76,9 +82,11 @@ npm install
 # รันหน้าบ้าน
 npm run dev
 ```
+
 เปิด `http://localhost:4321` ในเบราว์เซอร์ของคุณ
 
-## 🔒 ความปลอดภัยและวิธีการทำงาน (Security)
+## 🔒 ความปลอดภัยและการทำงาน
+
 - แทนที่จะใช้ระบบล็อกอินแบบเดิม โปรเจกต์นี้เลือกใช้ **Edit Tokens** ที่ไม่ต้องพึ่งรหัสผ่าน
 - เมื่อเริ่มสร้าง Tier List ใหม่ เซิร์ฟเวอร์จะสุ่มรหัส Token ความยาว 32 ตัวอักษร
 - เซิร์ฟเวอร์จะเก็บแค่ค่า **Hash (เข้ารหัสทางเดียว)** ของ Token นี้เท่านั้น ไม่มีใครรู้รหัสจริง
@@ -87,5 +95,5 @@ npm run dev
 
 ## 👨‍💻 ผู้พัฒนา
 
-พัฒนาด้วยความตั้งใจ ❤️ โดย **[Kx53](https://github.com/Kx53)**  
-เป็นส่วนหนึ่งของคอมมูนิตี้ **[13room.space](https://13room.space)**
+พัฒนาด้วย ❤️ โดย **[Kx53](https://github.com/Kx53)**  
+เป็นส่วนหนึ่งของ **[13room.space](https://13room.space)**
