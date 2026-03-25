@@ -186,8 +186,8 @@ router.post(
       .notEmpty().withMessage('Item title is required')
       .isLength({ max: 100 }).withMessage('Item title too long'),
     body('imageUrl')
+      .optional()
       .trim()
-      .notEmpty().withMessage('Image URL is required')
       .isString().withMessage('Invalid image URL')
       .isLength({ max: 2048 }).withMessage('Image URL too long'),
   ],

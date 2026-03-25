@@ -3,7 +3,7 @@ import mongoose from 'mongoose';
 const itemSchema = new mongoose.Schema({
   id: { type: String, required: true },
   title: { type: String, required: true, maxlength: 100 },
-  imageUrl: { type: String, required: true, maxlength: 2048 },
+  imageUrl: { type: String, maxlength: 2048 },
 }, { _id: false });
 
 const tierSchema = new mongoose.Schema({

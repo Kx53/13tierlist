@@ -30,21 +30,31 @@ export default function TierListViewer({ tiers, unrankedItems }: Props) {
                            border border-surface-700 bg-surface-800
                            hover:border-surface-500 hover:scale-105 transition-all duration-200"
               >
-                <img
-                  src={item.imageUrl}
-                  alt={item.title}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%231e293b" width="100" height="100"/><text x="50" y="55" text-anchor="middle" fill="%2364748b" font-size="30">?</text></svg>';
-                  }}
-                />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent
-                                p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <p className="text-[10px] sm:text-xs text-white truncate text-center font-medium">
-                    {item.title}
-                  </p>
-                </div>
+                {item.imageUrl ? (
+                  <>
+                    <img
+                      src={item.imageUrl}
+                      alt={item.title}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%231e293b" width="100" height="100"/><text x="50" y="55" text-anchor="middle" fill="%2364748b" font-size="30">?</text></svg>';
+                      }}
+                    />
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent
+                                    p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <p className="text-[10px] sm:text-xs text-white truncate text-center font-medium">
+                        {item.title}
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center p-1">
+                    <p className="text-[10px] sm:text-xs text-center font-bold text-white overflow-hidden text-ellipsis line-clamp-3 w-full px-1 leading-tight">
+                      {item.title}
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
             {tier.items.length === 0 && (
@@ -70,21 +80,31 @@ export default function TierListViewer({ tiers, unrankedItems }: Props) {
                            border border-surface-700 bg-surface-800
                            hover:border-surface-500 hover:scale-105 transition-all duration-200"
               >
-                <img
-                  src={item.imageUrl}
-                  alt={item.title}
-                  className="w-full h-full object-cover"
-                  loading="lazy"
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%231e293b" width="100" height="100"/><text x="50" y="55" text-anchor="middle" fill="%2364748b" font-size="30">?</text></svg>';
-                  }}
-                />
-                <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent
-                                p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
-                  <p className="text-[10px] sm:text-xs text-white truncate text-center font-medium">
-                    {item.title}
-                  </p>
-                </div>
+                {item.imageUrl ? (
+                  <>
+                    <img
+                      src={item.imageUrl}
+                      alt={item.title}
+                      className="w-full h-full object-cover"
+                      loading="lazy"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%231e293b" width="100" height="100"/><text x="50" y="55" text-anchor="middle" fill="%2364748b" font-size="30">?</text></svg>';
+                      }}
+                    />
+                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent
+                                    p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
+                      <p className="text-[10px] sm:text-xs text-white truncate text-center font-medium">
+                        {item.title}
+                      </p>
+                    </div>
+                  </>
+                ) : (
+                  <div className="w-full h-full flex items-center justify-center p-1">
+                    <p className="text-[10px] sm:text-xs text-center font-bold text-white overflow-hidden text-ellipsis line-clamp-3 w-full px-1 leading-tight">
+                      {item.title}
+                    </p>
+                  </div>
+                )}
               </div>
             ))}
           </div>

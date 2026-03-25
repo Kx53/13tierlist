@@ -53,18 +53,26 @@ function SortableItem({ item, onDelete }: { item: TierItem; onDelete: () => void
                  border-2 ${isDragging ? 'border-accent-500 shadow-xl' : 'border-surface-700 hover:border-accent-500/50'} 
                  bg-surface-800 transition-all duration-200`}
     >
-      <img
-        src={item.imageUrl}
-        alt={item.title}
-        className="w-full h-full object-cover pointer-events-none"
-        loading="lazy"
-        onError={(e) => {
-          (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%231e293b" width="100" height="100"/><text x="50" y="55" text-anchor="middle" fill="%2364748b" font-size="30">?</text></svg>';
-        }}
-      />
-      <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-1">
-        <p className="text-[10px] sm:text-xs text-white truncate text-center font-medium">{item.title}</p>
-      </div>
+      {item.imageUrl ? (
+        <>
+          <img
+            src={item.imageUrl}
+            alt={item.title}
+            className="w-full h-full object-cover pointer-events-none"
+            loading="lazy"
+            onError={(e) => {
+              (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%231e293b" width="100" height="100"/><text x="50" y="55" text-anchor="middle" fill="%2364748b" font-size="30">?</text></svg>';
+            }}
+          />
+          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-1 pointer-events-none">
+            <p className="text-[10px] sm:text-xs text-white truncate text-center font-medium">{item.title}</p>
+          </div>
+        </>
+      ) : (
+        <div className="w-full h-full flex flex-col items-center justify-center p-1 bg-surface-700 pointer-events-none">
+          <p className="text-[10px] sm:text-xs text-center font-bold text-white overflow-hidden text-ellipsis line-clamp-3 w-full px-1 leading-tight">{item.title}</p>
+        </div>
+      )}
       <button
         onClick={(e) => { e.stopPropagation(); onDelete(); }}
         className="absolute top-0.5 right-0.5 w-5 h-5 rounded-full bg-red-500/80 text-white
@@ -284,8 +292,8 @@ export default function TierListEditor({ tiers, unrankedItems = [], onChange }: 
     }
   };
 
-  const handleAddItem = (tierId: string, title: string, imageUrl: string) => {
-    const newItem: TierItem = { id: crypto.randomUUID().slice(0, 8), title, imageUrl };
+  const handleAddItem = (tierId: string, title: string, imageUrl?: string) => {
+    const newItem: TierItem = { id: crypto.randomUUID().slice(0, 8), title, ...(imageUrl ? { imageUrl } : {}) };
     if (tierId === 'unranked') {
       onChange(tiers, [...unrankedItems, newItem]);
     } else {
@@ -351,8 +359,12 @@ export default function TierListEditor({ tiers, unrankedItems = [], onChange }: 
 
         <DragOverlay>
           {activeItem && (
-            <div className="w-20 h-20 rounded-lg overflow-hidden border-4 border-accent-500 shadow-2xl shadow-accent-500/50 rotate-6 scale-110">
-              <img src={activeItem.imageUrl} alt={activeItem.title} className="w-full h-full object-cover" />
+            <div className="w-20 h-20 rounded-lg overflow-hidden border-4 border-accent-500 shadow-2xl shadow-accent-500/50 rotate-6 scale-110 flex items-center justify-center bg-surface-700">
+              {activeItem.imageUrl ? (
+                <img src={activeItem.imageUrl} alt={activeItem.title} className="w-full h-full object-cover" />
+              ) : (
+                <p className="text-xs text-center font-bold text-white overflow-hidden text-ellipsis line-clamp-3 w-full px-1">{activeItem.title}</p>
+              )}
             </div>
           )}
         </DragOverlay>

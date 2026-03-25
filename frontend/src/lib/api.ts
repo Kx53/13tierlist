@@ -3,7 +3,7 @@ const API_URL = import.meta.env.PUBLIC_API_URL || 'http://localhost:3001';
 export interface TierItem {
   id: string;
   title: string;
-  imageUrl: string;
+  imageUrl?: string;
 }
 
 export interface Tier {
