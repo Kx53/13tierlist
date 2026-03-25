@@ -1,0 +1,60 @@
+{
+  "home": {
+    "title": "13TierList — Create & Share Tier Lists",
+    "description": "Create beautiful image-based tier lists and share them with anyone",
+    "tag": "Free · No signup · Instant sharing",
+    "headline1": "Rank Everything",
+    "headline2": "Your Way",
+    "subtitle": "Create stunning image-based tier lists, drag & drop to rank, and share with anyone — no account needed.",
+    "cta": "Create Tier List",
+    "feature1Title": "Drag & Drop",
+    "feature1Desc": "Intuitively rank items by dragging them between tiers. Reorder within tiers too.",
+    "feature2Title": "Instant Sharing",
+    "feature2Desc": "Get a shareable link immediately. No login required — share with anyone.",
+    "feature3Title": "Image-Based",
+    "feature3Desc": "Add images via URL to create visual tier lists for games, anime, food, and more."
+  },
+  "create": {
+    "title": "Create New Tier List",
+    "nameLabel": "Tier List Name",
+    "namePlaceholder": "e.g., Best Fast Food, Favorite Anime 2024",
+    "btn": "Create Tier List",
+    "btnCreating": "Creating..."
+  },
+  "editor": {
+    "viewOnly": "View only",
+    "copyLink": "Copy Link",
+    "save": "Save",
+    "saving": "Saving",
+    "saved": "✓ Saved",
+    "error": "✕ Error",
+    "addTier": "+ Add Tier",
+    "itemBank": "Item Bank (Unranked)",
+    "uploadItem": "+ Upload Item",
+    "uploadPrompt": "Upload items to start dragging them into tiers"
+  },
+  "itemForm": {
+    "add": "Add Item",
+    "edit": "Edit Item",
+    "addUnranked": "Add New Item",
+    "addTier": "Add Item to Tier",
+    "image": "Image",
+    "text": "Text Only",
+    "title": "Title",
+    "titlePlaceholder": "Item name",
+    "imageUpload": "Image Upload",
+    "clickUpload": "Click to upload image",
+    "cancel": "Cancel",
+    "saveChanges": "Save Changes",
+    "uploading": "Uploading..."
+  },
+  "draft": {
+    "banner": "You have unsaved changes from a previous session.",
+    "restore": "Restore",
+    "dismiss": "Dismiss"
+  },
+  "footer": {
+    "builtWith": "Built with",
+    "by": "by"
+  }
+}

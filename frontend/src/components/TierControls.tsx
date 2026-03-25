@@ -1,4 +1,4 @@
-import type { Tier } from '../lib/api';
+import type { Tier } from '@/lib/api';
 
 interface Props {
   tiers: Tier[];
@@ -19,7 +19,7 @@ export default function TierControls({ tiers, onAddTier, onRenameTier, onDeleteT
               type="color"
               value={tier.color}
               onChange={(e) => onChangeColor(tier.id, e.target.value)}
-              className="w-7 h-7 rounded cursor-pointer border-0 bg-transparent flex-shrink-0"
+              className="w-7 h-7 rounded cursor-pointer border-0 bg-transparent shrink-0"
             />
             <input
               type="text"

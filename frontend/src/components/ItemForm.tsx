@@ -1,5 +1,26 @@
 import { useState, useRef, useEffect } from 'react';
-import { uploadImage, type TierItem } from '../lib/api';
+import { uploadImage, type TierItem } from '@/lib/api';
+import { Image as ImageIcon, Type } from 'lucide-react';
+import { useStore } from '@nanostores/react';
+import { Button, Input } from '@heroui/react';
+import { i18n } from '@/lib/i18n';
+
+export const itemFormDict = i18n('itemForm', {
+  add: "Add Item",
+  edit: "Edit Item",
+  addUnranked: "Add New Item",
+  addTier: "Add Item to Tier",
+  image: "Image",
+  text: "Text Only",
+  title: "Title",
+  titlePlaceholder: "Item name",
+  imageUpload: "Image Upload",
+  clickUpload: "Click to upload image",
+  cancel: "Cancel",
+  saveChanges: "Save Changes",
+  uploading: "Uploading...",
+  saving: "Saving..."
+});
 
 interface Props {
   tierId: string;
@@ -9,6 +30,7 @@ interface Props {
 }
 
 export default function ItemForm({ tierId, initialItem, onSubmit, onClose }: Props) {
+  const dict = useStore(itemFormDict);
   const [mode, setMode] = useState<'image' | 'text'>(initialItem && !initialItem.imageUrl ? 'text' : 'image');
   const [title, setTitle] = useState(initialItem?.title || '');
   const [file, setFile] = useState<File | null>(null);
@@ -92,38 +114,40 @@ export default function ItemForm({ tierId, initialItem, onSubmit, onClose }: Pro
       {/* Modal */}
       <div className="relative bg-surface-800 border-2 border-surface-700 p-6 rounded-2xl w-full max-w-sm shadow-2xl animate-scale-in">
         <h3 className="text-xl font-bold text-white mb-5">
-          {initialItem ? 'Edit Item' : tierId === 'unranked' ? 'Add New Item' : 'Add Item to Tier'}
+          {initialItem ? dict.edit : tierId === 'unranked' ? dict.addUnranked : dict.addTier}
         </h3>
 
         {/* Mode Tabs */}
-        <div className="flex bg-surface-900 rounded-lg p-1 mb-5">
-          <button
-            type="button"
-            className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-colors ${mode === 'image' ? 'bg-surface-700 text-white shadow-sm' : 'text-surface-400 hover:text-surface-200'}`}
-            onClick={() => setMode('image')}
-            disabled={isUploading}
+        <div className="flex bg-surface-900 border border-surface-700 rounded-lg p-1 mb-5">
+          <Button
+            size="sm"
+            variant={mode === 'image' ? 'secondary' : 'ghost'}
+            className={`flex-1 transition-colors ${mode === 'image' ? 'bg-surface-700 text-white shadow-sm' : 'text-surface-400 hover:text-surface-200'}`}
+            onPress={() => setMode('image')}
+            isDisabled={isUploading}
           >
-            🖼️ Image
-          </button>
-          <button
-            type="button"
-            className={`flex-1 py-1.5 text-sm font-medium rounded-md transition-colors ${mode === 'text' ? 'bg-surface-700 text-white shadow-sm' : 'text-surface-400 hover:text-surface-200'}`}
-            onClick={() => setMode('text')}
-            disabled={isUploading}
+            <ImageIcon className="w-4 h-4 mr-1.5" /> {dict.image}
+          </Button>
+          <Button
+            size="sm"
+            variant={mode === 'text' ? 'secondary' : 'ghost'}
+            className={`flex-1 transition-colors ${mode === 'text' ? 'bg-surface-700 text-white shadow-sm' : 'text-surface-400 hover:text-surface-200'}`}
+            onPress={() => setMode('text')}
+            isDisabled={isUploading}
           >
-            📝 Text Only
-          </button>
+            <Type className="w-4 h-4 mr-1.5" /> {dict.text}
+          </Button>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block text-sm font-medium text-surface-300 mb-1.5 focus-within:text-accent-400">Title</label>
-            <input
+            <label className="block text-sm font-medium text-surface-300 mb-1.5 focus-within:text-accent-400">{dict.title}</label>
+            <Input
               type="text"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              placeholder="Item name"
-              className="input-field w-full"
+              placeholder={dict.titlePlaceholder}
+              className="w-full text-sm bg-surface-900 border-surface-700 hover:border-surface-600 focus:border-accent-500"
               maxLength={100}
               autoFocus
               required
@@ -133,7 +157,7 @@ export default function ItemForm({ tierId, initialItem, onSubmit, onClose }: Pro
 
           {mode === 'image' && (
             <div className="animate-fade-in">
-              <label className="block text-sm font-medium text-surface-300 mb-1.5">Image Upload</label>
+              <label className="block text-sm font-medium text-surface-300 mb-1.5">{dict.imageUpload}</label>
               <input
                 type="file"
                 accept="image/*"
@@ -154,7 +178,7 @@ export default function ItemForm({ tierId, initialItem, onSubmit, onClose }: Pro
                   <svg className="w-8 h-8 mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                   </svg>
-                  <span className="font-medium text-sm">Click to upload image</span>
+                  <span className="font-medium text-sm">{dict.clickUpload}</span>
                 </button>
               ) : (
                 <div className="relative flex justify-center p-3 rounded-xl bg-surface-900 border-2 border-surface-700 group">
@@ -187,31 +211,22 @@ export default function ItemForm({ tierId, initialItem, onSubmit, onClose }: Pro
           )}
 
           <div className="flex gap-3 pt-4">
-            <button 
-              type="button" 
-              onClick={onClose} 
-              className="btn-secondary flex-1 border-surface-600 bg-surface-700 hover:bg-surface-600"
-              disabled={isUploading}
+            <Button 
+              variant="secondary"
+              className="flex-1 border-surface-600 bg-surface-700 hover:bg-surface-600 text-white"
+              onPress={onClose} 
+              isDisabled={isUploading}
             >
-              Cancel
-            </button>
-            <button
+              {dict.cancel}
+            </Button>
+            <Button
               type="submit"
-              disabled={!isFormValid || isUploading}
-              className="btn-primary flex-1 py-2.5 relative overflow-hidden disabled:opacity-70 disabled:cursor-not-allowed"
+              className="flex-1 bg-accent-500 hover:bg-accent-600 text-white font-bold"
+              isDisabled={!isFormValid || isUploading}
+              isPending={isUploading}
             >
-              {isUploading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <svg className="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                  </svg>
-                  {initialItem ? 'Saving...' : 'Uploading...'}
-                </span>
-              ) : (
-                initialItem ? 'Save Changes' : 'Add Item'
-              )}
-            </button>
+              {initialItem ? dict.saveChanges : dict.add}
+            </Button>
           </div>
         </form>
       </div>

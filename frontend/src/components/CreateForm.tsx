@@ -1,8 +1,21 @@
 import { useState } from 'react';
-import { createTierList } from '../lib/api';
-import { saveToken } from '../lib/token';
+import { createTierList } from '@/lib/api';
+import { saveToken } from '@/lib/token';
+import { useStore } from '@nanostores/react';
+import { i18n } from '@/lib/i18n';
+import { Input, Button } from "@heroui/react";
+
+export const createDict = i18n('create', {
+  title: "Create New Tier List",
+  nameLabel: "Tier List Title",
+  namePlaceholder: "e.g., Best Anime Characters, Top Foods, Game Rankings...",
+  btn: "Create Tier List →",
+  btnCreating: "Creating...",
+  error: "Something went wrong"
+});
 
 export default function CreateForm() {
+  const dict = useStore(createDict);
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -19,7 +32,7 @@ export default function CreateForm() {
       saveToken(slug, editToken);
       window.location.href = `/list/${slug}`;
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Something went wrong');
+      setError(err instanceof Error ? err.message : dict.error);
       setLoading(false);
     }
   };
@@ -28,15 +41,15 @@ export default function CreateForm() {
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
         <label htmlFor="title" className="block text-sm font-medium text-surface-300 mb-2">
-          Tier List Title
+          {dict.nameLabel}
         </label>
-        <input
+        <Input
           type="text"
           id="title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
-          placeholder="e.g., Best Anime Characters, Top Foods, Game Rankings..."
-          className="input text-lg"
+          placeholder={dict.namePlaceholder}
+          className="w-full text-lg bg-surface-900 border-surface-700 hover:border-surface-600 focus:border-accent-500"
           maxLength={200}
           autoFocus
           required
@@ -52,23 +65,15 @@ export default function CreateForm() {
         </div>
       )}
 
-      <button
+      <Button
         type="submit"
-        disabled={loading || !title.trim()}
-        className="btn-primary w-full py-3.5 text-base rounded-xl"
+        size="lg"
+        className="w-full py-6 text-base rounded-xl font-bold bg-accent-500 hover:bg-accent-600 text-white shadow-lg shadow-accent-500/25 border-none"
+        isDisabled={!title.trim()}
+        isPending={loading}
       >
-        {loading ? (
-          <span className="flex items-center justify-center gap-2">
-            <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"></path>
-            </svg>
-            Creating...
-          </span>
-        ) : (
-          'Create Tier List →'
-        )}
-      </button>
+        {loading ? dict.btnCreating : dict.btn}
+      </Button>
     </form>
   );
 }

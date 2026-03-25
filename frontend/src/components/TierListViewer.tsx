@@ -1,4 +1,4 @@
-import type { Tier, TierItem } from '../lib/api';
+import type { Tier, TierItem } from '@/lib/api';
 
 interface Props {
   tiers: Tier[];
@@ -15,7 +15,7 @@ export default function TierListViewer({ tiers, unrankedItems }: Props) {
         >
           {/* Tier Label */}
           <div
-            className="w-20 sm:w-28 flex-shrink-0 flex items-center justify-center font-bold text-lg sm:text-xl"
+            className="w-20 sm:w-28 shrink-0 flex items-center justify-center font-bold text-lg sm:text-xl"
             style={{ backgroundColor: tier.color + '30', color: tier.color }}
           >
             {tier.label}
@@ -41,7 +41,7 @@ export default function TierListViewer({ tiers, unrankedItems }: Props) {
                         (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%231e293b" width="100" height="100"/><text x="50" y="55" text-anchor="middle" fill="%2364748b" font-size="30">?</text></svg>';
                       }}
                     />
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent
+                    <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 to-transparent
                                     p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                       <p className="text-[10px] sm:text-xs text-white truncate text-center font-medium">
                         {item.title}
@@ -91,7 +91,7 @@ export default function TierListViewer({ tiers, unrankedItems }: Props) {
                         (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%231e293b" width="100" height="100"/><text x="50" y="55" text-anchor="middle" fill="%2364748b" font-size="30">?</text></svg>';
                       }}
                     />
-                    <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent
+                    <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 to-transparent
                                     p-1 opacity-0 group-hover:opacity-100 transition-opacity duration-200">
                       <p className="text-[10px] sm:text-xs text-white truncate text-center font-medium">
                         {item.title}

@@ -4,6 +4,12 @@
   "exclude": ["dist"],
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "react"
+    "jsxImportSource": "react",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["src/*"],
+      "elysia": ["../backend/node_modules/elysia"],
+      "elysia/*": ["../backend/node_modules/elysia/*"]
+    }
   }
 }

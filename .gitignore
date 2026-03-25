@@ -1,6 +1,7 @@
 # Dependencies
 backend/node_modules/
 frontend/node_modules/
+favicon_package_v0.16
 
 # Build
 dist/

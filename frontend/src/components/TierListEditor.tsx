@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Pencil, Trash2, Inbox } from 'lucide-react';
 import {
   DndContext,
   closestCenter,
@@ -22,8 +23,24 @@ import {
   arrayMove,
 } from '@dnd-kit/sortable';
 import { CSS } from '@dnd-kit/utilities';
-import type { Tier, TierItem } from '../lib/api';
-import ItemForm from './ItemForm';
+import type { Tier, TierItem } from '@/lib/api';
+import ItemForm from '@/components/ItemForm';
+import { useStore } from '@nanostores/react';
+import { i18n } from '@/lib/i18n';
+import { Button } from '@heroui/react';
+
+export const editorDict = i18n('editor', {
+    viewOnly: "View only",
+    copyLink: "Copy Link",
+    save: "Save",
+    saving: "Saving",
+    saved: "✓ Saved",
+    error: "✕ Error",
+    addTier: "+ Add Tier",
+    itemBank: "Item Bank (Unranked)",
+    uploadItem: "+ Upload Item",
+    uploadPrompt: "Upload items to start dragging them into tiers"
+});
 
 
 interface Props {
@@ -67,7 +84,7 @@ function SortableItem({ item, onDelete, onEdit }: { item: TierItem; onDelete: ()
               (e.target as HTMLImageElement).src = 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%231e293b" width="100" height="100"/><text x="50" y="55" text-anchor="middle" fill="%2364748b" font-size="30">?</text></svg>';
             }}
           />
-          <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 to-transparent p-1 pointer-events-none">
+          <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 to-transparent p-1 pointer-events-none">
             <p className="text-[10px] sm:text-xs text-white truncate text-center font-medium">{item.title}</p>
           </div>
         </>
@@ -85,7 +102,7 @@ function SortableItem({ item, onDelete, onEdit }: { item: TierItem; onDelete: ()
         onPointerDown={(e) => e.stopPropagation()}
         title="Edit item"
       >
-        ✏️
+        <Pencil className="w-3 h-3" />
       </button>
       <button
         onClick={(e) => { e.stopPropagation(); onDelete(); }}
@@ -126,7 +143,7 @@ function DroppableTier({
     <div className="flex rounded-xl overflow-hidden border border-surface-800 bg-surface-900/50 group/tier transition-all duration-200 hover:border-surface-700">
       {/* Tier Label */}
       <div
-        className="w-20 sm:w-28 flex-shrink-0 flex flex-col items-center justify-center gap-1 p-2 relative"
+        className="w-20 sm:w-28 shrink-0 flex flex-col items-center justify-center gap-1 p-2 relative"
         style={{ backgroundColor: tier.color + '30' }}
       >
         <input
@@ -150,7 +167,7 @@ function DroppableTier({
             className="w-5 h-5 rounded flex items-center justify-center text-red-400 hover:text-red-300 hover:bg-red-500/20 text-xs transition-colors"
             title="Delete tier"
           >
-            🗑
+            <Trash2 className="w-3.5 h-3.5" />
           </button>
         </div>
       </div>
@@ -174,6 +191,7 @@ function DroppableTier({
 
 // Droppable Unranked Pool
 function DroppableUnranked({ items, onDeleteItem, onEditItem, onAddItem }: { items: TierItem[], onDeleteItem: (itemId: string) => void, onEditItem: (itemId: string) => void, onAddItem: () => void }) {
+  const dict = useStore(editorDict);
   const itemIds = items.map(i => i.id);
   const { setNodeRef } = useDroppable({ id: 'unranked', data: { type: 'Container' } });
 
@@ -182,11 +200,11 @@ function DroppableUnranked({ items, onDeleteItem, onEditItem, onAddItem }: { ite
       <div className="bg-surface-800 border-b border-surface-700 p-3 flex justify-between items-center">
         <h3 className="font-bold text-surface-200 flex items-center gap-2">
           <svg className="w-5 h-5 text-surface-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 002-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
-          Item Bank (Unranked)
+          {dict.itemBank}
         </h3>
-        <button onClick={onAddItem} className="btn-primary py-1.5 text-sm">
-          + Upload Item
-        </button>
+        <Button size="sm" variant="primary" className="py-1.5 px-4 text-sm bg-accent-500 hover:bg-accent-600 font-bold text-white" onPress={onAddItem}>
+          {dict.uploadItem}
+        </Button>
       </div>
       <SortableContext items={itemIds} strategy={rectSortingStrategy}>
         <div ref={setNodeRef} className="p-4 min-h-[120px] flex flex-wrap gap-3 items-start">
@@ -200,8 +218,8 @@ function DroppableUnranked({ items, onDeleteItem, onEditItem, onAddItem }: { ite
           ))}
           {items.length === 0 && (
             <div className="w-full flex flex-col items-center justify-center py-8 text-surface-500 opacity-70">
-              <span className="text-3xl mb-2">📥</span>
-              <p>Upload items to start dragging them into tiers</p>
+              <Inbox className="w-8 h-8 mb-2 mx-auto" />
+              <p>{dict.uploadPrompt}</p>
             </div>
           )}
         </div>
@@ -211,6 +229,7 @@ function DroppableUnranked({ items, onDeleteItem, onEditItem, onAddItem }: { ite
 }
 
 export default function TierListEditor({ tiers, unrankedItems = [], onChange }: Props) {
+  const dict = useStore(editorDict);
   const [showItemForm, setShowItemForm] = useState<string | null>(null);
   const [editItem, setEditItem] = useState<TierItem | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -381,8 +400,10 @@ export default function TierListEditor({ tiers, unrankedItems = [], onChange }: 
           />
         ))}
 
-        <button
-          onClick={() => {
+        <Button
+          fullWidth
+          variant="outline"
+          onPress={() => {
             const colors = ['#FF7F7F', '#FFBF7F', '#FFDF7F', '#FFFF7F', '#BFFF7F', '#7FFF7F', '#7FFFFF', '#7F7FFF', '#FF7FFF'];
             const newTier: Tier = {
               id: crypto.randomUUID().slice(0, 8),
@@ -392,12 +413,12 @@ export default function TierListEditor({ tiers, unrankedItems = [], onChange }: 
             };
             onChange([...tiers, newTier], unrankedItems);
           }}
-          className="w-full py-3 rounded-xl border-2 border-dashed border-surface-700
+          className="w-full py-8 rounded-xl border-2 border-dashed border-surface-700
                      text-surface-500 hover:text-surface-300 hover:border-surface-500
                      hover:bg-surface-900/50 transition-all duration-200 text-sm font-medium"
         >
-          + Add Tier
-        </button>
+          {dict.addTier}
+        </Button>
 
         <DroppableUnranked 
           items={unrankedItems} 
