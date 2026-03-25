@@ -19,6 +19,7 @@
 
 - **No Sign-up Required:** Jump right in and create tier lists anonymously using a secure edit token system.
 - **Drag & Drop:** Fluid and native-feeling drag-and-drop interactions powered by `@dnd-kit`.
+- **Export as Image:** Download your finished tier list directly as a high-quality PNG.
 - **Hybrid Items:** Support for both Image Uploads (up to 5MB) and Text-Only items.
 - **Item Bank:** A dedicated staging area for your uploaded items before you rank them.
 - **Mobile Optimized:** Optimized touch sensors for effortless use on iPhones, iPads, and Android devices.
@@ -43,7 +44,6 @@
 - **Framework:** **Elysia.js** (High-performance web framework for Bun)
 - **Language:** TypeScript
 - **Database:** MongoDB (Native Mongoose ODM)
-- **Storage:** Local Disk Storage via `multer`
 
 ## 🚀 Quick Start (Local Development)
 

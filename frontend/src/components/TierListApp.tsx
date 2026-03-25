@@ -206,7 +206,7 @@ export default function TierListApp({ slug }: Props) {
                 placeholder="Tier List Title"
               />
             ) : (
-              <h1 className="text-2xl sm:text-3xl font-bold text-surface-100 break-words">{data.title}</h1>
+              <h1 className="text-2xl sm:text-3xl font-bold text-surface-100 wrap-break-word">{data.title}</h1>
             )}
             {!isOwner && (
               <p className="text-sm text-surface-500 mt-1 flex items-center justify-start gap-1">
