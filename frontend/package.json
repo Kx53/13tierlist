@@ -19,7 +19,7 @@
     "react-dom": "^19.0.0",
     "tailwindcss": "^4.1.0",
     "typescript": "^5.9.3",
-    "@astrojs/vercel": "^9.0.0"
+    "@astrojs/vercel": "^10.0.0"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
