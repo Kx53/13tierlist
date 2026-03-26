@@ -42,6 +42,7 @@
   --warning-foreground: oklch(21.03% 0.0059 78.22);
   --radius: 0.5rem;
   --field-radius: 0.5rem;
+  --font-sans: 'Inter', system-ui, sans-serif;
 }
 
 .dark,
@@ -77,6 +78,9 @@
   --surface-tertiary-foreground: oklch(99.11% 0.0000 302.93);
   --warning: oklch(82.03% 0.1388 82.23);
   --warning-foreground: oklch(21.03% 0.0059 82.23);
+  --radius: 0.5rem;
+  --field-radius: 0.5rem;
+  --font-sans: 'Inter', system-ui, sans-serif;
 }
 
 @theme {
