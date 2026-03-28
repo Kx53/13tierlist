@@ -44,13 +44,15 @@ const {
     ]}
   >
     <header class="sticky top-4 z-50 px-4 sm:px-6 lg:px-8">
-      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 simple-navbar-shell sm:px-5">
+      <div
+        class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 simple-navbar-shell sm:px-5"
+      >
         <a href="/" class="group flex items-center gap-3">
-          <div class="flex h-14 w-14 items-center justify-center rounded-full border border-border/80 bg-secondary/70 shadow-[0_12px_28px_-18px_rgba(127,240,236,0.7)]">
-            <img src="/favicon.svg" alt="Tierlist logo" class="h-8 w-8" />
-          </div>
-          <span class="text-lg font-black tracking-tight text-brand-300 sm:text-xl">
-            Tierlist
+          <img src="/favicon.svg" alt="Tierlist logo" class="h-10 w-10" />
+          <span
+            class="text-lg font-black tracking-tight text-brand-300 sm:text-xl"
+          >
+            TIERLIST
           </span>
         </a>
 
@@ -69,8 +71,7 @@ const {
               <path
                 fill-rule="evenodd"
                 d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                clip-rule="evenodd"
-              />
+                clip-rule="evenodd"></path>
             </svg>
             Create
           </a>
@@ -82,8 +83,10 @@ const {
       <slot />
     </main>
 
-    <footer class="mt-auto border-t border-border/40 bg-[#191b1c]">
-      <div class="mx-auto max-w-7xl px-4 py-6 text-center text-sm text-muted-foreground sm:px-6 lg:px-8">
+    <footer class="mt-auto border-t border-border/40 bg-surface-1">
+      <div
+        class="mx-auto max-w-7xl px-4 py-6 text-center text-sm text-muted-foreground sm:px-6 lg:px-8"
+      >
         <FooterText client:load /> &middot; 13TierList by 13room.space
       </div>
     </footer>

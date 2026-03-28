@@ -69,7 +69,7 @@ const TierListBoard = forwardRef<HTMLDivElement, Props>(function TierListBoard(
         {tiers.map((tier) => (
           <div
             key={tier.id}
-            className="flex overflow-hidden rounded-[24px] border border-border bg-card/75"
+            className="flex overflow-hidden rounded-3xl border border-border bg-card/75"
           >
             <div
               className="flex w-20 shrink-0 items-center justify-center p-2 text-center text-lg font-bold sm:w-28 sm:text-xl"
@@ -99,7 +99,9 @@ const TierListBoard = forwardRef<HTMLDivElement, Props>(function TierListBoard(
       {showUnranked && unrankedItems && unrankedItems.length > 0 ? (
         <div className="mt-8 overflow-hidden rounded-[28px] border border-border bg-card/80 shadow-[0_24px_80px_-36px_rgba(9,14,34,0.98)] backdrop-blur-xl">
           <div className="border-b border-border bg-secondary/70 p-4">
-            <h3 className="font-semibold text-foreground">Item Bank (Unranked)</h3>
+            <h3 className="font-semibold text-foreground">
+              Item Bank (Unranked)
+            </h3>
           </div>
           <div className="flex flex-wrap items-start gap-3 p-4">
             {unrankedItems.map((item) => (

@@ -228,17 +228,19 @@ export default function ItemForm({
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
-                  className={`flex h-36 w-full flex-col items-center justify-center rounded-[24px] border border-dashed transition-all duration-200 focus-visible:ring-2 focus-visible:ring-ring/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                  className={`flex h-36 w-full flex-col items-center justify-center rounded-3xl border border-dashed transition-all duration-200 focus-visible:ring-2 focus-visible:ring-ring/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
                     error
                       ? "border-destructive/50 bg-destructive/6 text-destructive"
                       : "border-border bg-secondary/40 text-muted-foreground hover:border-primary/35 hover:bg-secondary/65 hover:text-foreground"
                   }`}
                 >
                   <UploadCloud className="mb-2 h-8 w-8 opacity-70" />
-                  <span className="text-sm font-medium">{dict.clickUpload}</span>
+                  <span className="text-sm font-medium">
+                    {dict.clickUpload}
+                  </span>
                 </button>
               ) : (
-                <div className="relative flex justify-center rounded-[24px] border border-border bg-secondary/50 p-3">
+                <div className="relative flex justify-center rounded-3xl border border-border bg-secondary/50 p-3">
                   <img
                     src={previewUrl}
                     alt="Preview"

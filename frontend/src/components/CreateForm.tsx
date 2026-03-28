@@ -54,7 +54,7 @@ export default function CreateForm() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder={dict.namePlaceholder}
-          className="h-14 rounded-[24px] border-border/80 bg-[#1b1520]/70 text-base md:text-lg"
+          className="h-14 rounded-3xl border-border/80 bg-[#1b1520]/70 text-base md:text-lg"
           maxLength={200}
           autoFocus
           required

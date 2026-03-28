@@ -1,22 +1,32 @@
 import { useStore } from "@nanostores/react";
-import { ArrowRight, Image as ImageIcon, Link, MousePointer2 } from "lucide-react";
+import {
+  ArrowRight,
+  Image as ImageIcon,
+  Link,
+  MousePointer2,
+} from "lucide-react";
 import { i18n } from "@/lib/i18n";
+import { NoiseBackground } from "@/components/ui/noise-background";
 
 export const homeDict = i18n("home", {
   title: "Create & Share Tier Lists",
-  description: "Create beautiful image-based tier lists and share them with anyone",
+  description:
+    "Create beautiful image-based tier lists and share them with anyone",
   tag: "Free · No signup · Instant sharing",
   headline1: "Rank Everything",
-  headline2: "With Your Own Eye",
+  headline2: "With Your Own.",
   subtitle:
     "Build a tier list in seconds, drag items where they belong, and send one clean link when it is ready.",
   cta: "Create Tier List",
   feature1Title: "Drag & Drop",
-  feature1Desc: "Move items across tiers naturally and reorder them without friction.",
+  feature1Desc:
+    "Move items across tiers naturally and reorder them without friction.",
   feature2Title: "Instant Sharing",
-  feature2Desc: "Every board gets a link immediately, so you can send it as soon as it looks right.",
-  feature3Title: "Image-Based",
-  feature3Desc: "Use text or image items for games, food, anime, products, and anything else worth ranking.",
+  feature2Desc:
+    "Every board gets a link immediately, so you can send it as soon as it looks right.",
+  feature3Title: "Text & Image-Based",
+  feature3Desc:
+    "Use text or image items for games, food, anime, products, and anything else worth ranking.",
   sectionLabel: "Built for fast ranking",
   sectionTitle: "One editor. One link. One clean export.",
 });
@@ -42,9 +52,7 @@ export default function HomeHero() {
   ];
 
   return (
-    <div className="relative overflow-hidden px-2 py-10 sm:px-4 lg:px-6 lg:py-14">
-      <div className="pointer-events-none absolute -left-28 top-8 h-96 w-96 rounded-full bg-brand-500/10 blur-3xl" />
-      <div className="pointer-events-none absolute -right-24 top-0 h-80 w-80 rounded-full bg-mint-300/8 blur-3xl" />
+    <div className="px-2 py-10 sm:px-4 lg:px-6 lg:py-14">
       <section className="relative grid gap-14 lg:grid-cols-[minmax(0,1fr)_30rem] lg:items-center">
         <div className="max-w-3xl">
           <div className="mb-6 text-xs font-semibold uppercase tracking-[0.32em] text-brand-200/90">
@@ -62,10 +70,22 @@ export default function HomeHero() {
           </p>
 
           <div className="mt-10">
-            <a href="/create" className="noise-button inline-flex items-center gap-2">
-              <span className="relative z-10">{dict.cta}</span>
-              <ArrowRight className="relative z-10 h-4 w-4" />
-            </a>
+            <NoiseBackground
+              containerClassName="w-fit p-1.5 rounded-full"
+              gradientColors={[
+                "#d8a3f5", // brand-200
+                "#8c54fc", // brand-500
+                "#7ff0ec", // mint-300
+              ]}
+            >
+              <a
+                href="/create"
+                className="inline-flex h-full w-full cursor-pointer items-center gap-2 rounded-full bg-linear-to-r from-neutral-100 via-neutral-100 to-white px-6 py-3 text-black shadow-[0px_2px_0px_0px_var(--color-neutral-50)_inset,0px_0.5px_1px_0px_var(--color-neutral-400)] transition-all duration-100 active:scale-98 dark:from-black dark:via-black dark:to-neutral-900 dark:text-white dark:shadow-[0px_1px_0px_0px_var(--color-neutral-950)_inset,0px_1px_0px_0px_var(--color-neutral-800)]"
+              >
+                <span className="relative z-10 font-semibold">{dict.cta}</span>
+                <ArrowRight className="relative z-10 h-4 w-4" />
+              </a>
+            </NoiseBackground>
           </div>
         </div>
 
@@ -98,11 +118,14 @@ export default function HomeHero() {
             ].map((row) => (
               <div
                 key={row.label}
-                className="flex min-h-[5.5rem] overflow-hidden rounded-[26px] border border-border/80 bg-[#12091b]/78 backdrop-blur"
+                className="flex min-h-22 overflow-hidden rounded-[26px] border border-border/80 bg-[#12091b]/78 backdrop-blur"
               >
                 <div
                   className="flex w-24 shrink-0 items-center justify-center text-2xl font-black"
-                  style={{ backgroundColor: `${row.color}28`, color: row.color }}
+                  style={{
+                    backgroundColor: `${row.color}28`,
+                    color: row.color,
+                  }}
                 >
                   {row.label}
                 </div>
@@ -110,7 +133,7 @@ export default function HomeHero() {
                   {row.items.map((item) => (
                     <div
                       key={item}
-                      className="flex min-h-14 items-center justify-center rounded-[20px] border border-border/70 bg-[#191b1c]/70 px-4 text-center font-semibold text-foreground"
+                      className="flex min-h-14 items-center justify-center rounded-[20px] border border-border/70 bg-surface-1/70 px-4 text-center font-semibold text-foreground"
                     >
                       {item}
                     </div>
@@ -122,7 +145,7 @@ export default function HomeHero() {
         </div>
       </section>
 
-      <section className="border-t border-border/50 py-16">
+      <section className="py-18">
         <div className="mb-10 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <p className="text-xs uppercase tracking-[0.3em] text-brand-200/80">

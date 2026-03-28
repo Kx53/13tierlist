@@ -251,7 +251,7 @@ function DroppableTier({
   });
 
   return (
-    <div className="group/tier flex overflow-hidden rounded-[24px] border border-border bg-card/75 transition-all duration-200 hover:border-primary/25">
+    <div className="group/tier flex overflow-hidden rounded-3xl border border-border bg-card/75 transition-all duration-200 hover:border-primary/25">
       {/* Tier Label */}
       <div
         className="relative flex w-20 shrink-0 flex-col items-center justify-center gap-1 p-2 sm:w-28"
@@ -342,11 +342,7 @@ function DroppableUnranked({
           </svg>
           {dict.itemBank}
         </h3>
-        <Button
-          size="sm"
-          className="font-semibold"
-          onClick={onAddItem}
-        >
+        <Button size="sm" className="font-semibold" onClick={onAddItem}>
           {dict.uploadItem}
         </Button>
       </div>
@@ -589,7 +585,7 @@ export default function TierListEditor({
           onClick={() =>
             onChange([...tiers, createNewTier(tiers.length)], unrankedItems)
           }
-          className="w-full rounded-[24px] border-2 border-dashed border-border py-8 text-sm font-medium text-muted-foreground hover:border-primary/40 hover:bg-secondary/45 hover:text-foreground"
+          className="w-full rounded-3xl border-2 border-dashed border-border py-8 text-sm font-medium text-muted-foreground hover:border-primary/40 hover:bg-secondary/45 hover:text-foreground"
         >
           {dict.addTier}
         </Button>

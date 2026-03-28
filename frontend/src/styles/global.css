@@ -87,8 +87,16 @@
   body {
     @apply min-h-screen bg-background font-sans text-foreground antialiased;
     background-image:
-      radial-gradient(circle at top left, rgba(140, 84, 252, 0.12), transparent 28rem),
-      radial-gradient(circle at top right, rgba(127, 240, 236, 0.08), transparent 22rem),
+      radial-gradient(
+        circle at top left,
+        rgba(140, 84, 252, 0.12),
+        transparent 28rem
+      ),
+      radial-gradient(
+        circle at top right,
+        rgba(127, 240, 236, 0.08),
+        transparent 22rem
+      ),
       linear-gradient(180deg, rgba(241, 245, 248, 0.03), transparent 32rem);
   }
 
@@ -127,7 +135,7 @@
 }
 
 @utility surface-shell {
-  @apply rounded-[32px] border border-border/70 bg-card/78 shadow-[0_28px_96px_-42px_rgba(33,1,75,0.75)] backdrop-blur-xl;
+  @apply rounded-4xl border border-border/70 bg-card/78 shadow-[0_28px_96px_-42px_rgba(33,1,75,0.75)] backdrop-blur-xl;
 }
 
 @utility surface-panel {
@@ -135,21 +143,36 @@
 }
 
 @utility surface-panel-strong {
-  @apply rounded-[28px] border border-border bg-[#191b1c]/92 shadow-[0_32px_100px_-42px_rgba(4,15,15,0.98)];
+  @apply rounded-[28px] border border-border bg-surface-1/92 shadow-[0_32px_100px_-42px_rgba(4,15,15,0.98)];
 }
 
 @utility dotted-glow-background {
   background-color: #141b1e;
   background-image:
-    radial-gradient(circle at 16% 20%, rgba(140, 84, 252, 0.16), transparent 20rem),
-    radial-gradient(circle at 88% 8%, rgba(127, 240, 236, 0.12), transparent 18rem),
-    radial-gradient(circle at 50% 50%, rgba(241, 245, 248, 0.16) 1px, transparent 1px);
-  background-size: auto, auto, 22px 22px;
+    radial-gradient(
+      circle at 16% 20%,
+      rgba(140, 84, 252, 0.16),
+      transparent 20rem
+    ),
+    radial-gradient(
+      circle at 88% 8%,
+      rgba(127, 240, 236, 0.12),
+      transparent 18rem
+    ),
+    radial-gradient(
+      circle at 50% 50%,
+      rgba(241, 245, 248, 0.16) 1px,
+      transparent 1px
+    );
+  background-size:
+    auto,
+    auto,
+    22px 22px;
   background-position: center, center, center;
 }
 
 @utility simple-navbar-shell {
-  @apply rounded-full border border-border/80 bg-[#191b1c]/78 shadow-[0_20px_55px_-32px_rgba(33,1,75,0.9)] backdrop-blur-xl;
+  @apply rounded-full border border-border/80 bg-surface-1/78 shadow-[0_20px_55px_-32px_rgba(33,1,75,0.9)] backdrop-blur-xl;
 }
 
 @utility text-gradient-brand {
@@ -172,10 +195,25 @@
   opacity: 0.88;
   pointer-events: none;
   background:
-    radial-gradient(circle at 4% 16%, rgba(140, 84, 252, 0.24), transparent 18rem),
-    radial-gradient(circle at 96% 4%, rgba(127, 240, 236, 0.18), transparent 18rem),
-    radial-gradient(circle at center, rgba(241, 245, 248, 0.11) 1px, transparent 1px);
-  background-size: auto, auto, 22px 22px;
+    radial-gradient(
+      circle at 4% 16%,
+      rgba(140, 84, 252, 0.24),
+      transparent 18rem
+    ),
+    radial-gradient(
+      circle at 96% 4%,
+      rgba(127, 240, 236, 0.18),
+      transparent 18rem
+    ),
+    radial-gradient(
+      circle at center,
+      rgba(241, 245, 248, 0.11) 1px,
+      transparent 1px
+    );
+  background-size:
+    auto,
+    auto,
+    22px 22px;
   background-position: center, center, center;
   mask-image: linear-gradient(to bottom, white, rgba(255, 255, 255, 0.4));
 }
@@ -184,7 +222,11 @@
   @apply relative isolate overflow-hidden rounded-full border border-white/10 px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_22px_50px_-24px_rgba(140,84,252,0.78)] transition-transform duration-200 hover:-translate-y-0.5;
   background:
     linear-gradient(135deg, #a433d5 0%, #8c54fc 45%, #450591 100%),
-    radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.18), transparent 30%);
+    radial-gradient(
+      circle at 20% 20%,
+      rgba(255, 255, 255, 0.18),
+      transparent 30%
+    );
 }
 
 .noise-button::before {
