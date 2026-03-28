@@ -49,6 +49,8 @@ interface DraftData {
   unrankedItems?: TierItem[];
 }
 
+const EXPORT_BOARD_WIDTH = 1200;
+
 function sanitizeFilename(value: string) {
   const trimmed = value.trim();
 
@@ -312,7 +314,7 @@ export default function TierListApp({ slug }: Props) {
         aria-hidden="true"
         style={{ left: -10000, zIndex: -1 }}
       >
-        <div className="w-full max-w-300">
+        <div style={{ width: EXPORT_BOARD_WIDTH }}>
           <TierListBoard
             ref={exportRef}
             tiers={data.tiers}
