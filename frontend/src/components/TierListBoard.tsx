@@ -6,6 +6,7 @@ interface Props {
   unrankedItems?: TierItem[];
   imageLoading?: "eager" | "lazy";
   className?: string;
+  showUnranked?: boolean;
 }
 
 const fallbackImage =
@@ -30,6 +31,7 @@ function BoardItem({
             alt={item.title}
             className="w-full h-full object-cover"
             loading={imageLoading}
+            crossOrigin="anonymous"
             onError={(e) => {
               (e.target as HTMLImageElement).src = fallbackImage;
             }}
@@ -52,7 +54,13 @@ function BoardItem({
 }
 
 const TierListBoard = forwardRef<HTMLDivElement, Props>(function TierListBoard(
-  { tiers, unrankedItems, imageLoading = "lazy", className = "" },
+  {
+    tiers,
+    unrankedItems,
+    imageLoading = "lazy",
+    className = "",
+    showUnranked = true,
+  },
   ref,
 ) {
   return (
@@ -91,7 +99,7 @@ const TierListBoard = forwardRef<HTMLDivElement, Props>(function TierListBoard(
         ))}
       </div>
 
-      {unrankedItems && unrankedItems.length > 0 && (
+      {showUnranked && unrankedItems && unrankedItems.length > 0 && (
         <div className="mt-8 rounded-xl border border-surface-700 bg-surface-800/50 overflow-hidden">
           <div className="bg-surface-800 border-b border-surface-700 p-3">
             <h3 className="font-bold text-surface-200">Item Bank (Unranked)</h3>

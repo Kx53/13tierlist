@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { toPng } from "html-to-image";
 import { getTierList, updateTierList } from "@/lib/api";
 import { SearchX, Eye, Download, Check } from "lucide-react";
 import {
@@ -15,7 +16,6 @@ import type { TierListData, Tier, TierItem } from "@/lib/api";
 import { useStore } from "@nanostores/react";
 import { i18n } from "@/lib/i18n";
 import { Button, Card } from "@heroui/react";
-import html2canvas from "html2canvas";
 
 export const appEditorDict = i18n("editor", {
   viewOnly: "View only",
@@ -26,8 +26,7 @@ export const appEditorDict = i18n("editor", {
   saving: "Saving",
   saved: "✓ Saved",
   error: "✕ Error",
-  exportError:
-    "Couldn't generate the PNG. Please wait for images to finish loading and try again.",
+  exportError: "Couldn't generate the PNG. Please try again.",
   addTier: "+ Add Tier",
   itemBank: "Item Bank (Unranked)",
   uploadItem: "+ Upload Item",
@@ -48,42 +47,6 @@ interface DraftData {
   title?: string;
   tiers?: Tier[];
   unrankedItems?: TierItem[];
-}
-
-async function waitForExportAssets(element: HTMLElement) {
-  if ("fonts" in document) {
-    await (document as Document & { fonts: FontFaceSet }).fonts.ready;
-  }
-
-  const images = Array.from(element.querySelectorAll("img"));
-
-  await Promise.all(
-    images.map(async (image) => {
-      if (!image.currentSrc && !image.src) return;
-
-      if (image.complete && image.naturalWidth > 0) {
-        if ("decode" in image) {
-          try {
-            await image.decode();
-          } catch {
-            // Allow html2canvas to render the current image state.
-          }
-        }
-        return;
-      }
-
-      await new Promise<void>((resolve) => {
-        const done = () => {
-          image.removeEventListener("load", done);
-          image.removeEventListener("error", done);
-          resolve();
-        };
-
-        image.addEventListener("load", done, { once: true });
-        image.addEventListener("error", done, { once: true });
-      });
-    }),
-  );
 }
 
 function sanitizeFilename(value: string) {
@@ -125,43 +88,20 @@ export default function TierListApp({ slug }: Props) {
     setExportError("");
 
     try {
-      await waitForExportAssets(targetElement);
-
-      const canvas = await html2canvas(targetElement, {
-        useCORS: true,
-        allowTaint: false,
+      const dataUrl = await toPng(targetElement, {
+        cacheBust: true,
         backgroundColor: "#020617",
-        scale: 2,
-        imageTimeout: 15000,
-        logging: false,
-        removeContainer: true,
-        width: targetElement.scrollWidth,
-        height: targetElement.scrollHeight,
-        windowWidth: targetElement.scrollWidth,
-        windowHeight: targetElement.scrollHeight,
+        pixelRatio: 2,
       });
 
-      const blob = await new Promise<Blob>((resolve, reject) => {
-        canvas.toBlob((value) => {
-          if (value) {
-            resolve(value);
-            return;
-          }
-
-          reject(new Error("Failed to generate PNG blob from canvas."));
-        }, "image/png");
-      });
-
-      const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.download = `${sanitizeFilename(data.title)}.png`;
-      link.href = url;
+      link.href = dataUrl;
       document.body.appendChild(link);
       link.click();
 
       setTimeout(() => {
         document.body.removeChild(link);
-        URL.revokeObjectURL(url);
       }, 100);
     } catch (err) {
       console.error("Failed to export image:", err);
@@ -376,7 +316,7 @@ export default function TierListApp({ slug }: Props) {
           <TierListBoard
             ref={exportRef}
             tiers={data.tiers}
-            unrankedItems={unrankedItems}
+            showUnranked={false}
             imageLoading="eager"
             className="space-y-2"
           />
