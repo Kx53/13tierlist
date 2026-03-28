@@ -9,9 +9,13 @@ export const footerDict = i18n('footer', {
 
 export default function FooterText() {
   const dict = useStore(footerDict);
+
   return (
     <>
-      {dict.builtWith} <Heart className="w-4 h-4 inline-block text-red-500 mx-1 mb-0.5 fill-current" /> {dict.by} <a
+      {dict.builtWith}{" "}
+      <Heart className="w-4 h-4 inline-block text-red-500 mx-1 mb-0.5 fill-current" />{" "}
+      {dict.by}{" "}
+      <a
         href="https://github.com/Kx53"
         target="_blank"
         rel="noopener noreferrer"

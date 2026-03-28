@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { getTierList, updateTierList } from "@/lib/api";
 import { SearchX, Eye, Download, Check } from "lucide-react";
 import {
@@ -44,6 +44,61 @@ interface Props {
   slug: string;
 }
 
+interface DraftData {
+  title?: string;
+  tiers?: Tier[];
+  unrankedItems?: TierItem[];
+}
+
+async function waitForExportAssets(element: HTMLElement) {
+  if ("fonts" in document) {
+    await (document as Document & { fonts: FontFaceSet }).fonts.ready;
+  }
+
+  const images = Array.from(element.querySelectorAll("img"));
+
+  await Promise.all(
+    images.map(async (image) => {
+      if (!image.currentSrc && !image.src) return;
+
+      if (image.complete && image.naturalWidth > 0) {
+        if ("decode" in image) {
+          try {
+            await image.decode();
+          } catch {
+            // Allow html2canvas to render the current image state.
+          }
+        }
+        return;
+      }
+
+      await new Promise<void>((resolve) => {
+        const done = () => {
+          image.removeEventListener("load", done);
+          image.removeEventListener("error", done);
+          resolve();
+        };
+
+        image.addEventListener("load", done, { once: true });
+        image.addEventListener("error", done, { once: true });
+      });
+    }),
+  );
+}
+
+function sanitizeFilename(value: string) {
+  const trimmed = value.trim();
+
+  if (!trimmed) {
+    return "tier-list";
+  }
+
+  return trimmed
+    .replace(/[\\/:*?"<>|]+/g, "-")
+    .replace(/\s+/g, " ")
+    .slice(0, 100);
+}
+
 export default function TierListApp({ slug }: Props) {
   const editorTexts = useStore(appEditorDict);
   const draftTexts = useStore(draftDict);
@@ -56,57 +111,11 @@ export default function TierListApp({ slug }: Props) {
     "idle",
   );
   const [showDraftRestore, setShowDraftRestore] = useState(false);
-  const draftRef = useRef<unknown>(null);
+  const draftRef = useRef<DraftData | null>(null);
   const exportRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState("");
-
   const [copied, setCopied] = useState(false);
-
-  const waitForExportAssets = useCallback(async (element: HTMLElement) => {
-    if ("fonts" in document) {
-      await (document as Document & { fonts: FontFaceSet }).fonts.ready;
-    }
-
-    const images = Array.from(element.querySelectorAll("img"));
-    await Promise.all(
-      images.map(async (image) => {
-        if (!image.currentSrc && !image.src) return;
-
-        if (image.complete && image.naturalWidth > 0) {
-          if ("decode" in image) {
-            try {
-              await image.decode();
-            } catch {
-              // Ignore decode failures and allow html2canvas to render current image state.
-            }
-          }
-          return;
-        }
-
-        await new Promise<void>((resolve) => {
-          const done = () => {
-            image.removeEventListener("load", done);
-            image.removeEventListener("error", done);
-            resolve();
-          };
-
-          image.addEventListener("load", done, { once: true });
-          image.addEventListener("error", done, { once: true });
-        });
-      }),
-    );
-  }, []);
-
-  const sanitizeFilename = useCallback((value: string) => {
-    const trimmed = value.trim();
-    if (!trimmed) return "tier-list";
-
-    return trimmed
-      .replace(/[\\/:*?"<>|]+/g, "-")
-      .replace(/\s+/g, " ")
-      .slice(0, 100);
-  }, []);
 
   const handleExport = async () => {
     const targetElement = exportRef.current;
@@ -163,36 +172,50 @@ export default function TierListApp({ slug }: Props) {
   };
 
   useEffect(() => {
-    const fetchData = async () => {
+    let isMounted = true;
+
+    async function loadTierList() {
       try {
         const tierList = await getTierList(slug);
-        setData(tierList);
-        setIsOwner(hasToken(slug));
+        const ownsTierList = hasToken(slug);
+        const draft = ownsTierList
+          ? (getDraft(slug) as DraftData | null)
+          : null;
 
-        // Check for draft
-        const draft = getDraft(slug);
-        if (draft && hasToken(slug)) {
-          draftRef.current = draft;
-          setShowDraftRestore(true);
+        if (!isMounted) {
+          return;
         }
+
+        setData(tierList);
+        setIsOwner(ownsTierList);
+        draftRef.current = draft;
+        setShowDraftRestore(Boolean(draft));
       } catch (err) {
+        if (!isMounted) {
+          return;
+        }
+
         setError(
           err instanceof Error ? err.message : "Failed to load tier list",
         );
       } finally {
-        setLoading(false);
+        if (isMounted) {
+          setLoading(false);
+        }
       }
+    }
+
+    loadTierList();
+
+    return () => {
+      isMounted = false;
     };
-    fetchData();
   }, [slug]);
 
   const handleRestoreDraft = () => {
     if (draftRef.current && data) {
-      const draft = draftRef.current as {
-        title?: string;
-        tiers?: Tier[];
-        unrankedItems?: TierItem[];
-      };
+      const draft = draftRef.current;
+
       setData({
         ...data,
         title: draft.title || data.title,
@@ -208,16 +231,15 @@ export default function TierListApp({ slug }: Props) {
     setShowDraftRestore(false);
   };
 
-  const handleChange = useCallback(
-    (title: string, tiers: Tier[], unrankedItems?: TierItem[]) => {
-      setData((prev) =>
-        prev ? { ...prev, title, tiers, unrankedItems } : prev,
-      );
-      saveDraft(slug, { title, tiers, unrankedItems });
-      setSaveStatus("idle");
-    },
-    [slug],
-  );
+  const handleChange = (
+    title: string,
+    tiers: Tier[],
+    unrankedItems?: TierItem[],
+  ) => {
+    setData((prev) => (prev ? { ...prev, title, tiers, unrankedItems } : prev));
+    saveDraft(slug, { title, tiers, unrankedItems });
+    setSaveStatus("idle");
+  };
 
   const handleSave = async () => {
     if (!data) return;
@@ -244,12 +266,19 @@ export default function TierListApp({ slug }: Props) {
   };
 
   const shareUrl =
-    typeof window !== "undefined"
-      ? `${window.location.origin}/list/${slug}`
-      : "";
+    typeof window === "undefined"
+      ? ""
+      : `${window.location.origin}/list/${slug}`;
+  const saveButtonText =
+    saveStatus === "saved"
+      ? editorTexts.saved
+      : saveStatus === "error"
+        ? editorTexts.error
+        : editorTexts.save;
+  const unrankedItems = data?.unrankedItems || [];
 
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(shareUrl);
+    void navigator.clipboard.writeText(shareUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -343,11 +372,11 @@ export default function TierListApp({ slug }: Props) {
         aria-hidden="true"
         style={{ left: -10000, zIndex: -1 }}
       >
-        <div className="w-full max-w-[1200px]">
+        <div className="w-full max-w-300">
           <TierListBoard
             ref={exportRef}
             tiers={data.tiers}
-            unrankedItems={data.unrankedItems || []}
+            unrankedItems={unrankedItems}
             imageLoading="eager"
             className="space-y-2"
           />
@@ -364,7 +393,7 @@ export default function TierListApp({ slug }: Props) {
                 type="text"
                 value={data.title}
                 onChange={(e) =>
-                  handleChange(e.target.value, data.tiers, data.unrankedItems)
+                  handleChange(e.target.value, data.tiers, unrankedItems)
                 }
                 className="text-2xl sm:text-3xl font-bold bg-transparent border-none outline-none text-surface-100 w-full
                            focus:ring-0 placeholder-surface-600"
@@ -438,11 +467,7 @@ export default function TierListApp({ slug }: Props) {
                 isDisabled={saving}
                 isPending={saving}
               >
-                {saveStatus === "saved"
-                  ? editorTexts.saved
-                  : saveStatus === "error"
-                    ? editorTexts.error
-                    : editorTexts.save}
+                {saveButtonText}
               </Button>
             )}
           </div>
@@ -452,17 +477,13 @@ export default function TierListApp({ slug }: Props) {
         {isOwner ? (
           <TierListEditor
             tiers={data.tiers}
-            unrankedItems={data.unrankedItems || []}
-            onChange={(tiers, unrankedItems) =>
-              handleChange(data.title, tiers, unrankedItems)
+            unrankedItems={unrankedItems}
+            onChange={(tiers, nextUnrankedItems) =>
+              handleChange(data.title, tiers, nextUnrankedItems)
             }
-            slug={slug}
           />
         ) : (
-          <TierListViewer
-            tiers={data.tiers}
-            unrankedItems={data.unrankedItems || []}
-          />
+          <TierListViewer tiers={data.tiers} unrankedItems={unrankedItems} />
         )}
       </div>
     </div>

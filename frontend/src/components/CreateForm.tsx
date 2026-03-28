@@ -19,16 +19,17 @@ export default function CreateForm() {
   const [title, setTitle] = useState('');
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+  const trimmedTitle = title.trim();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (!title.trim()) return;
+    if (!trimmedTitle) return;
 
     setLoading(true);
     setError('');
 
     try {
-      const { slug, editToken } = await createTierList(title.trim());
+      const { slug, editToken } = await createTierList(trimmedTitle);
       saveToken(slug, editToken);
       window.location.href = `/list/${slug}`;
     } catch (err) {
@@ -69,7 +70,7 @@ export default function CreateForm() {
         type="submit"
         size="lg"
         className="w-full py-6 text-base rounded-xl font-bold bg-accent-500 hover:bg-accent-600 text-white shadow-lg shadow-accent-500/25 border-none"
-        isDisabled={!title.trim()}
+        isDisabled={!trimmedTitle}
         isPending={loading}
       >
         {loading ? dict.btnCreating : dict.btn}

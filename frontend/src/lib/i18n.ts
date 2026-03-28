@@ -1,5 +1,5 @@
 import { atom } from "nanostores";
-import { createI18n, localeFrom } from "@nanostores/i18n";
+import { createI18n } from "@nanostores/i18n";
 
 // Available locales
 export const locale = atom<"en" | "th">("en");

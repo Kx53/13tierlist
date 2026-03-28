@@ -45,7 +45,93 @@ interface Props {
   tiers: Tier[];
   unrankedItems?: TierItem[];
   onChange: (tiers: Tier[], unrankedItems?: TierItem[]) => void;
-  slug: string;
+}
+
+const TIER_COLORS = [
+  "#FF7F7F",
+  "#FFBF7F",
+  "#FFDF7F",
+  "#FFFF7F",
+  "#BFFF7F",
+  "#7FFF7F",
+  "#7FFFFF",
+  "#7F7FFF",
+  "#FF7FFF",
+];
+
+function findContainerByItemId(
+  itemId: string,
+  tiers: Tier[],
+  unrankedItems: TierItem[],
+) {
+  if (unrankedItems.some((item) => item.id === itemId)) {
+    return "unranked";
+  }
+
+  const tier = tiers.find((currentTier) =>
+    currentTier.items.some((item) => item.id === itemId),
+  );
+
+  return tier ? tier.id : null;
+}
+
+function getContainerItems(
+  containerId: string,
+  tiers: Tier[],
+  unrankedItems: TierItem[],
+) {
+  if (containerId === "unranked") {
+    return unrankedItems;
+  }
+
+  return tiers.find((tier) => tier.id === containerId)?.items || [];
+}
+
+function updateTierItems(tiers: Tier[], tierId: string, items: TierItem[]) {
+  return tiers.map((tier) => (tier.id === tierId ? { ...tier, items } : tier));
+}
+
+function updateTierValue(
+  tiers: Tier[],
+  tierId: string,
+  changes: Partial<Pick<Tier, "label" | "color">>,
+) {
+  return tiers.map((tier) =>
+    tier.id === tierId ? { ...tier, ...changes } : tier,
+  );
+}
+
+function removeItemFromTiers(tiers: Tier[], itemId: string) {
+  return tiers.map((tier) => ({
+    ...tier,
+    items: tier.items.filter((item) => item.id !== itemId),
+  }));
+}
+
+function updateItemInTiers(
+  tiers: Tier[],
+  tierId: string,
+  updatedItem: TierItem,
+) {
+  return tiers.map((tier) =>
+    tier.id === tierId
+      ? {
+          ...tier,
+          items: tier.items.map((item) =>
+            item.id === updatedItem.id ? updatedItem : item,
+          ),
+        }
+      : tier,
+  );
+}
+
+function createNewTier(tierCount: number): Tier {
+  return {
+    id: crypto.randomUUID().slice(0, 8),
+    label: "New",
+    color: TIER_COLORS[tierCount % TIER_COLORS.length],
+    items: [],
+  };
 }
 
 // Sortable Item component
@@ -201,7 +287,7 @@ function DroppableTier({
       <SortableContext items={itemIds} strategy={rectSortingStrategy}>
         <div
           ref={setNodeRef}
-          className="flex-1 flex flex-wrap gap-2 p-2 min-h-[80px] items-start"
+          className="flex-1 flex flex-wrap gap-2 p-2 min-h-20 items-start"
           data-tier-id={tier.id}
         >
           {tier.items.map((item) => (
@@ -268,7 +354,7 @@ function DroppableUnranked({
       <SortableContext items={itemIds} strategy={rectSortingStrategy}>
         <div
           ref={setNodeRef}
-          className="p-4 min-h-[120px] flex flex-wrap gap-3 items-start"
+          className="p-4 min-h-30 flex flex-wrap gap-3 items-start"
         >
           {items.map((item) => (
             <SortableItem
@@ -317,16 +403,7 @@ export default function TierListEditor({
     duration: 150,
   };
 
-  const findContainerByItemId = (itemId: string): string | null => {
-    if (unrankedItems.some((i) => i.id === itemId)) return "unranked";
-    const tier = tiers.find((t) => t.items.some((i) => i.id === itemId));
-    return tier ? tier.id : null;
-  };
-
-  const getContainerItems = (containerId: string): TierItem[] => {
-    if (containerId === "unranked") return unrankedItems;
-    return tiers.find((t) => t.id === containerId)?.items || [];
-  };
+  const allItems = [...unrankedItems, ...tiers.flatMap((tier) => tier.items)];
 
   const handleDragStart = (event: DragStartEvent) => {
     setActiveId(event.active.id as string);
@@ -339,21 +416,27 @@ export default function TierListEditor({
     // Drop outside or on active item
     if (!over || active.id === over.id) return;
 
-    const activeContainerId = findContainerByItemId(active.id as string);
+    const activeContainerId = findContainerByItemId(
+      active.id as string,
+      tiers,
+      unrankedItems,
+    );
     // Find if over a container or another item
     const overContainerId =
       over.data.current?.type === "Container"
         ? (over.id as string)
-        : findContainerByItemId(over.id as string);
+        : findContainerByItemId(over.id as string, tiers, unrankedItems);
 
     if (!activeContainerId || !overContainerId) return;
 
-    const newTiers = [...tiers];
+    let newTiers = [...tiers];
     let newUnranked = [...unrankedItems];
 
     if (activeContainerId === overContainerId) {
       // Reordering within the same container
-      const items = [...getContainerItems(activeContainerId)];
+      const items = [
+        ...getContainerItems(activeContainerId, tiers, unrankedItems),
+      ];
       const oldIndex = items.findIndex((i) => i.id === active.id);
       let newIndex = items.findIndex((i) => i.id === over.id);
       if (newIndex === -1) newIndex = items.length; // Drop on empty container space
@@ -363,22 +446,26 @@ export default function TierListEditor({
       if (activeContainerId === "unranked") {
         newUnranked = movedItems;
       } else {
-        const tierIndex = newTiers.findIndex((t) => t.id === activeContainerId);
-        if (tierIndex !== -1)
-          newTiers[tierIndex] = { ...newTiers[tierIndex], items: movedItems };
+        newTiers = updateTierItems(newTiers, activeContainerId, movedItems);
       }
     } else {
       // Moving between containers
-      let activeItems = [...getContainerItems(activeContainerId)];
-      let overItems = [...getContainerItems(overContainerId)];
+      let activeItems = [
+        ...getContainerItems(activeContainerId, tiers, unrankedItems),
+      ];
+      let overItems = [
+        ...getContainerItems(overContainerId, tiers, unrankedItems),
+      ];
 
-      const itemTomove = activeItems.find((i) => i.id === active.id)!;
+      const itemToMove = activeItems.find((i) => i.id === active.id);
+      if (!itemToMove) return;
+
       activeItems = activeItems.filter((i) => i.id !== active.id);
 
       let insertIndex = overItems.findIndex((i) => i.id === over.id);
       if (insertIndex === -1) insertIndex = overItems.length;
 
-      overItems.splice(insertIndex, 0, itemTomove);
+      overItems.splice(insertIndex, 0, itemToMove);
 
       // Apply updates to the source and destination containers
       [
@@ -388,9 +475,7 @@ export default function TierListEditor({
         if (id === "unranked") {
           newUnranked = items;
         } else {
-          const tierIndex = newTiers.findIndex((t) => t.id === id);
-          if (tierIndex !== -1)
-            newTiers[tierIndex] = { ...newTiers[tierIndex], items };
+          newTiers = updateTierItems(newTiers, id, items);
         }
       });
     }
@@ -399,25 +484,19 @@ export default function TierListEditor({
   };
 
   const handleDeleteItem = (itemId: string) => {
-    const isUnranked = unrankedItems.some((i) => i.id === itemId);
-    if (isUnranked) {
+    if (unrankedItems.some((item) => item.id === itemId)) {
       onChange(
         tiers,
-        unrankedItems.filter((i) => i.id !== itemId),
+        unrankedItems.filter((item) => item.id !== itemId),
       );
-    } else {
-      const newTiers = tiers.map((tier) => ({
-        ...tier,
-        items: tier.items.filter((item) => item.id !== itemId),
-      }));
-      onChange(newTiers, unrankedItems);
+      return;
     }
+
+    onChange(removeItemFromTiers(tiers, itemId), unrankedItems);
   };
 
   const handleEditItemClick = (itemId: string) => {
-    const item = [...unrankedItems, ...tiers.flatMap((t) => t.items)].find(
-      (i) => i.id === itemId,
-    );
+    const item = allItems.find((currentItem) => currentItem.id === itemId);
     if (item) setEditItem(item);
   };
 
@@ -437,22 +516,12 @@ export default function TierListEditor({
       if (tierId === "unranked") {
         onChange(
           tiers,
-          unrankedItems.map((i) => (i.id === editItem.id ? updatedItem : i)),
+          unrankedItems.map((item) =>
+            item.id === editItem.id ? updatedItem : item,
+          ),
         );
       } else {
-        onChange(
-          tiers.map((t) =>
-            t.id === tierId
-              ? {
-                  ...t,
-                  items: t.items.map((i) =>
-                    i.id === editItem.id ? updatedItem : i,
-                  ),
-                }
-              : t,
-          ),
-          unrankedItems,
-        );
+        onChange(updateItemInTiers(tiers, tierId, updatedItem), unrankedItems);
       }
       setEditItem(null);
     } else {
@@ -475,9 +544,7 @@ export default function TierListEditor({
   };
 
   const activeItem = activeId
-    ? [...unrankedItems, ...tiers.flatMap((t) => t.items)].find(
-        (i) => i.id === activeId,
-      )
+    ? allItems.find((item) => item.id === activeId)
     : null;
 
   return (
@@ -497,13 +564,13 @@ export default function TierListEditor({
               onEditItem={handleEditItemClick}
               onLabelChange={(label) =>
                 onChange(
-                  tiers.map((t) => (t.id === tier.id ? { ...t, label } : t)),
+                  updateTierValue(tiers, tier.id, { label }),
                   unrankedItems,
                 )
               }
               onColorChange={(color) =>
                 onChange(
-                  tiers.map((t) => (t.id === tier.id ? { ...t, color } : t)),
+                  updateTierValue(tiers, tier.id, { color }),
                   unrankedItems,
                 )
               }
@@ -521,26 +588,9 @@ export default function TierListEditor({
         <Button
           fullWidth
           variant="outline"
-          onPress={() => {
-            const colors = [
-              "#FF7F7F",
-              "#FFBF7F",
-              "#FFDF7F",
-              "#FFFF7F",
-              "#BFFF7F",
-              "#7FFF7F",
-              "#7FFFFF",
-              "#7F7FFF",
-              "#FF7FFF",
-            ];
-            const newTier: Tier = {
-              id: crypto.randomUUID().slice(0, 8),
-              label: "New",
-              color: colors[tiers.length % colors.length],
-              items: [],
-            };
-            onChange([...tiers, newTier], unrankedItems);
-          }}
+          onPress={() =>
+            onChange([...tiers, createNewTier(tiers.length)], unrankedItems)
+          }
           className="w-full py-8 rounded-xl border-2 border-dashed border-surface-700
                      text-surface-500 hover:text-surface-300 hover:border-surface-500
                      hover:bg-surface-900/50 transition-all duration-200 text-sm font-medium"
@@ -579,7 +629,9 @@ export default function TierListEditor({
         <ItemForm
           tierId={
             (showItemForm ||
-              (editItem ? findContainerByItemId(editItem.id) : null)) as string
+              (editItem
+                ? findContainerByItemId(editItem.id, tiers, unrankedItems)
+                : null)) as string
           }
           initialItem={editItem || undefined}
           onSubmit={handleSubmitItem}

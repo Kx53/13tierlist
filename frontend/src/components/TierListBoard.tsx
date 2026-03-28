@@ -73,7 +73,7 @@ const TierListBoard = forwardRef<HTMLDivElement, Props>(function TierListBoard(
               {tier.label}
             </div>
 
-            <div className="flex-1 flex flex-wrap gap-2 p-2 min-h-[80px] items-start">
+            <div className="flex-1 flex flex-wrap gap-2 p-2 min-h-20 items-start">
               {tier.items.map((item) => (
                 <BoardItem
                   key={item.id}
@@ -82,7 +82,7 @@ const TierListBoard = forwardRef<HTMLDivElement, Props>(function TierListBoard(
                 />
               ))}
               {tier.items.length === 0 && (
-                <div className="flex items-center justify-center w-full text-surface-600 text-sm min-h-[64px]">
+                <div className="flex items-center justify-center w-full text-surface-600 text-sm min-h-16">
                   Empty
                 </div>
               )}
