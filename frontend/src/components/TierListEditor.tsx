@@ -26,7 +26,7 @@ import type { Tier, TierItem } from "@/lib/api";
 import ItemForm from "@/components/ItemForm";
 import { useStore } from "@nanostores/react";
 import { i18n } from "@/lib/i18n";
-import { Button } from "@heroui/react";
+import { Button } from "@/components/ui/button";
 
 export const editorDict = i18n("editor", {
   viewOnly: "View only",
@@ -168,9 +168,9 @@ function SortableItem({
       style={style}
       {...attributes}
       {...listeners}
-      className={`group relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden cursor-grab active:cursor-grabbing touch-none select-none
-                 border-2 ${isDragging ? "border-accent-500 shadow-xl" : "border-surface-700 hover:border-accent-500/50"} 
-                 bg-surface-800 transition-all duration-200`}
+      className={`group relative h-16 w-16 touch-none select-none overflow-hidden rounded-2xl border cursor-grab active:cursor-grabbing sm:h-20 sm:w-20
+                 ${isDragging ? "border-primary shadow-[0_16px_40px_-24px_rgba(76,92,255,0.95)]" : "border-border hover:border-primary/50"}
+                 bg-secondary transition-all duration-200`}
     >
       {item.imageUrl ? (
         <>
@@ -191,7 +191,7 @@ function SortableItem({
           </div>
         </>
       ) : (
-        <div className="w-full h-full flex flex-col items-center justify-center p-1 bg-surface-700 pointer-events-none">
+        <div className="pointer-events-none flex h-full w-full flex-col items-center justify-center bg-surface-3 p-1">
           <p className="text-[10px] sm:text-xs text-center font-bold text-white overflow-hidden text-ellipsis line-clamp-3 w-full px-1 leading-tight">
             {item.title}
           </p>
@@ -251,10 +251,10 @@ function DroppableTier({
   });
 
   return (
-    <div className="flex rounded-xl overflow-hidden border border-surface-800 bg-surface-900/50 group/tier transition-all duration-200 hover:border-surface-700">
+    <div className="group/tier flex overflow-hidden rounded-[24px] border border-border bg-card/75 transition-all duration-200 hover:border-primary/25">
       {/* Tier Label */}
       <div
-        className="w-20 sm:w-28 shrink-0 flex flex-col items-center justify-center gap-1 p-2 relative"
+        className="relative flex w-20 shrink-0 flex-col items-center justify-center gap-1 p-2 sm:w-28"
         style={{ backgroundColor: tier.color + "30" }}
       >
         <input
@@ -287,7 +287,7 @@ function DroppableTier({
       <SortableContext items={itemIds} strategy={rectSortingStrategy}>
         <div
           ref={setNodeRef}
-          className="flex-1 flex flex-wrap gap-2 p-2 min-h-20 items-start"
+          className="flex min-h-20 flex-1 flex-wrap items-start gap-2 p-2"
           data-tier-id={tier.id}
         >
           {tier.items.map((item) => (
@@ -324,11 +324,11 @@ function DroppableUnranked({
   });
 
   return (
-    <div className="mt-8 rounded-xl border border-surface-700 bg-surface-800/50 overflow-hidden">
-      <div className="bg-surface-800 border-b border-surface-700 p-3 flex justify-between items-center">
-        <h3 className="font-bold text-surface-200 flex items-center gap-2">
+    <div className="mt-8 overflow-hidden rounded-[28px] border border-border bg-card/80 shadow-[0_24px_80px_-36px_rgba(9,14,34,0.98)] backdrop-blur-xl">
+      <div className="flex items-center justify-between border-b border-border bg-secondary/70 p-4">
+        <h3 className="flex items-center gap-2 font-semibold text-foreground">
           <svg
-            className="w-5 h-5 text-surface-400"
+            className="h-5 w-5 text-muted-foreground"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -344,9 +344,8 @@ function DroppableUnranked({
         </h3>
         <Button
           size="sm"
-          variant="primary"
-          className="py-1.5 px-4 text-sm bg-accent-500 hover:bg-accent-600 font-bold text-white"
-          onPress={onAddItem}
+          className="font-semibold"
+          onClick={onAddItem}
         >
           {dict.uploadItem}
         </Button>
@@ -354,7 +353,7 @@ function DroppableUnranked({
       <SortableContext items={itemIds} strategy={rectSortingStrategy}>
         <div
           ref={setNodeRef}
-          className="p-4 min-h-30 flex flex-wrap gap-3 items-start"
+          className="flex min-h-30 flex-wrap items-start gap-3 p-4"
         >
           {items.map((item) => (
             <SortableItem
@@ -365,7 +364,7 @@ function DroppableUnranked({
             />
           ))}
           {items.length === 0 && (
-            <div className="w-full flex flex-col items-center justify-center py-8 text-surface-500 opacity-70">
+            <div className="flex w-full flex-col items-center justify-center py-8 text-muted-foreground opacity-70">
               <Inbox className="w-8 h-8 mb-2 mx-auto" />
               <p>{dict.uploadPrompt}</p>
             </div>
@@ -555,7 +554,7 @@ export default function TierListEditor({
         onDragStart={handleDragStart}
         onDragEnd={handleDragEnd}
       >
-        <div className="flex flex-col gap-2 bg-surface-950 pb-2 rounded-xl">
+        <div className="flex flex-col gap-2 rounded-xl bg-background/30 pb-2">
           {tiers.map((tier) => (
             <DroppableTier
               key={tier.id}
@@ -586,14 +585,11 @@ export default function TierListEditor({
         </div>
 
         <Button
-          fullWidth
           variant="outline"
-          onPress={() =>
+          onClick={() =>
             onChange([...tiers, createNewTier(tiers.length)], unrankedItems)
           }
-          className="w-full py-8 rounded-xl border-2 border-dashed border-surface-700
-                     text-surface-500 hover:text-surface-300 hover:border-surface-500
-                     hover:bg-surface-900/50 transition-all duration-200 text-sm font-medium"
+          className="w-full rounded-[24px] border-2 border-dashed border-border py-8 text-sm font-medium text-muted-foreground hover:border-primary/40 hover:bg-secondary/45 hover:text-foreground"
         >
           {dict.addTier}
         </Button>
@@ -607,7 +603,7 @@ export default function TierListEditor({
 
         <DragOverlay dropAnimation={dropAnimationConfig}>
           {activeItem && (
-            <div className="w-20 h-20 rounded-lg overflow-hidden border-4 border-accent-500 shadow-2xl shadow-accent-500/50 flex items-center justify-center bg-surface-700">
+            <div className="flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl border-4 border-primary bg-surface-3 shadow-[0_16px_40px_-24px_rgba(76,92,255,0.95)]">
               {activeItem.imageUrl ? (
                 <img
                   src={activeItem.imageUrl}

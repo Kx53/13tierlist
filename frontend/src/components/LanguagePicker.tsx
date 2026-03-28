@@ -1,36 +1,38 @@
-import { useStore } from '@nanostores/react';
-import { locale } from '@/lib/i18n';
-import { Button } from '@heroui/react';
+import { useStore } from "@nanostores/react";
+import { locale } from "@/lib/i18n";
+import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 export default function LanguagePicker() {
   const currentLocale = useStore(locale);
 
   return (
-    <div className="flex bg-surface-800/50 p-1 rounded-lg border border-surface-700/50 backdrop-blur-sm gap-1">
-      <Button
+    <ToggleGroup
+      type="single"
+      value={currentLocale}
+      onValueChange={(nextLocale) => {
+        if (nextLocale === "en" || nextLocale === "th") {
+          locale.set(nextLocale);
+        }
+      }}
+      className="rounded-full bg-secondary/75"
+      aria-label="Language switcher"
+    >
+      <ToggleGroupItem
+        value="en"
         size="sm"
-        variant={currentLocale === 'en' ? 'primary' : 'ghost'}
-        className={`px-3 py-1 font-medium transition-all ${
-          currentLocale === 'en'
-            ? 'bg-accent-500 text-white shadow-sm'
-            : 'text-surface-400 hover:text-surface-200 hover:bg-surface-700/50'
-        }`}
-        onPress={() => locale.set('en')}
+        className="rounded-full px-3.5"
+        aria-label="English"
       >
         EN
-      </Button>
-      <Button
+      </ToggleGroupItem>
+      <ToggleGroupItem
+        value="th"
         size="sm"
-        variant={currentLocale === 'th' ? 'primary' : 'ghost'}
-        className={`px-3 py-1 font-medium transition-all ${
-          currentLocale === 'th'
-            ? 'bg-accent-500 text-white shadow-sm'
-            : 'text-surface-400 hover:text-surface-200 hover:bg-surface-700/50'
-        }`}
-        onPress={() => locale.set('th')}
+        className="rounded-full px-3.5"
+        aria-label="Thai"
       >
         ไทย
-      </Button>
-    </div>
+      </ToggleGroupItem>
+    </ToggleGroup>
   );
 }

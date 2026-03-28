@@ -1,16 +1,11 @@
 ---
-import Layout from '@/layouts/Layout.astro';
-import HomeHero from '@/components/HomeHero';
+import HomeHero from "@/components/HomeHero";
+import Layout from "@/layouts/Layout.astro";
 ---
 
-<Layout title="13TierList — Create & Share Tier Lists" description="Create beautiful image-based tier lists and share them with anyone">
-  <div class="relative overflow-hidden">
-    <!-- Background effects -->
-    <div class="absolute inset-0 -z-10">
-      <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-accent-500/10 rounded-full blur-3xl animate-pulse"></div>
-      <div class="absolute bottom-1/4 right-1/4 w-96 h-96 bg-purple-500/10 rounded-full blur-3xl animate-pulse" style="animation-delay: 1s"></div>
-    </div>
-
-    <HomeHero client:load />
-  </div>
+<Layout
+  title="13TierList — Create & Share Tier Lists"
+  description="Create beautiful image-based tier lists and share them with anyone"
+>
+  <HomeHero client:load />
 </Layout>

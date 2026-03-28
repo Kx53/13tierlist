@@ -20,16 +20,13 @@ function BoardItem({
   imageLoading?: "eager" | "lazy";
 }) {
   return (
-    <div
-      className="group relative w-16 h-16 sm:w-20 sm:h-20 rounded-lg overflow-hidden
-                 border border-surface-700 bg-surface-800"
-    >
+    <div className="group relative h-16 w-16 overflow-hidden rounded-2xl border border-border bg-secondary sm:h-20 sm:w-20">
       {item.imageUrl ? (
         <>
           <img
             src={item.imageUrl}
             alt={item.title}
-            className="w-full h-full object-cover"
+            className="h-full w-full object-cover"
             loading={imageLoading}
             crossOrigin="anonymous"
             onError={(e) => {
@@ -37,14 +34,14 @@ function BoardItem({
             }}
           />
           <div className="absolute inset-x-0 bottom-0 bg-linear-to-t from-black/80 to-transparent p-1">
-            <p className="text-[10px] sm:text-xs text-white truncate text-center font-medium">
+            <p className="truncate text-center text-[10px] font-medium text-white sm:text-xs">
               {item.title}
             </p>
           </div>
         </>
       ) : (
-        <div className="w-full h-full flex items-center justify-center p-1">
-          <p className="text-[10px] sm:text-xs text-center font-bold text-white overflow-hidden text-ellipsis line-clamp-3 w-full px-1 leading-tight">
+        <div className="flex h-full w-full items-center justify-center p-1">
+          <p className="line-clamp-3 w-full overflow-hidden px-1 text-center text-[10px] font-bold leading-tight text-white text-ellipsis sm:text-xs">
             {item.title}
           </p>
         </div>
@@ -67,21 +64,21 @@ const TierListBoard = forwardRef<HTMLDivElement, Props>(function TierListBoard(
     <div className={className || "space-y-2"}>
       <div
         ref={ref}
-        className="flex flex-col gap-2 bg-surface-950 pb-2 rounded-xl overflow-hidden"
+        className="flex flex-col gap-2 overflow-hidden rounded-xl bg-background/30 pb-2"
       >
         {tiers.map((tier) => (
           <div
             key={tier.id}
-            className="flex rounded-xl overflow-hidden border border-surface-800 bg-surface-900/50"
+            className="flex overflow-hidden rounded-[24px] border border-border bg-card/75"
           >
             <div
-              className="w-20 sm:w-28 shrink-0 flex items-center justify-center font-bold text-lg sm:text-xl p-2 text-center"
-              style={{ backgroundColor: tier.color + "30", color: tier.color }}
+              className="flex w-20 shrink-0 items-center justify-center p-2 text-center text-lg font-bold sm:w-28 sm:text-xl"
+              style={{ backgroundColor: `${tier.color}30`, color: tier.color }}
             >
               {tier.label}
             </div>
 
-            <div className="flex-1 flex flex-wrap gap-2 p-2 min-h-20 items-start">
+            <div className="flex min-h-20 flex-1 flex-wrap items-start gap-2 p-2">
               {tier.items.map((item) => (
                 <BoardItem
                   key={item.id}
@@ -89,22 +86,22 @@ const TierListBoard = forwardRef<HTMLDivElement, Props>(function TierListBoard(
                   imageLoading={imageLoading}
                 />
               ))}
-              {tier.items.length === 0 && (
-                <div className="flex items-center justify-center w-full text-surface-600 text-sm min-h-16">
+              {tier.items.length === 0 ? (
+                <div className="flex min-h-16 w-full items-center justify-center text-sm text-muted-foreground">
                   Empty
                 </div>
-              )}
+              ) : null}
             </div>
           </div>
         ))}
       </div>
 
-      {showUnranked && unrankedItems && unrankedItems.length > 0 && (
-        <div className="mt-8 rounded-xl border border-surface-700 bg-surface-800/50 overflow-hidden">
-          <div className="bg-surface-800 border-b border-surface-700 p-3">
-            <h3 className="font-bold text-surface-200">Item Bank (Unranked)</h3>
+      {showUnranked && unrankedItems && unrankedItems.length > 0 ? (
+        <div className="mt-8 overflow-hidden rounded-[28px] border border-border bg-card/80 shadow-[0_24px_80px_-36px_rgba(9,14,34,0.98)] backdrop-blur-xl">
+          <div className="border-b border-border bg-secondary/70 p-4">
+            <h3 className="font-semibold text-foreground">Item Bank (Unranked)</h3>
           </div>
-          <div className="p-4 flex flex-wrap gap-3 items-start">
+          <div className="flex flex-wrap items-start gap-3 p-4">
             {unrankedItems.map((item) => (
               <BoardItem
                 key={item.id}
@@ -114,7 +111,7 @@ const TierListBoard = forwardRef<HTMLDivElement, Props>(function TierListBoard(
             ))}
           </div>
         </div>
-      )}
+      ) : null}
     </div>
   );
 });

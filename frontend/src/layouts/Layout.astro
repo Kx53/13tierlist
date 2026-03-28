@@ -1,8 +1,8 @@
 ---
 import "@/styles/global.css";
 import { Trophy } from "lucide-react";
-import LanguagePicker from "@/components/LanguagePicker";
 import FooterText from "@/components/FooterText";
+import LanguagePicker from "@/components/LanguagePicker";
 
 export interface Props {
   title?: string;
@@ -26,8 +26,8 @@ const {
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="msapplication-TileColor" content="#0a0a0f" />
-    <meta name="theme-color" content="#0a0a0f" />
+    <meta name="msapplication-TileColor" content="#060816" />
+    <meta name="theme-color" content="#060816" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -37,34 +37,34 @@ const {
     <title>{title}</title>
   </head>
   <body class="min-h-screen">
-    <nav
-      class="sticky top-0 z-50 bg-surface-950/80 backdrop-blur-md border-b border-surface-800/50"
-    >
-      <div
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between"
-      >
-        <a href="/" class="flex items-center gap-2 group">
-          <Trophy className="w-8 h-8 text-accent-500" />
-          <span
-            class="text-lg font-bold bg-linear-to-r from-accent-400 to-purple-400 bg-clip-text text-transparent
-                       group-hover:from-accent-500 group-hover:to-pink-400 transition-all duration-300"
-          >
+    <nav class="sticky top-0 z-50 border-b border-border/60 bg-background/72 backdrop-blur-xl">
+      <div class="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+        <a href="/" class="group flex items-center gap-3">
+          <div class="flex h-11 w-11 items-center justify-center rounded-2xl border border-border/70 bg-secondary/75 shadow-[0_18px_44px_-28px_rgba(118,225,255,0.8)]">
+            <Trophy className="h-5 w-5 text-brand-400" />
+          </div>
+          <span class="text-sm font-semibold uppercase tracking-[0.28em] text-gradient-brand sm:text-base">
             13TierList
           </span>
         </a>
+
         <div class="flex items-center gap-4">
           <LanguagePicker client:load />
-          <a href="/create" class="btn-primary btn-sm">
+          <a
+            href="/create"
+            class="inline-flex h-10 items-center justify-center rounded-full border border-border bg-primary px-4 text-sm font-medium text-primary-foreground shadow-[0_16px_40px_-20px_rgba(76,92,255,0.95)] transition-all hover:bg-primary/92"
+          >
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              class="h-4 w-4"
+              class="mr-2 h-4 w-4"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
               <path
                 fill-rule="evenodd"
                 d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z"
-                clip-rule="evenodd"></path>
+                clip-rule="evenodd"
+              />
             </svg>
             Create
           </a>
@@ -72,14 +72,12 @@ const {
       </div>
     </nav>
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    <main class="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <slot />
     </main>
 
-    <footer class="border-t border-surface-800/50 mt-auto">
-      <div
-        class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 text-center text-surface-500 text-sm"
-      >
+    <footer class="mt-auto border-t border-border/60">
+      <div class="mx-auto max-w-7xl px-4 py-8 text-center text-sm text-muted-foreground sm:px-6 lg:px-8">
         <FooterText client:load /> &middot; 13TierList by 13room.space
       </div>
     </footer>

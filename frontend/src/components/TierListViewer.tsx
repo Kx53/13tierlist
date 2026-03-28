@@ -11,7 +11,7 @@ export default function TierListViewer({ tiers, unrankedItems }: Props) {
     <TierListBoard
       tiers={tiers}
       unrankedItems={unrankedItems}
-      className="space-y-2 animate-fade-in"
+      className="space-y-2 animate-in fade-in-0"
     />
   );
 }

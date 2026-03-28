@@ -1,24 +1,25 @@
-import { useState } from 'react';
-import { createTierList } from '@/lib/api';
-import { saveToken } from '@/lib/token';
-import { useStore } from '@nanostores/react';
-import { i18n } from '@/lib/i18n';
-import { Input, Button } from "@heroui/react";
+import { useState } from "react";
+import { useStore } from "@nanostores/react";
+import { createTierList } from "@/lib/api";
+import { i18n } from "@/lib/i18n";
+import { saveToken } from "@/lib/token";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 
-export const createDict = i18n('create', {
+export const createDict = i18n("create", {
   title: "Create New Tier List",
   nameLabel: "Tier List Title",
   namePlaceholder: "e.g., Best Anime Characters, Top Foods, Game Rankings...",
   btn: "Create Tier List →",
   btnCreating: "Creating...",
-  error: "Something went wrong"
+  error: "Something went wrong",
 });
 
 export default function CreateForm() {
   const dict = useStore(createDict);
-  const [title, setTitle] = useState('');
+  const [title, setTitle] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
   const trimmedTitle = title.trim();
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -26,7 +27,7 @@ export default function CreateForm() {
     if (!trimmedTitle) return;
 
     setLoading(true);
-    setError('');
+    setError("");
 
     try {
       const { slug, editToken } = await createTierList(trimmedTitle);
@@ -41,7 +42,10 @@ export default function CreateForm() {
   return (
     <form onSubmit={handleSubmit} className="space-y-6">
       <div>
-        <label htmlFor="title" className="block text-sm font-medium text-surface-300 mb-2">
+        <label
+          htmlFor="title"
+          className="mb-2 block text-sm font-medium text-muted-foreground"
+        >
           {dict.nameLabel}
         </label>
         <Input
@@ -50,28 +54,28 @@ export default function CreateForm() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder={dict.namePlaceholder}
-          className="w-full text-lg bg-surface-900 border-surface-700 hover:border-surface-600 focus:border-accent-500"
+          className="h-13 text-base md:text-lg"
           maxLength={200}
           autoFocus
           required
         />
-        <p className="mt-2 text-xs text-surface-500">
+        <p className="mt-2 text-xs text-muted-foreground">
           {title.length}/200 characters
         </p>
       </div>
 
-      {error && (
-        <div className="p-3 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-sm animate-scale-in">
+      {error ? (
+        <div className="rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive animate-in fade-in-0 zoom-in-95">
           {error}
         </div>
-      )}
+      ) : null}
 
       <Button
         type="submit"
         size="lg"
-        className="w-full py-6 text-base rounded-xl font-bold bg-accent-500 hover:bg-accent-600 text-white shadow-lg shadow-accent-500/25 border-none"
-        isDisabled={!trimmedTitle}
-        isPending={loading}
+        className="w-full font-semibold"
+        disabled={!trimmedTitle}
+        pending={loading}
       >
         {loading ? dict.btnCreating : dict.btn}
       </Button>

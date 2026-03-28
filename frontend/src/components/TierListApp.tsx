@@ -1,21 +1,21 @@
 import { useEffect, useRef, useState } from "react";
 import { toPng } from "html-to-image";
-import { getTierList, updateTierList } from "@/lib/api";
-import { SearchX, Eye, Download, Check } from "lucide-react";
-import {
-  getToken,
-  hasToken,
-  saveDraft,
-  getDraft,
-  removeDraft,
-} from "@/lib/token";
+import { Check, Download, Eye, SearchX } from "lucide-react";
+import TierListBoard from "@/components/TierListBoard";
 import TierListEditor from "@/components/TierListEditor";
 import TierListViewer from "@/components/TierListViewer";
-import TierListBoard from "@/components/TierListBoard";
-import type { TierListData, Tier, TierItem } from "@/lib/api";
-import { useStore } from "@nanostores/react";
+import { getTierList, updateTierList, type Tier, type TierItem, type TierListData } from "@/lib/api";
 import { i18n } from "@/lib/i18n";
-import { Button, Card } from "@heroui/react";
+import {
+  getDraft,
+  getToken,
+  hasToken,
+  removeDraft,
+  saveDraft,
+} from "@/lib/token";
+import { useStore } from "@nanostores/react";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 export const appEditorDict = i18n("editor", {
   viewOnly: "View only",
@@ -76,11 +76,11 @@ export default function TierListApp({ slug }: Props) {
     "idle",
   );
   const [showDraftRestore, setShowDraftRestore] = useState(false);
-  const draftRef = useRef<DraftData | null>(null);
-  const exportRef = useRef<HTMLDivElement>(null);
   const [isExporting, setIsExporting] = useState(false);
   const [exportError, setExportError] = useState("");
   const [copied, setCopied] = useState(false);
+  const draftRef = useRef<DraftData | null>(null);
+  const exportRef = useRef<HTMLDivElement>(null);
 
   const handleExport = async () => {
     const targetElement = exportRef.current;
@@ -92,7 +92,7 @@ export default function TierListApp({ slug }: Props) {
     try {
       const dataUrl = await toPng(targetElement, {
         cacheBust: true,
-        backgroundColor: "#020617",
+        backgroundColor: "#060816",
         pixelRatio: 2,
       });
 
@@ -190,6 +190,7 @@ export default function TierListApp({ slug }: Props) {
 
     setSaving(true);
     setSaveStatus("idle");
+
     try {
       await updateTierList(slug, token, {
         title: data.title,
@@ -211,12 +212,14 @@ export default function TierListApp({ slug }: Props) {
     typeof window === "undefined"
       ? ""
       : `${window.location.origin}/list/${slug}`;
+
   const saveButtonText =
     saveStatus === "saved"
       ? editorTexts.saved
       : saveStatus === "error"
         ? editorTexts.error
         : editorTexts.save;
+
   const unrankedItems = data?.unrankedItems || [];
 
   const handleCopyLink = () => {
@@ -230,7 +233,7 @@ export default function TierListApp({ slug }: Props) {
       <div className="flex items-center justify-center py-32">
         <div className="flex flex-col items-center gap-4">
           <svg
-            className="animate-spin h-10 w-10 text-accent-500"
+            className="h-10 w-10 animate-spin text-primary"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -242,14 +245,14 @@ export default function TierListApp({ slug }: Props) {
               r="10"
               stroke="currentColor"
               strokeWidth="4"
-            ></circle>
+            />
             <path
               className="opacity-75"
               fill="currentColor"
               d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z"
-            ></path>
+            />
           </svg>
-          <p className="text-surface-400">Loading tier list...</p>
+          <p className="text-muted-foreground">Loading tier list...</p>
         </div>
       </div>
     );
@@ -258,59 +261,59 @@ export default function TierListApp({ slug }: Props) {
   if (error || !data) {
     return (
       <div className="flex items-center justify-center py-32">
-        <Card className="p-8 max-w-md w-full bg-surface-900 border-surface-800">
-          <div className="flex flex-col items-center text-center">
-            <SearchX className="w-12 h-12 mb-4 text-surface-500" />
-            <h2 className="text-xl font-semibold text-surface-200 mb-2">
-              Not Found
-            </h2>
-            <p className="text-surface-400 mb-6">
+        <Card className="max-w-md w-full">
+          <CardContent className="flex flex-col items-center p-8 text-center">
+            <SearchX className="mb-4 h-12 w-12 text-muted-foreground" />
+            <h2 className="mb-2 text-xl font-semibold">Not Found</h2>
+            <p className="mb-6 text-muted-foreground">
               {error || "This tier list could not be found."}
             </p>
-            <a href="/" className="btn-primary w-fit inline-flex px-6 py-2">
+            <a
+              href="/"
+              className="inline-flex h-10 items-center justify-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground shadow-[0_16px_40px_-20px_rgba(76,92,255,0.95)] transition-colors hover:bg-primary/92"
+            >
               Go Home
             </a>
-          </div>
+          </CardContent>
         </Card>
       </div>
     );
   }
 
   return (
-    <div className="animate-fade-in">
-      {/* Draft restore banner */}
-      {showDraftRestore && (
-        <div className="mb-6 p-4 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-between animate-slide-up">
-          <p className="text-amber-400 text-sm">{draftTexts.banner}</p>
+    <div className="animate-in fade-in-0">
+      {showDraftRestore ? (
+        <div className="mb-6 flex items-center justify-between gap-4 rounded-3xl border border-amber-300/15 bg-amber-300/8 px-4 py-4 animate-in slide-in-from-top-2">
+          <p className="text-sm text-amber-100/85">{draftTexts.banner}</p>
           <div className="flex gap-2">
             <Button
               size="sm"
               variant="secondary"
-              className="bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border-transparent"
-              onPress={handleRestoreDraft}
+              className="border-amber-200/10 bg-amber-200/14 text-amber-100 hover:bg-amber-200/20"
+              onClick={handleRestoreDraft}
             >
               {draftTexts.restore}
             </Button>
             <Button
               size="sm"
               variant="ghost"
-              className="text-surface-500"
-              onPress={handleDismissDraft}
+              className="text-amber-100/65 hover:text-amber-50"
+              onClick={handleDismissDraft}
             >
               {draftTexts.dismiss}
             </Button>
           </div>
         </div>
-      )}
+      ) : null}
 
-      {exportError && (
-        <div className="mb-4 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+      {exportError ? (
+        <div className="mb-4 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive-foreground">
           {exportError}
         </div>
-      )}
+      ) : null}
 
       <div
-        className="fixed top-0 pointer-events-none opacity-0"
+        className="pointer-events-none fixed top-0 opacity-0"
         aria-hidden="true"
         style={{ left: -10000, zIndex: -1 }}
       >
@@ -325,11 +328,9 @@ export default function TierListApp({ slug }: Props) {
         </div>
       </div>
 
-      {/* Exportable Area removed from wrapper into child components */}
       <div className="mt-4">
-        {/* Header */}
-        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-4 sm:mb-8">
-          <div className="flex-1 w-full">
+        <div className="mb-4 flex flex-col items-start justify-between gap-4 rounded-[30px] border border-border/70 bg-card/60 p-5 shadow-[0_24px_80px_-36px_rgba(9,14,34,0.98)] backdrop-blur-xl sm:mb-8 sm:flex-row sm:items-center">
+          <div className="w-full flex-1">
             {isOwner ? (
               <input
                 type="text"
@@ -337,30 +338,29 @@ export default function TierListApp({ slug }: Props) {
                 onChange={(e) =>
                   handleChange(e.target.value, data.tiers, unrankedItems)
                 }
-                className="text-2xl sm:text-3xl font-bold bg-transparent border-none outline-none text-surface-100 w-full
-                           focus:ring-0 placeholder-surface-600"
+                className="w-full border-none bg-transparent text-2xl font-semibold text-foreground outline-none placeholder:text-muted-foreground sm:text-3xl"
                 placeholder="Tier List Title"
               />
             ) : (
-              <h1 className="text-2xl sm:text-3xl font-bold text-surface-100 wrap-break-word">
+              <h1 className="wrap-break-word text-2xl font-semibold text-foreground sm:text-3xl">
                 {data.title}
               </h1>
             )}
-            {!isOwner && (
-              <p className="text-sm text-surface-500 mt-1 flex items-center justify-start gap-1">
-                <Eye className="w-4 h-4" /> {editorTexts.viewOnly}
+            {!isOwner ? (
+              <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
+                <Eye className="h-4 w-4" /> {editorTexts.viewOnly}
               </p>
-            )}
+            ) : null}
           </div>
 
-          <div className="flex items-center gap-2 sm:gap-3 flex-wrap">
+          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
             <Button
               size="sm"
               variant="secondary"
-              onPress={handleExport}
-              isPending={isExporting}
+              onClick={handleExport}
+              pending={isExporting}
             >
-              <Download className="w-4 h-4" />
+              <Download className="h-4 w-4" />
               <span className="hidden sm:inline">
                 {isExporting ? editorTexts.exporting : editorTexts.download}
               </span>
@@ -369,11 +369,11 @@ export default function TierListApp({ slug }: Props) {
             <Button
               size="sm"
               variant="secondary"
-              className={copied ? "text-emerald-400 bg-emerald-500/10" : ""}
-              onPress={handleCopyLink}
+              className={copied ? "bg-emerald-500/10 text-emerald-400" : ""}
+              onClick={handleCopyLink}
             >
               {copied ? (
-                <Check className="w-4 h-4" />
+                <Check className="h-4 w-4" />
               ) : (
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -390,32 +390,31 @@ export default function TierListApp({ slug }: Props) {
               </span>
             </Button>
 
-            {isOwner && (
+            {isOwner ? (
               <Button
                 size="sm"
                 variant={
                   saveStatus === "saved" || saveStatus === "error"
                     ? "outline"
-                    : "primary"
+                    : "default"
                 }
                 className={
                   saveStatus === "saved"
-                    ? "border-emerald-500/30 text-emerald-400 bg-emerald-500/20"
+                    ? "border-emerald-500/30 bg-emerald-500/20 text-emerald-400"
                     : saveStatus === "error"
-                      ? "border-red-500/30 text-red-400 bg-red-500/20"
+                      ? "border-red-500/30 bg-red-500/20 text-red-400"
                       : ""
                 }
-                onPress={handleSave}
-                isDisabled={saving}
-                isPending={saving}
+                onClick={handleSave}
+                disabled={saving}
+                pending={saving}
               >
                 {saveButtonText}
               </Button>
-            )}
+            ) : null}
           </div>
         </div>
 
-        {/* Tier List */}
         {isOwner ? (
           <TierListEditor
             tiers={data.tiers}

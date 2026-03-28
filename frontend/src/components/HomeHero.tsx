@@ -1,88 +1,214 @@
-import { Gamepad2, MousePointer2, Link, Image as ImageIcon } from 'lucide-react';
-import { useStore } from '@nanostores/react';
-import { i18n } from '@/lib/i18n';
+import { motion } from "framer-motion";
+import { useStore } from "@nanostores/react";
+import {
+  ArrowRight,
+  Image as ImageIcon,
+  Link,
+  MousePointer2,
+  Sparkles,
+} from "lucide-react";
+import { i18n } from "@/lib/i18n";
+import { Button } from "@/components/ui/button";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 
-export const homeDict = i18n('home', {
+export const homeDict = i18n("home", {
   title: "13TierList — Create & Share Tier Lists",
   description: "Create beautiful image-based tier lists and share them with anyone",
   tag: "Free · No signup · Instant sharing",
   headline1: "Rank Everything",
   headline2: "Your Way",
-  subtitle: "Create stunning image-based tier lists, drag & drop to rank, and share with anyone — no account needed.",
+  subtitle:
+    "Create stunning image-based tier lists, drag & drop to rank, and share with anyone — no account needed.",
   cta: "Create Tier List",
   feature1Title: "Drag & Drop",
   feature1Desc: "Intuitively rank items by dragging them between tiers. Reorder within tiers too.",
   feature2Title: "Instant Sharing",
   feature2Desc: "Get a shareable link immediately. No login required — share with anyone.",
   feature3Title: "Image-Based",
-  feature3Desc: "Add images via URL to create visual tier lists for games, anime, food, and more."
+  feature3Desc: "Add images via URL to create visual tier lists for games, anime, food, and more.",
 });
 
 export default function HomeHero() {
   const dict = useStore(homeDict);
+  const featureCards = [
+    {
+      icon: MousePointer2,
+      title: dict.feature1Title,
+      description: dict.feature1Desc,
+      accent: "from-brand-400/20 to-brand-500/5",
+    },
+    {
+      icon: Link,
+      title: dict.feature2Title,
+      description: dict.feature2Desc,
+      accent: "from-ember-300/20 to-brand-500/5",
+    },
+    {
+      icon: ImageIcon,
+      title: dict.feature3Title,
+      description: dict.feature3Desc,
+      accent: "from-brand-500/20 to-emerald-300/5",
+    },
+  ];
 
   return (
-    <>
-      {/* Hero */}
-      <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-24 sm:py-32 text-center">
-        <div className="animate-fade-in">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-accent-500/10 border border-accent-500/20 text-accent-400 text-sm font-medium mb-8">
-            <Gamepad2 className="w-4 h-4" /> {dict.tag}
-          </span>
-        </div>
+    <div className="relative overflow-hidden">
+      <div className="pointer-events-none absolute inset-0 -z-10 marketing-grid opacity-40" />
+      <div className="pointer-events-none absolute left-0 top-16 -z-10 h-72 w-72 rounded-full bg-brand-400/12 blur-3xl" />
+      <div className="pointer-events-none absolute right-0 top-28 -z-10 h-96 w-96 rounded-full bg-brand-500/14 blur-3xl" />
 
-        <h1 className="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight animate-slide-up">
-          <span className="bg-linear-to-r from-white via-surface-200 to-surface-400 bg-clip-text text-transparent">
-            {dict.headline1}
-          </span>
-          <br />
-          <span className="bg-linear-to-r from-accent-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-            {dict.headline2}
-          </span>
-        </h1>
+      <section className="grid gap-10 py-16 sm:py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:py-24">
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
+          className="max-w-3xl"
+        >
+          <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border/80 bg-secondary/65 px-4 py-2 text-sm font-medium text-brand-200 backdrop-blur">
+            <Sparkles className="h-4 w-4 text-brand-400" />
+            {dict.tag}
+          </div>
 
-        <p className="mt-6 text-lg sm:text-xl text-surface-400 max-w-2xl mx-auto animate-slide-up" style={{ animationDelay: '0.1s' }}>
-          {dict.subtitle}
-        </p>
+          <h1 className="max-w-4xl text-5xl font-black leading-[0.95] tracking-[-0.04em] sm:text-6xl lg:text-7xl">
+            <span className="text-gradient-brand">{dict.headline1}</span>
+            <br />
+            <span className="text-gradient-signal">{dict.headline2}</span>
+          </h1>
 
-        <div className="mt-10 flex flex-col sm:flex-row items-center justify-center gap-4 animate-slide-up" style={{ animationDelay: '0.2s' }}>
-          <a href="/create" className="btn-primary text-base px-8 py-3.5 rounded-2xl shadow-2xl shadow-accent-500/20 hover:shadow-accent-500/40 hover:-translate-y-0.5 transition-all duration-300">
-            <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-2 inline-block" viewBox="0 0 20 20" fill="currentColor">
-              <path fillRule="evenodd" d="M10 3a1 1 0 011 1v5h5a1 1 0 110 2h-5v5a1 1 0 11-2 0v-5H4a1 1 0 110-2h5V4a1 1 0 011-1z" clipRule="evenodd" />
-            </svg>
-            {dict.cta}
-          </a>
-        </div>
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground sm:text-xl">
+            {dict.subtitle}
+          </p>
+
+          <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
+            <Button asChild size="lg" className="rounded-full px-7">
+              <a href="/create">
+                {dict.cta}
+                <ArrowRight className="h-4 w-4" />
+              </a>
+            </Button>
+            <div className="flex items-center gap-3 text-sm text-muted-foreground">
+              <div className="flex -space-x-2">
+                <span className="h-8 w-8 rounded-full border border-border bg-surface-2" />
+                <span className="h-8 w-8 rounded-full border border-border bg-surface-3" />
+                <span className="h-8 w-8 rounded-full border border-border bg-surface-4" />
+              </div>
+              <span>Build a board in under a minute.</span>
+            </div>
+          </div>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.08 }}
+          className="surface-shell relative overflow-hidden p-5 sm:p-6"
+        >
+          <div className="absolute inset-x-8 top-0 h-px bg-linear-to-r from-transparent via-brand-400/70 to-transparent" />
+          <div className="mb-6 flex items-center justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.3em] text-brand-200/85">
+                Live Board
+              </p>
+              <h2 className="mt-2 text-2xl font-semibold text-foreground">
+                {dict.title}
+              </h2>
+            </div>
+            <div className="rounded-full border border-border bg-secondary/70 px-3 py-1 text-xs text-muted-foreground">
+              No signup
+            </div>
+          </div>
+
+          <div className="space-y-3">
+            {[
+              { label: "S", color: "#ff7f7f", item: "ghjkl" },
+              { label: "A", color: "#ffbf7f", item: "qwerty" },
+              { label: "B", color: "#ffe17f", item: "Empty" },
+              { label: "C", color: "#fbff7a", item: "Empty" },
+            ].map((row, index) => (
+              <motion.div
+                key={row.label}
+                initial={{ opacity: 0, x: 12 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: 0.12 + index * 0.08 }}
+                className="overflow-hidden rounded-[24px] border border-border bg-[#09112a]"
+              >
+                <div className="flex min-h-22 items-stretch">
+                  <div
+                    className="flex w-24 shrink-0 items-center justify-center text-2xl font-black"
+                    style={{ backgroundColor: `${row.color}26`, color: row.color }}
+                  >
+                    {row.label}
+                  </div>
+                  <div className="flex flex-1 items-center justify-start px-4 py-3">
+                    <div className="flex min-h-16 min-w-[10rem] items-center justify-center rounded-[20px] border border-border bg-secondary px-4 text-center font-semibold text-foreground">
+                      {row.item}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </section>
 
-      {/* Features */}
-      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
-          <div className="card hover:border-accent-500/30 hover:-translate-y-1 transition-all duration-300 group">
-            <div className="w-12 h-12 rounded-xl bg-accent-500/10 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
-              <MousePointer2 className="w-6 h-6 text-accent-400" />
+      <section className="pb-16 sm:pb-20">
+        <div className="surface-shell p-6 sm:p-8">
+          <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+            <div>
+              <p className="text-xs uppercase tracking-[0.28em] text-brand-200/85">
+                Why people use it
+              </p>
+              <h2 className="mt-2 text-3xl font-semibold tracking-tight">
+                Built for quick ranking, not account setup.
+              </h2>
             </div>
-            <h3 className="text-lg font-semibold text-surface-100 mb-2">{dict.feature1Title}</h3>
-            <p className="text-surface-400 text-sm">{dict.feature1Desc}</p>
+            <p className="max-w-xl text-sm leading-7 text-muted-foreground">
+              One clean editor, one shareable link, and an export that is ready to post.
+            </p>
           </div>
 
-          <div className="card hover:border-purple-500/30 hover:-translate-y-1 transition-all duration-300 group">
-            <div className="w-12 h-12 rounded-xl bg-purple-500/10 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
-              <Link className="w-6 h-6 text-purple-400" />
-            </div>
-            <h3 className="text-lg font-semibold text-surface-100 mb-2">{dict.feature2Title}</h3>
-            <p className="text-surface-400 text-sm">{dict.feature2Desc}</p>
-          </div>
+          <Separator className="mb-6 bg-border/70" />
 
-          <div className="card hover:border-pink-500/30 hover:-translate-y-1 transition-all duration-300 group">
-            <div className="w-12 h-12 rounded-xl bg-pink-500/10 flex items-center justify-center text-2xl mb-4 group-hover:scale-110 transition-transform duration-300">
-              <ImageIcon className="w-6 h-6 text-pink-400" />
-            </div>
-            <h3 className="text-lg font-semibold text-surface-100 mb-2">{dict.feature3Title}</h3>
-            <p className="text-surface-400 text-sm">{dict.feature3Desc}</p>
+          <div className="grid gap-5 md:grid-cols-3">
+            {featureCards.map((feature, index) => {
+              const Icon = feature.icon;
+
+              return (
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 16 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.45, delay: 0.18 + index * 0.08 }}
+                >
+                  <Card className="h-full overflow-hidden border-border/70 bg-card/65">
+                    <CardHeader className="pb-4">
+                      <div
+                        className={`mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br ${feature.accent} border border-border/70`}
+                      >
+                        <Icon className="h-5 w-5 text-foreground" />
+                      </div>
+                      <CardTitle>{feature.title}</CardTitle>
+                      <CardDescription className="leading-6">
+                        {feature.description}
+                      </CardDescription>
+                    </CardHeader>
+                    <CardContent className="pt-0 text-sm text-muted-foreground">
+                      Made to stay fast and obvious even on a phone.
+                    </CardContent>
+                  </Card>
+                </motion.div>
+              );
+            })}
           </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

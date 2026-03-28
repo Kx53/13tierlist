@@ -1,10 +1,10 @@
-import { useStore } from '@nanostores/react';
-import { i18n } from '@/lib/i18n';
-import { Heart } from 'lucide-react';
+import { useStore } from "@nanostores/react";
+import { Heart } from "lucide-react";
+import { i18n } from "@/lib/i18n";
 
-export const footerDict = i18n('footer', {
+export const footerDict = i18n("footer", {
   builtWith: "Built with",
-  by: "by"
+  by: "by",
 });
 
 export default function FooterText() {
@@ -13,13 +13,13 @@ export default function FooterText() {
   return (
     <>
       {dict.builtWith}{" "}
-      <Heart className="w-4 h-4 inline-block text-red-500 mx-1 mb-0.5 fill-current" />{" "}
+      <Heart className="mx-1 mb-0.5 inline-block h-4 w-4 fill-current text-red-500" />{" "}
       {dict.by}{" "}
       <a
         href="https://github.com/Kx53"
         target="_blank"
         rel="noopener noreferrer"
-        className="text-surface-300 hover:text-accent-400 font-medium transition-colors"
+        className="font-medium text-foreground/85 hover:text-brand-400"
       >
         Kx53
       </a>

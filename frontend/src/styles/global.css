@@ -1,225 +1,147 @@
 @import "tailwindcss";
-@import "@heroui/styles";
+@import "tw-animate-css";
 
-/*
- * HeroUI Theme Customization
- * @see https://v3.heroui.com/docs/react/getting-started/theming
- */
-:root,
-.light,
-.default,
-[data-theme="light"],
-[data-theme="default"] {
-  --accent: oklch(49.92% 0.1914 302.93);
-  --accent-foreground: oklch(99.11% 0 0);
-  --background: oklch(97.02% 0 302.93);
-  --border: oklch(90% 0 302.93);
-  --danger: oklch(65.32% 0.2328 31.63);
-  --danger-foreground: oklch(99.11% 0 0);
-  --default: oklch(94% 0 302.93);
-  --default-foreground: oklch(21.03% 0.0059 302.93);
-  --field-background: oklch(100% 0 302.93);
-  --field-foreground: oklch(21.03% 0 302.93);
-  --field-placeholder: oklch(55.17% 0 302.93);
-  --focus: oklch(49.92% 0.1914 302.93);
-  --foreground: oklch(21.03% 0 302.93);
-  --muted: oklch(55.17% 0 302.93);
-  --overlay: oklch(100% 0 302.93);
-  --overlay-foreground: oklch(21.03% 0 302.93);
-  --scrollbar: oklch(87.1% 0 302.93);
-  --segment: oklch(100% 0 302.93);
-  --segment-foreground: oklch(21.03% 0 302.93);
-  --separator: oklch(92% 0 302.93);
-  --success: oklch(73.29% 0.1935 156.7);
-  --success-foreground: oklch(21.03% 0.0059 156.7);
-  --surface: oklch(100% 0 302.93);
-  --surface-foreground: oklch(21.03% 0 302.93);
-  --surface-secondary: oklch(95.24% 0 302.93);
-  --surface-secondary-foreground: oklch(21.03% 0 302.93);
-  --surface-tertiary: oklch(93.73% 0 302.93);
-  --surface-tertiary-foreground: oklch(21.03% 0 302.93);
-  --warning: oklch(78.19% 0.1585 78.22);
-  --warning-foreground: oklch(21.03% 0.0059 78.22);
-  --radius: 0.5rem;
-  --field-radius: 0.5rem;
-  --font-sans: "Roboto", system-ui, sans-serif;
+:root {
+  --background: #060816;
+  --foreground: #eef3ff;
+  --card: rgba(13, 18, 38, 0.86);
+  --card-foreground: #eef3ff;
+  --popover: #0c1228;
+  --popover-foreground: #eef3ff;
+  --primary: #4c5cff;
+  --primary-foreground: #f6f8ff;
+  --secondary: rgba(26, 34, 64, 0.8);
+  --secondary-foreground: #dce5ff;
+  --muted: rgba(20, 27, 51, 0.72);
+  --muted-foreground: #90a0c3;
+  --accent: #76e1ff;
+  --accent-foreground: #04111b;
+  --destructive: #f35b76;
+  --destructive-foreground: #fff3f6;
+  --border: rgba(140, 164, 255, 0.18);
+  --input: rgba(15, 22, 42, 0.9);
+  --ring: rgba(118, 225, 255, 0.45);
+  --radius: 1rem;
 }
 
-.dark,
-[data-theme="dark"] {
+.dark {
   color-scheme: dark;
-  --accent: oklch(49.92% 0.1914 302.93);
-  --accent-foreground: oklch(99.11% 0 0);
-  --background: oklch(12% 0 302.93);
-  --border: oklch(28% 0 302.93);
-  --danger: oklch(59.4% 0.1967 30.52);
-  --danger-foreground: oklch(99.11% 0 0);
-  --default: oklch(27.4% 0 302.93);
-  --default-foreground: oklch(99.11% 0 0);
-  --field-background: oklch(21.03% 0 302.93);
-  --field-foreground: oklch(99.11% 0 302.93);
-  --field-placeholder: oklch(70.5% 0 302.93);
-  --focus: oklch(49.92% 0.1914 302.93);
-  --foreground: oklch(99.11% 0 302.93);
-  --muted: oklch(70.5% 0 302.93);
-  --overlay: oklch(21.03% 0 302.93);
-  --overlay-foreground: oklch(99.11% 0 302.93);
-  --scrollbar: oklch(70.5% 0 302.93);
-  --segment: oklch(39.64% 0 302.93);
-  --segment-foreground: oklch(99.11% 0 302.93);
-  --separator: oklch(25% 0 302.93);
-  --success: oklch(73.29% 0.1935 156.7);
-  --success-foreground: oklch(21.03% 0.0059 156.7);
-  --surface: oklch(21.03% 0 302.93);
-  --surface-foreground: oklch(99.11% 0 302.93);
-  --surface-secondary: oklch(25.7% 0 302.93);
-  --surface-secondary-foreground: oklch(99.11% 0 302.93);
-  --surface-tertiary: oklch(27.21% 0 302.93);
-  --surface-tertiary-foreground: oklch(99.11% 0 302.93);
-  --warning: oklch(82.03% 0.1388 82.23);
-  --warning-foreground: oklch(21.03% 0.0059 82.23);
-  --radius: 0.5rem;
-  --field-radius: 0.5rem;
-  --font-sans: "Roboto", system-ui, sans-serif;
 }
 
-@theme {
-  /* Font */
+@theme inline {
   --font-sans: "Roboto", system-ui, sans-serif;
-
-  /* Surface colors (dark mode) */
-  --color-surface-50: #f8fafc;
-  --color-surface-100: #f1f5f9;
-  --color-surface-200: #e2e8f0;
-  --color-surface-300: #cbd5e1;
-  --color-surface-400: #94a3b8;
-  --color-surface-500: #64748b;
-  --color-surface-600: #475569;
-  --color-surface-700: #334155;
-  --color-surface-800: #1e293b;
-  --color-surface-900: #0f172a;
-  --color-surface-950: #020617;
-
-  /* Accent colors */
-  --color-accent-400: #a78bfa;
-  --color-accent-500: #8b5cf6;
-  --color-accent-600: #7c3aed;
-
-  /* Animations */
-  --animate-fade-in: fadeIn 0.3s ease-out;
-  --animate-slide-up: slideUp 0.4s ease-out;
-  --animate-scale-in: scaleIn 0.2s ease-out;
-
-  @keyframes fadeIn {
-    0% {
-      opacity: 0;
-    }
-    100% {
-      opacity: 1;
-    }
-  }
-
-  @keyframes slideUp {
-    0% {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    100% {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  @keyframes scaleIn {
-    0% {
-      opacity: 0;
-      transform: scale(0.95);
-    }
-    100% {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --radius-sm: calc(var(--radius) - 6px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 8px);
+  --color-brand-50: #f3f7ff;
+  --color-brand-200: #bfd6ff;
+  --color-brand-300: #8ca8ff;
+  --color-brand-400: #76e1ff;
+  --color-brand-500: #4c5cff;
+  --color-brand-600: #3342da;
+  --color-brand-700: #1c275e;
+  --color-ember-300: #ffc58f;
+  --color-ember-400: #ff9d76;
+  --color-surface-1: #0b1022;
+  --color-surface-2: #111832;
+  --color-surface-3: #172042;
+  --color-surface-4: #202a53;
 }
 
-/* === Base styles === */
 @layer base {
-  body {
-    @apply bg-surface-950 text-surface-100 font-sans antialiased;
+  * {
+    @apply border-border;
   }
 
-  * {
-    @apply border-surface-700;
+  html {
+    @apply bg-background text-foreground;
+  }
+
+  body {
+    @apply min-h-screen bg-background font-sans text-foreground antialiased;
+    background-image:
+      radial-gradient(circle at top left, rgba(118, 225, 255, 0.12), transparent 28rem),
+      radial-gradient(circle at top right, rgba(76, 92, 255, 0.16), transparent 24rem),
+      linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 32rem);
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply text-foreground;
+  }
+
+  a {
+    @apply transition-colors;
   }
 
   ::selection {
-    @apply bg-accent-500/30 text-white;
+    background: rgba(118, 225, 255, 0.28);
+    color: #f8fbff;
   }
 
   ::-webkit-scrollbar {
-    @apply w-2;
+    width: 0.65rem;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-surface-900;
+    background: #0a1022;
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-surface-600 rounded-full;
+    background: rgba(130, 148, 213, 0.45);
+    border-radius: 999px;
   }
 
   ::-webkit-scrollbar-thumb:hover {
-    @apply bg-surface-500;
+    background: rgba(130, 148, 213, 0.6);
   }
 }
 
-/* === Component styles (Tailwind v4 syntax) === */
-@utility btn {
-  @apply inline-flex items-center justify-center gap-2 px-4 py-2.5
-         font-medium text-sm rounded-xl
-         transition-all duration-200 ease-out
-         focus:outline-none focus:ring-2 focus:ring-accent-500/50 focus:ring-offset-2 focus:ring-offset-surface-950
-         disabled:opacity-50 disabled:cursor-not-allowed
-         active:scale-[0.98];
+@utility surface-shell {
+  @apply rounded-[32px] border border-border/70 bg-card/80 shadow-[0_30px_120px_-48px_rgba(6,10,24,0.98)] backdrop-blur-xl;
 }
 
-@utility btn-primary {
-  @apply btn bg-accent-500 hover:bg-accent-600 text-white shadow-lg shadow-accent-500/25
-         hover:shadow-accent-600/30;
+@utility surface-panel {
+  @apply rounded-[28px] border border-border/70 bg-card/70 shadow-[0_24px_80px_-36px_rgba(9,14,34,0.98)] backdrop-blur-lg;
 }
 
-@utility btn-secondary {
-  @apply btn bg-surface-800 hover:bg-surface-700 text-surface-200
-         border border-surface-600 hover:border-surface-500;
+@utility surface-panel-strong {
+  @apply rounded-[28px] border border-border bg-[#10172f]/95 shadow-[0_32px_100px_-42px_rgba(6,10,24,0.98)];
 }
 
-@utility btn-danger {
-  @apply btn bg-red-500/10 hover:bg-red-500/20 text-red-400
-         border border-red-500/30 hover:border-red-500/50;
+@utility marketing-grid {
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+  background-size: 72px 72px;
 }
 
-@utility btn-ghost {
-  @apply btn bg-transparent hover:bg-surface-800 text-surface-400 hover:text-surface-200;
+@utility text-gradient-brand {
+  @apply bg-linear-to-r from-brand-400 via-white to-brand-300 bg-clip-text text-transparent;
 }
 
-@utility btn-sm {
-  @apply px-3 py-1.5 text-xs rounded-lg;
-}
-
-@utility input-field {
-  @apply w-full px-4 py-2.5 bg-surface-900 border border-surface-700
-         rounded-xl text-surface-100 placeholder-surface-500
-         transition-all duration-200
-         focus:outline-none focus:ring-2 focus:ring-accent-500/50 focus:border-accent-500
-         hover:border-surface-600;
-}
-
-@utility card-base {
-  @apply bg-surface-900/50 backdrop-blur-sm border border-surface-800
-         rounded-2xl p-6 transition-all duration-200;
-}
-
-@utility glass-panel {
-  @apply bg-surface-900/30 backdrop-blur-xl border border-surface-700/50
-         rounded-2xl shadow-2xl;
+@utility text-gradient-signal {
+  @apply bg-linear-to-r from-ember-300 via-white to-brand-400 bg-clip-text text-transparent;
 }
