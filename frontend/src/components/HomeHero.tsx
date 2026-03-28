@@ -1,4 +1,3 @@
-import { motion } from "framer-motion";
 import { useStore } from "@nanostores/react";
 import {
   ArrowRight,
@@ -8,7 +7,8 @@ import {
   Sparkles,
 } from "lucide-react";
 import { i18n } from "@/lib/i18n";
-import { Button } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
   CardContent,
@@ -33,6 +33,14 @@ export const homeDict = i18n("home", {
   feature2Desc: "Get a shareable link immediately. No login required — share with anyone.",
   feature3Title: "Image-Based",
   feature3Desc: "Add images via URL to create visual tier lists for games, anime, food, and more.",
+  heroNote: "Build a board in under a minute.",
+  previewLabel: "Live Board",
+  previewBadge: "No signup",
+  whyLabel: "Why people use it",
+  whyTitle: "Built for quick ranking, not account setup.",
+  whySubtitle:
+    "One clean editor, one shareable link, and an export that is ready to post.",
+  featureExtra: "Made to stay fast and obvious even on a phone.",
 });
 
 export default function HomeHero() {
@@ -65,12 +73,7 @@ export default function HomeHero() {
       <div className="pointer-events-none absolute right-0 top-28 -z-10 h-96 w-96 rounded-full bg-brand-500/14 blur-3xl" />
 
       <section className="grid gap-10 py-16 sm:py-20 lg:grid-cols-[1.1fr_0.9fr] lg:items-center lg:py-24">
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.45 }}
-          className="max-w-3xl"
-        >
+        <div className="max-w-3xl animate-in fade-in-0 slide-in-from-bottom-4 duration-500">
           <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-border/80 bg-secondary/65 px-4 py-2 text-sm font-medium text-brand-200 backdrop-blur">
             <Sparkles className="h-4 w-4 text-brand-400" />
             {dict.tag}
@@ -87,41 +90,37 @@ export default function HomeHero() {
           </p>
 
           <div className="mt-8 flex flex-col items-start gap-4 sm:flex-row sm:items-center">
-            <Button asChild size="lg" className="rounded-full px-7">
-              <a href="/create">
-                {dict.cta}
-                <ArrowRight className="h-4 w-4" />
-              </a>
-            </Button>
+            <a
+              href="/create"
+              className={cn(buttonVariants({ size: "lg" }), "rounded-full px-7")}
+            >
+              {dict.cta}
+              <ArrowRight className="h-4 w-4" />
+            </a>
             <div className="flex items-center gap-3 text-sm text-muted-foreground">
               <div className="flex -space-x-2">
                 <span className="h-8 w-8 rounded-full border border-border bg-surface-2" />
                 <span className="h-8 w-8 rounded-full border border-border bg-surface-3" />
                 <span className="h-8 w-8 rounded-full border border-border bg-surface-4" />
               </div>
-              <span>Build a board in under a minute.</span>
+              <span>{dict.heroNote}</span>
             </div>
           </div>
-        </motion.div>
+        </div>
 
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.55, delay: 0.08 }}
-          className="surface-shell relative overflow-hidden p-5 sm:p-6"
-        >
+        <div className="surface-shell relative overflow-hidden p-5 animate-in fade-in-0 slide-in-from-bottom-6 duration-700 sm:p-6">
           <div className="absolute inset-x-8 top-0 h-px bg-linear-to-r from-transparent via-brand-400/70 to-transparent" />
           <div className="mb-6 flex items-center justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.3em] text-brand-200/85">
-                Live Board
+                {dict.previewLabel}
               </p>
               <h2 className="mt-2 text-2xl font-semibold text-foreground">
                 {dict.title}
               </h2>
             </div>
             <div className="rounded-full border border-border bg-secondary/70 px-3 py-1 text-xs text-muted-foreground">
-              No signup
+              {dict.previewBadge}
             </div>
           </div>
 
@@ -132,12 +131,10 @@ export default function HomeHero() {
               { label: "B", color: "#ffe17f", item: "Empty" },
               { label: "C", color: "#fbff7a", item: "Empty" },
             ].map((row, index) => (
-              <motion.div
+              <div
                 key={row.label}
-                initial={{ opacity: 0, x: 12 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.12 + index * 0.08 }}
-                className="overflow-hidden rounded-[24px] border border-border bg-[#09112a]"
+                className="overflow-hidden rounded-[24px] border border-border bg-[#09112a] animate-in fade-in-0 slide-in-from-right-3 duration-500"
+                style={{ animationDelay: `${0.12 + index * 0.08}s` }}
               >
                 <div className="flex min-h-22 items-stretch">
                   <div
@@ -152,10 +149,10 @@ export default function HomeHero() {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
-        </motion.div>
+        </div>
       </section>
 
       <section className="pb-16 sm:pb-20">
@@ -163,14 +160,14 @@ export default function HomeHero() {
           <div className="mb-8 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
             <div>
               <p className="text-xs uppercase tracking-[0.28em] text-brand-200/85">
-                Why people use it
+                {dict.whyLabel}
               </p>
               <h2 className="mt-2 text-3xl font-semibold tracking-tight">
-                Built for quick ranking, not account setup.
+                {dict.whyTitle}
               </h2>
             </div>
             <p className="max-w-xl text-sm leading-7 text-muted-foreground">
-              One clean editor, one shareable link, and an export that is ready to post.
+              {dict.whySubtitle}
             </p>
           </div>
 
@@ -181,16 +178,15 @@ export default function HomeHero() {
               const Icon = feature.icon;
 
               return (
-                <motion.div
+                <div
                   key={feature.title}
-                  initial={{ opacity: 0, y: 16 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.45, delay: 0.18 + index * 0.08 }}
+                  className="animate-in fade-in-0 slide-in-from-bottom-4 duration-500"
+                  style={{ animationDelay: `${0.18 + index * 0.08}s` }}
                 >
                   <Card className="h-full overflow-hidden border-border/70 bg-card/65">
                     <CardHeader className="pb-4">
                       <div
-                        className={`mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-linear-to-br ${feature.accent} border border-border/70`}
+                        className={`mb-4 flex h-12 w-12 items-center justify-center rounded-2xl border border-border/70 bg-linear-to-br ${feature.accent}`}
                       >
                         <Icon className="h-5 w-5 text-foreground" />
                       </div>
@@ -200,10 +196,10 @@ export default function HomeHero() {
                       </CardDescription>
                     </CardHeader>
                     <CardContent className="pt-0 text-sm text-muted-foreground">
-                      Made to stay fast and obvious even on a phone.
+                      {dict.featureExtra}
                     </CardContent>
                   </Card>
-                </motion.div>
+                </div>
               );
             })}
           </div>

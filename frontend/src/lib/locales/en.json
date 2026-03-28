@@ -12,7 +12,14 @@
     "feature2Title": "Instant Sharing",
     "feature2Desc": "Get a shareable link immediately. No login required — share with anyone.",
     "feature3Title": "Image-Based",
-    "feature3Desc": "Add images via URL to create visual tier lists for games, anime, food, and more."
+    "feature3Desc": "Add images via URL to create visual tier lists for games, anime, food, and more.",
+    "heroNote": "Build a board in under a minute.",
+    "previewLabel": "Live Board",
+    "previewBadge": "No signup",
+    "whyLabel": "Why people use it",
+    "whyTitle": "Built for quick ranking, not account setup.",
+    "whySubtitle": "One clean editor, one shareable link, and an export that is ready to post.",
+    "featureExtra": "Made to stay fast and obvious even on a phone."
   },
   "create": {
     "title": "Create New Tier List",
@@ -20,6 +27,11 @@
     "namePlaceholder": "e.g., Best Fast Food, Favorite Anime 2024",
     "btn": "Create Tier List",
     "btnCreating": "Creating..."
+  },
+  "createPage": {
+    "eyebrow": "Start Fresh",
+    "title": "Create a New Tier List",
+    "subtitle": "Give your tier list a name and start ranking!"
   },
   "editor": {
     "viewOnly": "View only",
