@@ -43,6 +43,8 @@ export default function HomeHero() {
 
   return (
     <div className="relative overflow-hidden px-2 py-10 sm:px-4 lg:px-6 lg:py-14">
+      <div className="pointer-events-none absolute -left-24 top-10 h-80 w-80 rounded-full bg-brand-500/10 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 top-6 h-72 w-72 rounded-full bg-mint-300/8 blur-3xl" />
       <section className="relative grid gap-14 lg:grid-cols-[minmax(0,1fr)_30rem] lg:items-center">
         <div className="max-w-3xl">
           <div className="mb-6 inline-flex items-center rounded-full border border-border/80 bg-secondary/55 px-4 py-2 text-xs font-medium uppercase tracking-[0.26em] text-brand-200">
@@ -72,11 +74,11 @@ export default function HomeHero() {
             {dict.title}
           </p>
           <div className="space-y-3">
-            {[
-              { label: "S", color: "#d8a3f5", item: "ghjkl" },
-              { label: "A", color: "#8c54fc", item: "qwerty" },
-              { label: "B", color: "#7ff0ec", item: "Empty" },
-              { label: "C", color: "#b8acc6", item: "Empty" },
+              {[
+              { label: "S", color: "#ff7f7f", item: "ghjkl" },
+              { label: "A", color: "#ffbf7f", item: "qwerty" },
+              { label: "B", color: "#ffdf7f", item: "Empty" },
+              { label: "C", color: "#ffff7f", item: "Empty" },
             ].map((row) => (
               <div
                 key={row.label}
