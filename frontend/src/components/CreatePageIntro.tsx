@@ -15,7 +15,7 @@ export default function CreatePageIntro() {
       <p className="text-xs uppercase tracking-[0.28em] text-brand-200/85">
         {dict.eyebrow}
       </p>
-      <h1 className="mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
+      <h1 className="mt-3 text-4xl font-semibold tracking-tight text-gradient-brand sm:text-5xl">
         {dict.title}
       </h1>
       <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-muted-foreground">

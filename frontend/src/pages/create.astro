@@ -8,11 +8,15 @@ import Layout from "@/layouts/Layout.astro";
   title="Create Tier List — 13TierList"
   description="Create a new image-based tier list"
 >
-  <div class="mx-auto max-w-3xl py-14 sm:py-20">
-    <CreatePageIntro client:load />
+  <div class="-mx-4 px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+    <div class="dotted-glow-background dotted-glow-mask rounded-[36px] px-6 py-12 sm:px-8 lg:px-12 lg:py-16">
+      <div class="mx-auto max-w-3xl">
+        <CreatePageIntro client:load />
 
-    <div class="surface-shell p-6 sm:p-8">
-      <CreateForm client:load />
+        <div class="surface-shell p-6 sm:p-8">
+          <CreateForm client:load />
+        </div>
+      </div>
     </div>
   </div>
 </Layout>

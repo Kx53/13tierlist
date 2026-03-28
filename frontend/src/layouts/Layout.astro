@@ -26,8 +26,8 @@ const {
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
     <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
     <link rel="manifest" href="/site.webmanifest" />
-    <meta name="msapplication-TileColor" content="#060816" />
-    <meta name="theme-color" content="#060816" />
+    <meta name="msapplication-TileColor" content="#040F0F" />
+    <meta name="theme-color" content="#040F0F" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
@@ -37,22 +37,22 @@ const {
     <title>{title}</title>
   </head>
   <body class="min-h-screen">
-    <nav class="sticky top-0 z-50 border-b border-border/60 bg-background/72 backdrop-blur-xl">
-      <div class="mx-auto flex h-18 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+    <header class="sticky top-4 z-50 px-4 sm:px-6 lg:px-8">
+      <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 simple-navbar-shell sm:px-5">
         <a href="/" class="group flex items-center gap-3">
-          <div class="flex h-11 w-11 items-center justify-center rounded-2xl border border-border/70 bg-secondary/75 shadow-[0_18px_44px_-28px_rgba(118,225,255,0.8)]">
-            <Trophy className="h-5 w-5 text-brand-400" />
+          <div class="flex h-10 w-10 items-center justify-center rounded-full border border-border/80 bg-secondary/70 shadow-[0_12px_28px_-18px_rgba(127,240,236,0.7)]">
+            <Trophy className="h-4 w-4 text-mint-300" />
           </div>
-          <span class="text-sm font-semibold uppercase tracking-[0.28em] text-gradient-brand sm:text-base">
-            13TierList
+          <span class="text-sm font-semibold uppercase tracking-[0.32em] text-gradient-brand sm:text-base">
+            TIERLIST
           </span>
         </a>
 
-        <div class="flex items-center gap-4">
+        <div class="flex items-center gap-3">
           <LanguagePicker client:load />
           <a
             href="/create"
-            class="inline-flex h-10 items-center justify-center rounded-full border border-border bg-primary px-4 text-sm font-medium text-primary-foreground shadow-[0_16px_40px_-20px_rgba(76,92,255,0.95)] transition-all hover:bg-primary/92"
+            class="inline-flex h-10 items-center justify-center rounded-full border border-white/10 bg-primary px-4 text-sm font-medium text-primary-foreground shadow-[0_18px_40px_-24px_rgba(140,84,252,0.8)] transition-colors hover:bg-brand-400"
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -70,13 +70,13 @@ const {
           </a>
         </div>
       </div>
-    </nav>
+    </header>
 
     <main class="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       <slot />
     </main>
 
-    <footer class="mt-auto border-t border-border/60">
+    <footer class="mt-auto border-t border-border/50">
       <div class="mx-auto max-w-7xl px-4 py-8 text-center text-sm text-muted-foreground sm:px-6 lg:px-8">
         <FooterText client:load /> &middot; 13TierList by 13room.space
       </div>

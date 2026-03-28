@@ -1,25 +1,20 @@
 {
   "home": {
-    "title": "13TierList — Create & Share Tier Lists",
+    "title": "Create & Share Tier Lists",
     "description": "Create beautiful image-based tier lists and share them with anyone",
     "tag": "Free · No signup · Instant sharing",
     "headline1": "Rank Everything",
-    "headline2": "Your Way",
-    "subtitle": "Create stunning image-based tier lists, drag & drop to rank, and share with anyone — no account needed.",
+    "headline2": "With Your Own Eye",
+    "subtitle": "Build a tier list in seconds, drag items where they belong, and send one clean link when it is ready.",
     "cta": "Create Tier List",
     "feature1Title": "Drag & Drop",
-    "feature1Desc": "Intuitively rank items by dragging them between tiers. Reorder within tiers too.",
+    "feature1Desc": "Move items across tiers naturally and reorder them without friction.",
     "feature2Title": "Instant Sharing",
-    "feature2Desc": "Get a shareable link immediately. No login required — share with anyone.",
+    "feature2Desc": "Every board gets a link immediately, so you can send it as soon as it looks right.",
     "feature3Title": "Image-Based",
-    "feature3Desc": "Add images via URL to create visual tier lists for games, anime, food, and more.",
-    "heroNote": "Build a board in under a minute.",
-    "previewLabel": "Live Board",
-    "previewBadge": "No signup",
-    "whyLabel": "Why people use it",
-    "whyTitle": "Built for quick ranking, not account setup.",
-    "whySubtitle": "One clean editor, one shareable link, and an export that is ready to post.",
-    "featureExtra": "Made to stay fast and obvious even on a phone."
+    "feature3Desc": "Use text or image items for games, food, anime, products, and anything else worth ranking.",
+    "sectionLabel": "Built for fast ranking",
+    "sectionTitle": "One editor. One link. One clean export."
   },
   "create": {
     "title": "Create New Tier List",
