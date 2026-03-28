@@ -40,11 +40,11 @@ export default function CreateForm() {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-6">
+    <form onSubmit={handleSubmit} className="mx-auto max-w-2xl space-y-8">
       <div>
         <label
           htmlFor="title"
-          className="mb-2 block text-sm font-medium text-muted-foreground"
+          className="mb-3 block text-sm font-medium text-muted-foreground"
         >
           {dict.nameLabel}
         </label>
@@ -54,7 +54,7 @@ export default function CreateForm() {
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           placeholder={dict.namePlaceholder}
-          className="h-13 text-base md:text-lg"
+          className="h-14 rounded-[24px] border-border/80 bg-[#1b1520]/70 text-base md:text-lg"
           maxLength={200}
           autoFocus
           required
@@ -73,7 +73,7 @@ export default function CreateForm() {
       <Button
         type="submit"
         size="lg"
-        className="w-full font-semibold"
+        className="h-13 w-full rounded-full font-semibold"
         disabled={!trimmedTitle}
         pending={loading}
       >

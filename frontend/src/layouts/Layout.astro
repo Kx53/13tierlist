@@ -37,15 +37,20 @@ const {
     />
     <title>{title}</title>
   </head>
-  <body class:list={["min-h-screen", pagePattern === "dotted" && "dotted-glow-background"]}>
+  <body
+    class:list={[
+      "min-h-screen flex flex-col",
+      pagePattern === "dotted" && "dotted-glow-background",
+    ]}
+  >
     <header class="sticky top-4 z-50 px-4 sm:px-6 lg:px-8">
       <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 simple-navbar-shell sm:px-5">
         <a href="/" class="group flex items-center gap-3">
-          <div class="flex h-11 w-11 items-center justify-center rounded-full border border-border/80 bg-secondary/70 shadow-[0_12px_28px_-18px_rgba(127,240,236,0.7)]">
-            <img src="/favicon.svg" alt="Tierlist logo" class="h-6 w-6" />
+          <div class="flex h-14 w-14 items-center justify-center rounded-full border border-border/80 bg-secondary/70 shadow-[0_12px_28px_-18px_rgba(127,240,236,0.7)]">
+            <img src="/favicon.svg" alt="Tierlist logo" class="h-8 w-8" />
           </div>
-          <span class="text-sm font-bold uppercase tracking-[0.34em] text-brand-200 sm:text-base">
-            TIERLIST
+          <span class="text-lg font-black tracking-tight text-brand-300 sm:text-xl">
+            Tierlist
           </span>
         </a>
 
@@ -73,12 +78,12 @@ const {
       </div>
     </header>
 
-    <main class="mx-auto w-full max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+    <main class="mx-auto w-full max-w-7xl flex-1 px-4 py-8 sm:px-6 lg:px-8">
       <slot />
     </main>
 
     <footer class="mt-auto border-t border-border/40 bg-[#191b1c]">
-      <div class="mx-auto max-w-7xl px-4 py-8 text-center text-sm text-muted-foreground sm:px-6 lg:px-8">
+      <div class="mx-auto max-w-7xl px-4 py-6 text-center text-sm text-muted-foreground sm:px-6 lg:px-8">
         <FooterText client:load /> &middot; 13TierList by 13room.space
       </div>
     </footer>

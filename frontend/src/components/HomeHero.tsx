@@ -43,11 +43,11 @@ export default function HomeHero() {
 
   return (
     <div className="relative overflow-hidden px-2 py-10 sm:px-4 lg:px-6 lg:py-14">
-      <div className="pointer-events-none absolute -left-24 top-10 h-80 w-80 rounded-full bg-brand-500/10 blur-3xl" />
-      <div className="pointer-events-none absolute -right-20 top-6 h-72 w-72 rounded-full bg-mint-300/8 blur-3xl" />
+      <div className="pointer-events-none absolute -left-28 top-8 h-96 w-96 rounded-full bg-brand-500/10 blur-3xl" />
+      <div className="pointer-events-none absolute -right-24 top-0 h-80 w-80 rounded-full bg-mint-300/8 blur-3xl" />
       <section className="relative grid gap-14 lg:grid-cols-[minmax(0,1fr)_30rem] lg:items-center">
         <div className="max-w-3xl">
-          <div className="mb-6 inline-flex items-center rounded-full border border-border/80 bg-secondary/55 px-4 py-2 text-xs font-medium uppercase tracking-[0.26em] text-brand-200">
+          <div className="mb-6 text-xs font-semibold uppercase tracking-[0.32em] text-brand-200/90">
             {dict.tag}
           </div>
 
@@ -74,11 +74,27 @@ export default function HomeHero() {
             {dict.title}
           </p>
           <div className="space-y-3">
-              {[
-              { label: "S", color: "#ff7f7f", item: "ghjkl" },
-              { label: "A", color: "#ffbf7f", item: "qwerty" },
-              { label: "B", color: "#ffdf7f", item: "Empty" },
-              { label: "C", color: "#ffff7f", item: "Empty" },
+            {[
+              {
+                label: "S",
+                color: "#ff7f7f",
+                items: ["Thai Milk Tea", "Brown Sugar Boba"],
+              },
+              {
+                label: "A",
+                color: "#ffbf7f",
+                items: ["Cola", "Lemon Tea"],
+              },
+              {
+                label: "B",
+                color: "#ffdf7f",
+                items: ["Peach Soda", "Matcha Latte"],
+              },
+              {
+                label: "C",
+                color: "#ffff7f",
+                items: ["Sparkling Water"],
+              },
             ].map((row) => (
               <div
                 key={row.label}
@@ -90,10 +106,15 @@ export default function HomeHero() {
                 >
                   {row.label}
                 </div>
-                <div className="flex flex-1 items-center px-4 py-3">
-                  <div className="flex min-h-14 min-w-[9rem] items-center justify-center rounded-[20px] border border-border/70 bg-[#191b1c]/70 px-4 text-center font-semibold text-foreground">
-                    {row.item}
-                  </div>
+                <div className="flex flex-1 flex-wrap items-center gap-3 px-4 py-3">
+                  {row.items.map((item) => (
+                    <div
+                      key={item}
+                      className="flex min-h-14 items-center justify-center rounded-[20px] border border-border/70 bg-[#191b1c]/70 px-4 text-center font-semibold text-foreground"
+                    >
+                      {item}
+                    </div>
+                  ))}
                 </div>
               </div>
             ))}
@@ -119,9 +140,7 @@ export default function HomeHero() {
 
             return (
               <div key={feature.title} className="flex flex-col gap-4">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-border/70 bg-secondary/55 text-mint-300">
-                  <Icon className="h-5 w-5" />
-                </div>
+                <Icon className="h-5 w-5 text-mint-300" />
                 <div className="flex flex-col gap-3">
                   <h3 className="text-xl font-semibold">{feature.title}</h3>
                   <p className="max-w-sm text-base leading-7 text-muted-foreground">

@@ -9,11 +9,10 @@ import Layout from "@/layouts/Layout.astro";
   description="Create a new image-based tier list"
   pagePattern="dotted"
 >
-  <div class="mx-auto max-w-3xl py-12 sm:py-16">
+  <div class="mx-auto flex min-h-[calc(100svh-14rem)] max-w-3xl flex-col justify-center py-12 sm:py-16">
     <CreatePageIntro client:load />
-
-    <div class="surface-shell p-6 sm:p-8">
+    <div class="mx-auto w-full max-w-2xl">
       <CreateForm client:load />
     </div>
   </div>
- </Layout>
+</Layout>
