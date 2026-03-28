@@ -329,7 +329,7 @@ export default function TierListApp({ slug }: Props) {
       </div>
 
       <div className="mt-4">
-        <div className="mb-4 flex flex-col items-start justify-between gap-4 rounded-[30px] border border-border/70 bg-card/60 p-5 shadow-[0_24px_80px_-36px_rgba(9,14,34,0.98)] backdrop-blur-xl sm:mb-8 sm:flex-row sm:items-center">
+        <div className="mb-5 flex flex-col items-start justify-between gap-4 sm:mb-7 sm:flex-row sm:items-center">
           <div className="w-full flex-1">
             {isOwner ? (
               <input
@@ -338,11 +338,11 @@ export default function TierListApp({ slug }: Props) {
                 onChange={(e) =>
                   handleChange(e.target.value, data.tiers, unrankedItems)
                 }
-                className="w-full border-none bg-transparent text-2xl font-semibold text-foreground outline-none placeholder:text-muted-foreground sm:text-3xl"
+                className="w-full border-none bg-transparent px-1 text-2xl font-semibold text-foreground outline-none placeholder:text-muted-foreground sm:text-3xl"
                 placeholder="Tier List Title"
               />
             ) : (
-              <h1 className="wrap-break-word text-2xl font-semibold text-foreground sm:text-3xl">
+              <h1 className="wrap-break-word px-1 text-2xl font-semibold text-foreground sm:text-3xl">
                 {data.title}
               </h1>
             )}
@@ -357,6 +357,7 @@ export default function TierListApp({ slug }: Props) {
             <Button
               size="sm"
               variant="secondary"
+              className="hover:border-brand-200/40 hover:bg-secondary/95"
               onClick={handleExport}
               pending={isExporting}
             >
@@ -369,7 +370,11 @@ export default function TierListApp({ slug }: Props) {
             <Button
               size="sm"
               variant="secondary"
-              className={copied ? "bg-emerald-500/10 text-emerald-400" : ""}
+              className={
+                copied
+                  ? "bg-emerald-500/10 text-emerald-400"
+                  : "hover:border-brand-200/40 hover:bg-secondary/95"
+              }
               onClick={handleCopyLink}
             >
               {copied ? (
@@ -403,7 +408,7 @@ export default function TierListApp({ slug }: Props) {
                     ? "border-emerald-500/30 bg-emerald-500/20 text-emerald-400"
                     : saveStatus === "error"
                       ? "border-red-500/30 bg-red-500/20 text-red-400"
-                      : ""
+                      : "hover:shadow-[0_18px_40px_-24px_rgba(140,84,252,0.82)]"
                 }
                 onClick={handleSave}
                 disabled={saving}

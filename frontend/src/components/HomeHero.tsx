@@ -42,64 +42,62 @@ export default function HomeHero() {
   ];
 
   return (
-    <div className="-mx-4 overflow-hidden px-4 sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
-      <div className="dotted-glow-background dotted-glow-mask relative rounded-[36px] px-6 py-12 sm:px-8 lg:px-12 lg:py-16">
-        <section className="relative grid gap-14 lg:grid-cols-[minmax(0,1fr)_30rem] lg:items-center">
-          <div className="max-w-3xl">
-            <div className="mb-6 inline-flex items-center rounded-full border border-border/80 bg-secondary/55 px-4 py-2 text-xs font-medium uppercase tracking-[0.26em] text-brand-200">
-              {dict.tag}
-            </div>
-
-            <h1 className="max-w-4xl text-5xl font-black leading-[0.93] tracking-[-0.05em] sm:text-6xl lg:text-7xl">
-              <span className="text-gradient-brand">{dict.headline1}</span>
-              <br />
-              <span className="text-gradient-signal">{dict.headline2}</span>
-            </h1>
-
-            <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground sm:text-xl">
-              {dict.subtitle}
-            </p>
-
-            <div className="mt-10">
-              <a href="/create" className="noise-button inline-flex items-center gap-2">
-                {dict.cta}
-                <ArrowRight className="h-4 w-4" />
-              </a>
-            </div>
+    <div className="relative overflow-hidden px-2 py-10 sm:px-4 lg:px-6 lg:py-14">
+      <section className="relative grid gap-14 lg:grid-cols-[minmax(0,1fr)_30rem] lg:items-center">
+        <div className="max-w-3xl">
+          <div className="mb-6 inline-flex items-center rounded-full border border-border/80 bg-secondary/55 px-4 py-2 text-xs font-medium uppercase tracking-[0.26em] text-brand-200">
+            {dict.tag}
           </div>
 
-          <div className="relative">
-            <p className="mb-5 text-sm uppercase tracking-[0.32em] text-brand-200/80">
-              {dict.title}
-            </p>
-            <div className="space-y-3">
-              {[
-                { label: "S", color: "#d8a3f5", item: "ghjkl" },
-                { label: "A", color: "#8c54fc", item: "qwerty" },
-                { label: "B", color: "#7ff0ec", item: "Empty" },
-                { label: "C", color: "#b8acc6", item: "Empty" },
-              ].map((row) => (
+          <h1 className="max-w-4xl text-5xl font-black leading-[0.93] tracking-[-0.05em] sm:text-6xl lg:text-7xl">
+            <span className="text-gradient-brand">{dict.headline1}</span>
+            <br />
+            <span className="text-gradient-signal">{dict.headline2}</span>
+          </h1>
+
+          <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground sm:text-xl">
+            {dict.subtitle}
+          </p>
+
+          <div className="mt-10">
+            <a href="/create" className="noise-button inline-flex items-center gap-2">
+              <span className="relative z-10">{dict.cta}</span>
+              <ArrowRight className="relative z-10 h-4 w-4" />
+            </a>
+          </div>
+        </div>
+
+        <div className="relative">
+          <p className="mb-5 text-sm uppercase tracking-[0.32em] text-brand-200/80">
+            {dict.title}
+          </p>
+          <div className="space-y-3">
+            {[
+              { label: "S", color: "#d8a3f5", item: "ghjkl" },
+              { label: "A", color: "#8c54fc", item: "qwerty" },
+              { label: "B", color: "#7ff0ec", item: "Empty" },
+              { label: "C", color: "#b8acc6", item: "Empty" },
+            ].map((row) => (
+              <div
+                key={row.label}
+                className="flex min-h-[5.5rem] overflow-hidden rounded-[26px] border border-border/80 bg-[#12091b]/78 backdrop-blur"
+              >
                 <div
-                  key={row.label}
-                  className="flex min-h-[5.5rem] overflow-hidden rounded-[26px] border border-border/80 bg-[#12091b]/78 backdrop-blur"
+                  className="flex w-24 shrink-0 items-center justify-center text-2xl font-black"
+                  style={{ backgroundColor: `${row.color}28`, color: row.color }}
                 >
-                  <div
-                    className="flex w-24 shrink-0 items-center justify-center text-2xl font-black"
-                    style={{ backgroundColor: `${row.color}28`, color: row.color }}
-                  >
-                    {row.label}
-                  </div>
-                  <div className="flex flex-1 items-center px-4 py-3">
-                    <div className="flex min-h-14 min-w-[9rem] items-center justify-center rounded-[20px] border border-border/70 bg-[#191b1c]/70 px-4 text-center font-semibold text-foreground">
-                      {row.item}
-                    </div>
+                  {row.label}
+                </div>
+                <div className="flex flex-1 items-center px-4 py-3">
+                  <div className="flex min-h-14 min-w-[9rem] items-center justify-center rounded-[20px] border border-border/70 bg-[#191b1c]/70 px-4 text-center font-semibold text-foreground">
+                    {row.item}
                   </div>
                 </div>
-              ))}
-            </div>
+              </div>
+            ))}
           </div>
-        </section>
-      </div>
+        </div>
+      </section>
 
       <section className="border-t border-border/50 py-16">
         <div className="mb-10 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">

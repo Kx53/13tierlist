@@ -181,7 +181,7 @@
 }
 
 .noise-button {
-  @apply relative overflow-hidden rounded-full border border-white/10 px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_22px_50px_-24px_rgba(140,84,252,0.78)] transition-transform duration-200 hover:-translate-y-0.5;
+  @apply relative isolate overflow-hidden rounded-full border border-white/10 px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_22px_50px_-24px_rgba(140,84,252,0.78)] transition-transform duration-200 hover:-translate-y-0.5;
   background:
     linear-gradient(135deg, #a433d5 0%, #8c54fc 45%, #450591 100%),
     radial-gradient(circle at 20% 20%, rgba(255, 255, 255, 0.18), transparent 30%);
@@ -190,9 +190,38 @@
 .noise-button::before {
   content: "";
   position: absolute;
+  inset: -1px;
+  border-radius: inherit;
+  padding: 1px;
+  background: conic-gradient(
+    from 0deg,
+    rgba(127, 240, 236, 0.1),
+    rgba(127, 240, 236, 0.92),
+    rgba(216, 163, 245, 0.88),
+    rgba(140, 84, 252, 0.95),
+    rgba(127, 240, 236, 0.1)
+  );
+  animation: buttonOrbit 3.4s linear infinite;
+  -webkit-mask:
+    linear-gradient(#000 0 0) content-box,
+    linear-gradient(#000 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.noise-button::after {
+  content: "";
+  position: absolute;
   inset: 0;
   opacity: 0.16;
   pointer-events: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
   mix-blend-mode: screen;
+}
+
+@keyframes buttonOrbit {
+  to {
+    transform: rotate(1turn);
+  }
 }

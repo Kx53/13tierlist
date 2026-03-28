@@ -1,17 +1,18 @@
 ---
 import "@/styles/global.css";
-import { Trophy } from "lucide-react";
 import FooterText from "@/components/FooterText";
 import LanguagePicker from "@/components/LanguagePicker";
 
 export interface Props {
   title?: string;
   description?: string;
+  pagePattern?: "default" | "dotted";
 }
 
 const {
   title = "13TierList",
   description = "Create and share tier lists with friends. — tierlist.13room.space",
+  pagePattern = "default",
 } = Astro.props;
 ---
 
@@ -36,12 +37,12 @@ const {
     />
     <title>{title}</title>
   </head>
-  <body class="min-h-screen">
+  <body class:list={["min-h-screen", pagePattern === "dotted" && "dotted-glow-background"]}>
     <header class="sticky top-4 z-50 px-4 sm:px-6 lg:px-8">
       <div class="mx-auto flex max-w-6xl items-center justify-between gap-4 px-4 py-3 simple-navbar-shell sm:px-5">
         <a href="/" class="group flex items-center gap-3">
           <div class="flex h-10 w-10 items-center justify-center rounded-full border border-border/80 bg-secondary/70 shadow-[0_12px_28px_-18px_rgba(127,240,236,0.7)]">
-            <Trophy className="h-4 w-4 text-mint-300" />
+            <img src="/favicon.svg" alt="Tierlist logo" class="h-5 w-5" />
           </div>
           <span class="text-sm font-semibold uppercase tracking-[0.32em] text-gradient-brand sm:text-base">
             TIERLIST
