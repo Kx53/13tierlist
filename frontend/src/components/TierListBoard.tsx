@@ -10,7 +10,7 @@ interface Props {
 }
 
 const fallbackImage =
-  'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%231e293b" width="100" height="100"/><text x="50" y="55" text-anchor="middle" fill="%2364748b" font-size="30">?</text></svg>';
+  'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23f3f3f1" width="100" height="100"/><text x="50" y="58" text-anchor="middle" fill="%23000000" font-size="32">?</text></svg>';
 
 function BoardItem({
   item,
@@ -20,7 +20,7 @@ function BoardItem({
   imageLoading?: "eager" | "lazy";
 }) {
   return (
-    <div className="group relative h-16 w-16 overflow-hidden rounded-2xl border border-border bg-secondary sm:h-20 sm:w-20">
+    <div className="group relative h-16 w-16 overflow-hidden border border-black bg-white sm:h-20 sm:w-20">
       {item.imageUrl ? (
         <>
           <img
@@ -40,8 +40,8 @@ function BoardItem({
           </div>
         </>
       ) : (
-        <div className="flex h-full w-full items-center justify-center p-1">
-          <p className="line-clamp-3 w-full overflow-hidden px-1 text-center text-[10px] font-bold leading-tight text-white text-ellipsis sm:text-xs">
+        <div className="flex h-full w-full items-center justify-center bg-muted p-1">
+          <p className="line-clamp-3 w-full overflow-hidden px-1 text-center text-[10px] font-medium leading-tight text-black text-ellipsis sm:text-xs">
             {item.title}
           </p>
         </div>
@@ -64,16 +64,16 @@ const TierListBoard = forwardRef<HTMLDivElement, Props>(function TierListBoard(
     <div className={className || "space-y-2"}>
       <div
         ref={ref}
-        className="flex flex-col gap-2 overflow-hidden rounded-xl bg-background/30 pb-2"
+        className="flex flex-col overflow-hidden border-l border-t border-black bg-white"
       >
         {tiers.map((tier) => (
           <div
             key={tier.id}
-            className="flex overflow-hidden rounded-3xl border border-border bg-card/75"
+            className="flex border-b border-r border-black bg-white"
           >
             <div
-              className="flex w-20 shrink-0 items-center justify-center p-2 text-center text-lg font-bold sm:w-28 sm:text-xl"
-              style={{ backgroundColor: `${tier.color}30`, color: tier.color }}
+              className="flex w-20 shrink-0 items-center justify-center border-r border-black p-2 text-center text-lg font-medium text-black sm:w-28 sm:text-xl"
+              style={{ backgroundColor: tier.color }}
             >
               {tier.label}
             </div>
@@ -97,11 +97,12 @@ const TierListBoard = forwardRef<HTMLDivElement, Props>(function TierListBoard(
       </div>
 
       {showUnranked && unrankedItems && unrankedItems.length > 0 ? (
-        <div className="mt-8 overflow-hidden rounded-[28px] border border-border bg-card/80 shadow-[0_24px_80px_-36px_rgba(9,14,34,0.98)] backdrop-blur-xl">
-          <div className="border-b border-border bg-secondary/70 p-4">
-            <h3 className="font-semibold text-foreground">
+        <div className="mt-8 overflow-hidden border border-black bg-white">
+          <div className="flex items-center justify-between border-b border-black bg-surface-1 p-4 text-white">
+            <h3 className="font-medium text-white">
               Item Bank (Unranked)
             </h3>
+            <span className="label-caps text-white/60">UNRANKED</span>
           </div>
           <div className="flex flex-wrap items-start gap-3 p-4">
             {unrankedItems.map((item) => (

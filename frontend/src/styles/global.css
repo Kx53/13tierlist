@@ -2,34 +2,31 @@
 @import "tw-animate-css";
 
 :root {
-  --background: #141b1e;
-  --foreground: #f1f5f8;
-  --card: rgba(28, 31, 34, 0.8);
-  --card-foreground: #f1f5f8;
-  --popover: #1f2327;
-  --popover-foreground: #f1f5f8;
-  --primary: #8c54fc;
-  --primary-foreground: #f1f5f8;
-  --secondary: rgba(33, 1, 75, 0.2);
-  --secondary-foreground: #ede9fb;
-  --muted: rgba(89, 95, 97, 0.28);
-  --muted-foreground: #c2c9cc;
-  --accent: #7ff0ec;
-  --accent-foreground: #040f0f;
-  --destructive: #f35b76;
-  --destructive-foreground: #fff3f6;
-  --border: rgba(218, 163, 245, 0.18);
-  --input: rgba(30, 4, 42, 0.24);
-  --ring: rgba(127, 240, 236, 0.32);
+  --background: #ffffff;
+  --foreground: #000000;
+  --card: #ffffff;
+  --card-foreground: #000000;
+  --popover: #ffffff;
+  --popover-foreground: #000000;
+  --primary: #000000;
+  --primary-foreground: #ffffff;
+  --secondary: #f3f3f1;
+  --secondary-foreground: #000000;
+  --muted: #f5f5f2;
+  --muted-foreground: #666666;
+  --accent: #3cd9b3;
+  --accent-foreground: #000000;
+  --destructive: #c92a2a;
+  --destructive-foreground: #ffffff;
+  --border: #000000;
+  --input: #ffffff;
+  --ring: #000000;
   --radius: 1rem;
 }
 
-.dark {
-  color-scheme: dark;
-}
-
 @theme inline {
-  --font-sans: "Roboto", system-ui, sans-serif;
+  --font-sans: "Inter", "Noto Sans Thai", Helvetica, sans-serif;
+  --font-display: "Playfair Display", "Noto Serif Thai", Georgia, serif;
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-card: var(--card);
@@ -49,30 +46,30 @@
   --color-border: var(--border);
   --color-input: var(--input);
   --color-ring: var(--ring);
-  --radius-sm: calc(var(--radius) - 6px);
-  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: 0;
+  --radius-md: var(--radius);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 8px);
-  --color-brand-50: #efe4ff;
-  --color-brand-100: #efe4ff;
-  --color-brand-200: #d8a3f5;
-  --color-brand-300: #c266f0;
-  --color-brand-400: #a433d5;
-  --color-brand-500: #8c54fc;
-  --color-brand-600: #76229a;
-  --color-brand-700: #450591;
-  --color-brand-800: #21014b;
-  --color-mint-300: #7ff0ec;
-  --color-mint-500: #3d7a78;
-  --color-stone-50: #f1f5f8;
-  --color-stone-200: #bdd0df;
-  --color-stone-400: #6b8aa0;
-  --color-stone-500: #4e6677;
-  --color-stone-700: #31424d;
-  --color-surface-1: #191b1c;
-  --color-surface-2: #383b3d;
-  --color-surface-3: #595f61;
-  --color-surface-4: #7b8285;
+  --radius-xl: 9999px;
+  --color-brand-50: #fafafa;
+  --color-brand-100: #f3f3f1;
+  --color-brand-200: #808080;
+  --color-brand-300: #5b5b5b;
+  --color-brand-400: #3c3c3c;
+  --color-brand-500: #000000;
+  --color-brand-600: #000000;
+  --color-brand-700: #000000;
+  --color-brand-800: #000000;
+  --color-mint-300: #3cd9b3;
+  --color-mint-500: #1b8d73;
+  --color-stone-50: #ffffff;
+  --color-stone-200: #e5e5e2;
+  --color-stone-400: #808080;
+  --color-stone-500: #666666;
+  --color-stone-700: #3c3c3c;
+  --color-surface-1: #3c3c3c;
+  --color-surface-2: #f3f3f1;
+  --color-surface-3: #e9e9e5;
+  --color-surface-4: #808080;
 }
 
 @layer base {
@@ -82,22 +79,14 @@
 
   html {
     @apply bg-background text-foreground;
+    color-scheme: light;
+    scroll-behavior: smooth;
   }
 
   body {
     @apply min-h-screen bg-background font-sans text-foreground antialiased;
-    background-image:
-      radial-gradient(
-        circle at top left,
-        rgba(140, 84, 252, 0.12),
-        transparent 28rem
-      ),
-      radial-gradient(
-        circle at top right,
-        rgba(127, 240, 236, 0.08),
-        transparent 22rem
-      ),
-      linear-gradient(180deg, rgba(241, 245, 248, 0.03), transparent 32rem);
+    font-weight: 400;
+    letter-spacing: -0.012em;
   }
 
   h1,
@@ -105,6 +94,13 @@
   h3,
   h4 {
     @apply text-foreground;
+    text-wrap: balance;
+  }
+
+  button,
+  a,
+  input {
+    -webkit-tap-highlight-color: transparent;
   }
 
   a {
@@ -112,8 +108,8 @@
   }
 
   ::selection {
-    background: rgba(140, 84, 252, 0.28);
-    color: #f8fbff;
+    background: #cdffea;
+    color: #000000;
   }
 
   ::-webkit-scrollbar {
@@ -121,150 +117,101 @@
   }
 
   ::-webkit-scrollbar-track {
-    background: #191b1c;
+    background: #ffffff;
   }
 
   ::-webkit-scrollbar-thumb {
-    background: rgba(141, 84, 252, 0.4);
+    background: #3c3c3c;
+    border: 2px solid #ffffff;
     border-radius: 999px;
   }
+}
 
-  ::-webkit-scrollbar-thumb:hover {
-    background: rgba(141, 84, 252, 0.58);
-  }
+@utility font-display {
+  font-family: "Playfair Display", "Noto Serif Thai", Georgia, serif;
+}
+
+@utility label-caps {
+  font-size: 0.75rem;
+  font-weight: 500;
+  line-height: 1.25rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
 }
 
 @utility surface-shell {
-  @apply rounded-4xl border border-border/70 bg-card/78 shadow-[0_28px_96px_-42px_rgba(33,1,75,0.75)] backdrop-blur-xl;
+  @apply border border-black bg-white;
 }
 
 @utility surface-panel {
-  @apply rounded-[28px] border border-border/70 bg-card/72 shadow-[0_20px_70px_-34px_rgba(33,1,75,0.72)] backdrop-blur-lg;
+  @apply border border-black bg-white;
 }
 
 @utility surface-panel-strong {
-  @apply rounded-[28px] border border-border bg-surface-1/92 shadow-[0_32px_100px_-42px_rgba(4,15,15,0.98)];
-}
-
-@utility dotted-glow-background {
-  background-color: #141b1e;
-  background-image:
-    radial-gradient(
-      circle at 16% 20%,
-      rgba(140, 84, 252, 0.16),
-      transparent 20rem
-    ),
-    radial-gradient(
-      circle at 88% 8%,
-      rgba(127, 240, 236, 0.12),
-      transparent 18rem
-    ),
-    radial-gradient(
-      circle at 50% 50%,
-      rgba(241, 245, 248, 0.16) 1px,
-      transparent 1px
-    );
-  background-size:
-    auto,
-    auto,
-    22px 22px;
-  background-position: center, center, center;
+  @apply border border-black bg-surface-1 text-white;
 }
 
 @utility simple-navbar-shell {
-  @apply rounded-full border border-border/80 bg-surface-1/78 shadow-[0_20px_55px_-32px_rgba(33,1,75,0.9)] backdrop-blur-xl;
+  @apply border border-black bg-white;
 }
 
 @utility text-gradient-brand {
-  @apply bg-linear-to-r from-brand-200 via-stone-50 to-mint-300 bg-clip-text text-transparent;
+  @apply text-black;
 }
 
 @utility text-gradient-signal {
-  @apply bg-linear-to-r from-brand-300 via-brand-500 to-mint-300 bg-clip-text text-transparent;
+  @apply text-black;
 }
 
-.dotted-glow-mask {
-  @apply relative isolate overflow-hidden;
+@utility pastel-canvas {
+  position: relative;
+  isolation: isolate;
 }
 
-.dotted-glow-mask::before {
+.pastel-canvas::before {
   content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  opacity: 0.88;
+  position: fixed;
+  z-index: -1;
+  right: -12vw;
+  bottom: -34vh;
+  width: min(78rem, 110vw);
+  height: min(58rem, 80vh);
   pointer-events: none;
+  opacity: 0.78;
+  filter: blur(10px);
   background:
-    radial-gradient(
-      circle at 4% 16%,
-      rgba(140, 84, 252, 0.24),
-      transparent 18rem
-    ),
-    radial-gradient(
-      circle at 96% 4%,
-      rgba(127, 240, 236, 0.18),
-      transparent 18rem
-    ),
-    radial-gradient(
-      circle at center,
-      rgba(241, 245, 248, 0.11) 1px,
-      transparent 1px
-    );
-  background-size:
-    auto,
-    auto,
-    22px 22px;
-  background-position: center, center, center;
-  mask-image: linear-gradient(to bottom, white, rgba(255, 255, 255, 0.4));
+    radial-gradient(circle at 18% 42%, #ffedbe 0 13%, transparent 37%),
+    radial-gradient(circle at 44% 60%, #ffbcc3 0 12%, transparent 38%),
+    radial-gradient(circle at 60% 32%, #cdffea 0 16%, transparent 43%),
+    radial-gradient(circle at 80% 44%, #b9eeff 0 14%, transparent 40%),
+    radial-gradient(circle at 68% 72%, #e7d4ff 0 15%, transparent 42%),
+    radial-gradient(circle at 92% 70%, #f1ffc9 0 12%, transparent 38%);
 }
 
-.noise-button {
-  @apply relative isolate overflow-hidden rounded-full border border-white/10 px-6 py-3 text-sm font-semibold text-primary-foreground shadow-[0_22px_50px_-24px_rgba(140,84,252,0.78)] transition-transform duration-200 hover:-translate-y-0.5;
-  background:
-    linear-gradient(135deg, #a433d5 0%, #8c54fc 45%, #450591 100%),
-    radial-gradient(
-      circle at 20% 20%,
-      rgba(255, 255, 255, 0.18),
-      transparent 30%
-    );
+.editorial-grid {
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+  background-size: 32px 32px;
 }
 
-.noise-button::before {
-  content: "";
-  position: absolute;
-  inset: -35%;
-  background: linear-gradient(
-    110deg,
-    transparent 30%,
-    rgba(255, 255, 255, 0.06) 40%,
-    rgba(127, 240, 236, 0.45) 50%,
-    rgba(216, 163, 245, 0.35) 58%,
-    transparent 72%
-  );
-  transform: translateX(-65%) skewX(-18deg);
-  animation: buttonSweep 3.4s ease-in-out infinite;
-  pointer-events: none;
+.pixel-mark {
+  image-rendering: pixelated;
+  box-shadow:
+    8px 0 0 #000,
+    0 8px 0 #000,
+    8px 8px 0 #000,
+    16px 8px 0 #000,
+    8px 16px 0 #000;
 }
 
-.noise-button::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  opacity: 0.16;
-  pointer-events: none;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160' viewBox='0 0 160 160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.15' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
-  mix-blend-mode: screen;
-}
-
-@keyframes buttonSweep {
-  0%,
-  20% {
-    transform: translateX(-72%) skewX(-18deg);
-  }
-  60% {
-    transform: translateX(72%) skewX(-18deg);
-  }
-  100% {
-    transform: translateX(72%) skewX(-18deg);
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

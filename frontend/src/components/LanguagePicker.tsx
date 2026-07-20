@@ -1,9 +1,14 @@
+import { useEffect } from "react";
 import { useStore } from "@nanostores/react";
 import { locale } from "@/lib/i18n";
 import { ToggleGroup, ToggleGroupItem } from "@/components/ui/toggle-group";
 
 export default function LanguagePicker() {
   const currentLocale = useStore(locale);
+
+  useEffect(() => {
+    document.documentElement.lang = currentLocale;
+  }, [currentLocale]);
 
   return (
     <ToggleGroup
@@ -14,7 +19,7 @@ export default function LanguagePicker() {
           locale.set(nextLocale);
         }
       }}
-      className="rounded-full bg-secondary/75"
+      className="rounded-full bg-white"
       aria-label="Language switcher"
     >
       <ToggleGroupItem

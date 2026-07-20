@@ -39,7 +39,10 @@
     "addTier": "+ Add Tier",
     "itemBank": "Item Bank (Unranked)",
     "uploadItem": "+ Upload Item",
-    "uploadPrompt": "Upload items to start dragging them into tiers"
+    "uploadPrompt": "Upload items to start dragging them into tiers",
+    "editorMode": "Edit mode",
+    "publicBoard": "Public board",
+    "copied": "Copied"
   },
   "itemForm": {
     "add": "Add Item",

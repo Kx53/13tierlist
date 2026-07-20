@@ -4,25 +4,25 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const buttonVariants = cva(
-  "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-xl text-sm font-medium transition-all outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 focus-visible:ring-2 focus-visible:ring-ring/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.99]",
+  "inline-flex shrink-0 items-center justify-center gap-2 whitespace-nowrap rounded-full border text-sm font-medium transition-colors outline-none disabled:pointer-events-none disabled:opacity-40 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background active:scale-[0.99]",
   {
     variants: {
       variant: {
         default:
-          "bg-primary text-primary-foreground shadow-[0_16px_40px_-20px_rgba(76,92,255,0.95)] hover:bg-primary/92",
+          "border-black bg-black text-white hover:bg-white hover:text-black",
         secondary:
-          "border border-border bg-secondary text-secondary-foreground hover:bg-secondary/90",
+          "border-black bg-white text-black hover:bg-secondary",
         outline:
-          "border border-border bg-transparent text-foreground hover:bg-muted/70",
-        ghost: "text-muted-foreground hover:bg-muted hover:text-foreground",
+          "border-black bg-transparent text-black hover:bg-black hover:text-white",
+        ghost: "border-transparent text-muted-foreground hover:bg-muted hover:text-black",
         destructive:
-          "bg-destructive text-destructive-foreground hover:bg-destructive/90",
+          "border-destructive bg-destructive text-white hover:bg-white hover:text-destructive",
       },
       size: {
         default: "h-10 px-4 py-2",
-        sm: "h-9 rounded-lg px-3 text-sm",
-        lg: "h-12 rounded-2xl px-6 text-base",
-        icon: "size-10 rounded-xl",
+        sm: "h-9 px-3.5 text-sm",
+        lg: "h-12 px-6 text-base",
+        icon: "size-10",
       },
     },
     defaultVariants: {

@@ -179,13 +179,13 @@ export default function ItemForm({
               setMode(value);
             }
           }}
-          className="grid w-full grid-cols-2 rounded-2xl"
+          className="grid w-full grid-cols-2 rounded-full"
         >
-          <ToggleGroupItem value="image" className="rounded-xl">
+          <ToggleGroupItem value="image" className="rounded-full">
             <ImageIcon className="mr-1.5 h-4 w-4" />
             {dict.image}
           </ToggleGroupItem>
-          <ToggleGroupItem value="text" className="rounded-xl">
+          <ToggleGroupItem value="text" className="rounded-full">
             <Type className="mr-1.5 h-4 w-4" />
             {dict.text}
           </ToggleGroupItem>
@@ -193,7 +193,7 @@ export default function ItemForm({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="mb-1.5 block text-sm font-medium text-muted-foreground">
+            <label className="label-caps mb-2 block text-foreground">
               {dict.title}
             </label>
             <Input
@@ -211,7 +211,7 @@ export default function ItemForm({
 
           {mode === "image" ? (
             <div className="animate-in fade-in-0">
-              <label className="mb-1.5 block text-sm font-medium text-muted-foreground">
+              <label className="label-caps mb-2 block text-foreground">
                 {dict.imageUpload}
               </label>
               <input
@@ -228,10 +228,10 @@ export default function ItemForm({
                   type="button"
                   onClick={() => fileInputRef.current?.click()}
                   disabled={isUploading}
-                  className={`flex h-36 w-full flex-col items-center justify-center rounded-3xl border border-dashed transition-all duration-200 focus-visible:ring-2 focus-visible:ring-ring/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background ${
+                  className={`flex h-36 w-full flex-col items-center justify-center border border-dashed transition-colors focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-white ${
                     error
-                      ? "border-destructive/50 bg-destructive/6 text-destructive"
-                      : "border-border bg-secondary/40 text-muted-foreground hover:border-primary/35 hover:bg-secondary/65 hover:text-foreground"
+                      ? "border-destructive bg-red-50 text-destructive"
+                      : "border-black bg-white text-muted-foreground hover:bg-muted hover:text-foreground"
                   }`}
                 >
                   <UploadCloud className="mb-2 h-8 w-8 opacity-70" />
@@ -240,17 +240,17 @@ export default function ItemForm({
                   </span>
                 </button>
               ) : (
-                <div className="relative flex justify-center rounded-3xl border border-border bg-secondary/50 p-3">
+                <div className="relative flex justify-center border border-black bg-muted p-3">
                   <img
                     src={previewUrl}
                     alt="Preview"
-                    className="max-h-36 rounded-2xl object-contain"
+                    className="max-h-36 object-contain"
                   />
                   {!isUploading ? (
                     <button
                       type="button"
                       onClick={clearSelectedImage}
-                      className="absolute -right-3 -top-3 flex h-8 w-8 items-center justify-center rounded-full border border-border bg-surface-3 text-sm text-foreground shadow-lg transition-colors hover:bg-destructive hover:text-destructive-foreground"
+                      className="absolute -right-3 -top-3 flex h-8 w-8 items-center justify-center rounded-full border border-black bg-white text-sm text-foreground transition-colors hover:bg-destructive hover:text-white"
                       title="Remove image"
                     >
                       ×

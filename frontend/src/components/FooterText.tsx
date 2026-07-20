@@ -13,13 +13,13 @@ export default function FooterText() {
   return (
     <>
       {dict.builtWith}{" "}
-      <Heart className="mx-1 mb-0.5 inline-block h-4 w-4 fill-current text-red-500" />{" "}
+      <Heart className="mx-1 mb-0.5 inline-block h-4 w-4 text-black/70" />{" "}
       {dict.by}{" "}
       <a
         href="https://github.com/Kx53"
         target="_blank"
         rel="noopener noreferrer"
-        className="font-medium text-foreground/85 hover:text-brand-400"
+        className="font-medium text-foreground underline decoration-1 underline-offset-4 hover:text-muted-foreground"
       >
         Kx53
       </a>

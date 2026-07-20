@@ -11,14 +11,14 @@ export default function CreatePageIntro() {
   const dict = useStore(createPageDict);
 
   return (
-    <div className="mb-10 text-center">
-      <p className="text-xs uppercase tracking-[0.28em] text-brand-200/85">
+    <div>
+      <p className="label-caps inline-flex rounded-full bg-surface-1 px-4 py-2 text-white">
         {dict.eyebrow}
       </p>
-      <h1 className="mt-3 text-4xl font-semibold tracking-tight text-gradient-brand sm:text-5xl">
+      <h1 className="font-display mt-7 max-w-2xl text-5xl font-normal leading-[0.95] tracking-[-0.045em] sm:text-7xl">
         {dict.title}
       </h1>
-      <p className="mx-auto mt-4 max-w-xl text-base leading-7 text-muted-foreground">
+      <p className="mt-6 max-w-lg text-lg font-light leading-7 text-foreground">
         {dict.subtitle}
       </p>
     </div>

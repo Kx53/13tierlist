@@ -1,12 +1,6 @@
 import { useStore } from "@nanostores/react";
-import {
-  ArrowRight,
-  Image as ImageIcon,
-  Link,
-  MousePointer2,
-} from "lucide-react";
+import { ArrowRight } from "lucide-react";
 import { i18n } from "@/lib/i18n";
-import { NoiseBackground } from "@/components/ui/noise-background";
 
 export const homeDict = i18n("home", {
   title: "Create & Share Tier Lists",
@@ -35,65 +29,64 @@ export default function HomeHero() {
   const dict = useStore(homeDict);
   const featureCards = [
     {
-      icon: MousePointer2,
+      number: "01",
       title: dict.feature1Title,
       description: dict.feature1Desc,
     },
     {
-      icon: Link,
+      number: "02",
       title: dict.feature2Title,
       description: dict.feature2Desc,
     },
     {
-      icon: ImageIcon,
+      number: "03",
       title: dict.feature3Title,
       description: dict.feature3Desc,
     },
   ];
 
   return (
-    <div className="px-2 py-10 sm:px-4 lg:px-6 lg:py-14">
-      <section className="relative grid gap-14 lg:grid-cols-[minmax(0,1fr)_30rem] lg:items-center">
-        <div className="max-w-3xl">
-          <div className="mb-6 text-xs font-semibold uppercase tracking-[0.32em] text-brand-200/90">
+    <div className="py-8 sm:py-12 lg:py-16">
+      <section className="relative grid min-h-[38rem] gap-14 overflow-hidden border-b border-black pb-16 lg:grid-cols-[minmax(0,1.08fr)_minmax(24rem,0.72fr)] lg:items-center lg:pb-20">
+        <div className="relative z-10 max-w-4xl">
+          <div className="label-caps mb-8 inline-flex rounded-full bg-surface-1 px-4 py-2 text-white">
             {dict.tag}
           </div>
 
-          <h1 className="max-w-4xl text-5xl font-black leading-[0.93] tracking-[-0.05em] sm:text-6xl lg:text-7xl">
-            <span className="text-gradient-brand">{dict.headline1}</span>
+          <h1 className="max-w-5xl text-[clamp(3.6rem,8vw,7.75rem)] font-light leading-[0.84] tracking-[-0.065em]">
+            <span>{dict.headline1}</span>
             <br />
-            <span className="text-gradient-signal">{dict.headline2}</span>
+            <span className="font-display font-normal tracking-[-0.045em]">
+              {dict.headline2}
+            </span>
           </h1>
 
-          <p className="mt-6 max-w-2xl text-lg leading-8 text-muted-foreground sm:text-xl">
+          <p className="mt-8 max-w-xl text-lg font-light leading-7 text-foreground sm:text-xl sm:leading-8">
             {dict.subtitle}
           </p>
 
-          <div className="mt-10">
-            <NoiseBackground
-              containerClassName="w-fit p-1.5 rounded-full"
-              gradientColors={[
-                "#d8a3f5", // brand-200
-                "#8c54fc", // brand-500
-                "#7ff0ec", // mint-300
-              ]}
+          <div className="mt-10 flex flex-wrap items-center gap-5">
+            <a
+              href="/create"
+              className="inline-flex h-12 items-center gap-3 rounded-full border border-black bg-black px-6 text-base font-medium text-white transition-colors hover:bg-white hover:text-black"
             >
-              <a
-                href="/create"
-                className="inline-flex h-full w-full cursor-pointer items-center gap-2 rounded-full bg-linear-to-r from-neutral-100 via-neutral-100 to-white px-6 py-3 text-black shadow-[0px_2px_0px_0px_var(--color-neutral-50)_inset,0px_0.5px_1px_0px_var(--color-neutral-400)] transition-all duration-100 active:scale-98 dark:from-black dark:via-black dark:to-neutral-900 dark:text-white dark:shadow-[0px_1px_0px_0px_var(--color-neutral-950)_inset,0px_1px_0px_0px_var(--color-neutral-800)]"
-              >
-                <span className="relative z-10 font-semibold">{dict.cta}</span>
-                <ArrowRight className="relative z-10 h-4 w-4" />
-              </a>
-            </NoiseBackground>
+              <span>{dict.cta}</span>
+              <ArrowRight className="h-4 w-4" />
+            </a>
+            <span className="label-caps text-muted-foreground">S / A / B / C / D</span>
           </div>
         </div>
 
-        <div className="relative">
-          <p className="mb-5 text-sm uppercase tracking-[0.32em] text-brand-200/80">
-            {dict.title}
-          </p>
-          <div className="space-y-3">
+        <div className="relative z-10 mx-auto w-full max-w-[31rem] lg:translate-y-8">
+          <div className="absolute -inset-16 -z-10 bg-[radial-gradient(circle_at_20%_40%,#ffedbe_0_12%,transparent_36%),radial-gradient(circle_at_52%_72%,#ffbcc3_0_12%,transparent_40%),radial-gradient(circle_at_75%_30%,#cdffea_0_16%,transparent_42%),radial-gradient(circle_at_86%_76%,#e7d4ff_0_16%,transparent_40%)] blur-xl" />
+          <div className="border border-black bg-white">
+            <div className="flex h-12 items-center justify-between border-b border-black bg-black px-4 text-white">
+              <p className="label-caps">{dict.title}</p>
+              <div className="flex gap-1" aria-hidden="true">
+                <span className="size-2 bg-white" />
+                <span className="size-2 border border-white" />
+              </div>
+            </div>
             {[
               {
                 label: "S",
@@ -116,24 +109,20 @@ export default function HomeHero() {
                 items: ["Sparkling Water"],
               },
             ].map((row) => (
-              <div
-                key={row.label}
-                className="flex min-h-22 overflow-hidden rounded-[26px] border border-border/80 bg-[#12091b]/78 backdrop-blur"
-              >
+              <div key={row.label} className="flex min-h-20 border-b border-black last:border-b-0">
                 <div
-                  className="flex w-24 shrink-0 items-center justify-center text-2xl font-black"
+                  className="flex w-20 shrink-0 items-center justify-center border-r border-black text-2xl font-medium text-black"
                   style={{
-                    backgroundColor: `${row.color}28`,
-                    color: row.color,
+                    backgroundColor: row.color,
                   }}
                 >
                   {row.label}
                 </div>
-                <div className="flex flex-1 flex-wrap items-center gap-3 px-4 py-3">
+                <div className="flex flex-1 flex-wrap items-center gap-2 p-3">
                   {row.items.map((item) => (
                     <div
                       key={item}
-                      className="flex min-h-14 items-center justify-center rounded-[20px] border border-border/70 bg-surface-1/70 px-4 text-center font-semibold text-foreground"
+                      className="flex min-h-12 flex-1 basis-[7rem] items-center justify-center border border-black bg-white px-3 text-center text-xs font-medium leading-4"
                     >
                       {item}
                     </div>
@@ -141,38 +130,48 @@ export default function HomeHero() {
                 </div>
               </div>
             ))}
+            <div className="flex h-11 items-center justify-between border-t border-black px-4 text-xs text-muted-foreground">
+              <span>DRAG TO RANK</span>
+              <span className="size-2 bg-mint-300" aria-hidden="true" />
+            </div>
           </div>
         </div>
       </section>
 
-      <section className="py-18">
-        <div className="mb-10 flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">
+      <section className="py-16 sm:py-20">
+        <div className="mb-10 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
-            <p className="text-xs uppercase tracking-[0.3em] text-brand-200/80">
+            <p className="label-caps text-muted-foreground">
               {dict.sectionLabel}
             </p>
-            <h2 className="mt-3 text-3xl font-semibold tracking-tight sm:text-4xl">
+            <h2 className="mt-4 max-w-3xl text-4xl font-medium leading-none tracking-[-0.05em] sm:text-5xl">
               {dict.sectionTitle}
             </h2>
           </div>
         </div>
 
-        <div className="grid gap-8 border-t border-border/50 pt-8 md:grid-cols-3 md:gap-10">
+        <div className="grid border-l border-t border-black sm:grid-cols-2 lg:grid-cols-4">
           {featureCards.map((feature) => {
-            const Icon = feature.icon;
-
             return (
-              <div key={feature.title} className="flex flex-col gap-4">
-                <Icon className="h-5 w-5 text-mint-300" />
-                <div className="flex flex-col gap-3">
-                  <h3 className="text-xl font-semibold">{feature.title}</h3>
-                  <p className="max-w-sm text-base leading-7 text-muted-foreground">
-                    {feature.description}
-                  </p>
-                </div>
+              <div key={feature.title} className="min-h-64 border-b border-r border-black bg-white p-7 sm:p-8">
+                <p className="label-caps text-muted-foreground">{feature.number}</p>
+                <h3 className="mt-12 text-2xl font-medium tracking-[-0.035em]">{feature.title}</h3>
+                <p className="mt-4 max-w-sm text-base font-light leading-7 text-foreground">
+                  {feature.description}
+                </p>
               </div>
             );
           })}
+          <a
+            href="/create"
+            className="group flex min-h-64 flex-col justify-between border-b border-r border-black bg-surface-1 p-7 text-white hover:bg-black sm:p-8"
+          >
+            <span className="label-caps text-white/70">READY?</span>
+            <span className="flex items-end justify-between gap-4 text-2xl font-medium tracking-[-0.035em]">
+              {dict.cta}
+              <ArrowRight className="mb-1 size-5 transition-transform group-hover:translate-x-1" />
+            </span>
+          </a>
         </div>
       </section>
     </div>

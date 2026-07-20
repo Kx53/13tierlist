@@ -4,13 +4,13 @@ import { cva, type VariantProps } from "class-variance-authority";
 import { cn } from "@/lib/utils";
 
 const toggleGroupVariants = cva(
-  "inline-flex items-center justify-center rounded-xl text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-ring/70 focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:pointer-events-none disabled:opacity-50 data-[state=on]:bg-primary data-[state=on]:text-primary-foreground data-[state=on]:shadow-[0_10px_30px_-18px_rgba(76,92,255,0.95)]",
+  "inline-flex items-center justify-center rounded-full border border-transparent text-sm font-medium transition-colors outline-none focus-visible:ring-2 focus-visible:ring-black focus-visible:ring-offset-2 focus-visible:ring-offset-white disabled:pointer-events-none disabled:opacity-50 data-[state=on]:border-black data-[state=on]:bg-black data-[state=on]:text-white",
   {
     variants: {
       variant: {
-        default: "bg-transparent text-muted-foreground hover:bg-muted hover:text-foreground",
+        default: "bg-transparent text-muted-foreground hover:text-foreground",
         outline:
-          "border border-border bg-secondary text-secondary-foreground hover:bg-muted",
+          "border-black bg-white text-black hover:bg-muted",
       },
       size: {
         default: "h-10 px-3",
@@ -40,7 +40,7 @@ const ToggleGroup = React.forwardRef<
   <ToggleGroupPrimitive.Root
     ref={ref}
     className={cn(
-      "inline-flex items-center gap-1 rounded-2xl border border-border bg-secondary/70 p-1 backdrop-blur-sm",
+      "inline-flex items-center gap-1 rounded-full border border-black bg-white p-1",
       className,
     )}
     {...props}

@@ -31,6 +31,9 @@ export const appEditorDict = i18n("editor", {
   itemBank: "Item Bank (Unranked)",
   uploadItem: "+ Upload Item",
   uploadPrompt: "Upload items to start dragging them into tiers",
+  editorMode: "Edit mode",
+  publicBoard: "Public board",
+  copied: "Copied",
 });
 
 export const draftDict = i18n("draft", {
@@ -92,7 +95,7 @@ export default function TierListApp({ slug }: Props) {
     try {
       const dataUrl = await toPng(targetElement, {
         cacheBust: true,
-        backgroundColor: "#060816",
+        backgroundColor: "#ffffff",
         pixelRatio: 2,
       });
 
@@ -233,7 +236,7 @@ export default function TierListApp({ slug }: Props) {
       <div className="flex items-center justify-center py-32">
         <div className="flex flex-col items-center gap-4">
           <svg
-            className="h-10 w-10 animate-spin text-primary"
+            className="h-9 w-9 animate-spin text-black"
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
@@ -268,10 +271,7 @@ export default function TierListApp({ slug }: Props) {
             <p className="mb-6 text-muted-foreground">
               {error || "This tier list could not be found."}
             </p>
-            <a
-              href="/"
-              className="inline-flex h-10 items-center justify-center rounded-xl bg-primary px-5 text-sm font-medium text-primary-foreground shadow-[0_16px_40px_-20px_rgba(76,92,255,0.95)] transition-colors hover:bg-primary/92"
-            >
+            <a href="/" className="inline-flex h-10 items-center justify-center rounded-full border border-black bg-black px-5 text-sm font-medium text-white transition-colors hover:bg-white hover:text-black">
               Go Home
             </a>
           </CardContent>
@@ -283,13 +283,12 @@ export default function TierListApp({ slug }: Props) {
   return (
     <div className="animate-in fade-in-0">
       {showDraftRestore ? (
-        <div className="mb-6 flex items-center justify-between gap-4 rounded-3xl border border-amber-300/15 bg-amber-300/8 px-4 py-4 animate-in slide-in-from-top-2">
-          <p className="text-sm text-amber-100/85">{draftTexts.banner}</p>
+        <div className="mb-6 flex flex-col items-start justify-between gap-4 border border-black bg-[#ffedbe] px-4 py-4 animate-in slide-in-from-top-2 sm:flex-row sm:items-center">
+          <p className="text-sm text-black">{draftTexts.banner}</p>
           <div className="flex gap-2">
             <Button
               size="sm"
               variant="secondary"
-              className="border-amber-200/10 bg-amber-200/14 text-amber-100 hover:bg-amber-200/20"
               onClick={handleRestoreDraft}
             >
               {draftTexts.restore}
@@ -297,7 +296,7 @@ export default function TierListApp({ slug }: Props) {
             <Button
               size="sm"
               variant="ghost"
-              className="text-amber-100/65 hover:text-amber-50"
+              className="text-black hover:bg-black hover:text-white"
               onClick={handleDismissDraft}
             >
               {draftTexts.dismiss}
@@ -307,7 +306,7 @@ export default function TierListApp({ slug }: Props) {
       ) : null}
 
       {exportError ? (
-        <div className="mb-4 rounded-2xl border border-destructive/30 bg-destructive/10 px-4 py-3 text-sm text-destructive-foreground">
+        <div className="mb-4 border border-destructive bg-red-50 px-4 py-3 text-sm text-destructive">
           {exportError}
         </div>
       ) : null}
@@ -328,9 +327,12 @@ export default function TierListApp({ slug }: Props) {
         </div>
       </div>
 
-      <div className="mt-4">
-        <div className="mb-5 flex flex-col items-start justify-between gap-4 sm:mb-7 sm:flex-row sm:items-center">
+      <div>
+        <div className="mb-8 flex flex-col items-start justify-between gap-6 border-b border-black pb-7 sm:flex-row sm:items-end">
           <div className="w-full flex-1">
+            <p className="label-caps mb-3 text-muted-foreground">
+              {isOwner ? editorTexts.editorMode : editorTexts.publicBoard}
+            </p>
             {isOwner ? (
               <input
                 type="text"
@@ -338,26 +340,25 @@ export default function TierListApp({ slug }: Props) {
                 onChange={(e) =>
                   handleChange(e.target.value, data.tiers, unrankedItems)
                 }
-                className="w-full border-none bg-transparent px-1 text-2xl font-semibold text-foreground outline-none placeholder:text-muted-foreground sm:text-3xl"
+                className="w-full border-none bg-transparent text-3xl font-medium tracking-[-0.045em] text-foreground outline-none placeholder:text-muted-foreground sm:text-5xl"
                 placeholder="Tier List Title"
               />
             ) : (
-              <h1 className="wrap-break-word px-1 text-2xl font-semibold text-foreground sm:text-3xl">
+              <h1 className="wrap-break-word text-3xl font-medium tracking-[-0.045em] text-foreground sm:text-5xl">
                 {data.title}
               </h1>
             )}
             {!isOwner ? (
-              <p className="mt-1 flex items-center gap-1 text-sm text-muted-foreground">
+              <p className="mt-2 flex items-center gap-1 text-sm text-muted-foreground">
                 <Eye className="h-4 w-4" /> {editorTexts.viewOnly}
               </p>
             ) : null}
           </div>
 
-          <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+          <div className="flex flex-wrap items-center gap-2">
             <Button
               size="sm"
               variant="secondary"
-              className="hover:border-brand-200/40 hover:bg-secondary/95"
               onClick={handleExport}
               pending={isExporting}
             >
@@ -372,8 +373,8 @@ export default function TierListApp({ slug }: Props) {
               variant="secondary"
               className={
                 copied
-                  ? "bg-emerald-500/10 text-emerald-400"
-                  : "hover:border-brand-200/40 hover:bg-secondary/95"
+                  ? "border-black bg-[#cdffea] text-black"
+                  : ""
               }
               onClick={handleCopyLink}
             >
@@ -391,7 +392,7 @@ export default function TierListApp({ slug }: Props) {
                 </svg>
               )}
               <span className="hidden sm:inline">
-                {copied ? "Copied" : editorTexts.copyLink}
+                {copied ? editorTexts.copied : editorTexts.copyLink}
               </span>
             </Button>
 
@@ -405,10 +406,10 @@ export default function TierListApp({ slug }: Props) {
                 }
                 className={
                   saveStatus === "saved"
-                    ? "border-emerald-500/30 bg-emerald-500/20 text-emerald-400"
+                    ? "border-black bg-[#cdffea] text-black"
                     : saveStatus === "error"
-                      ? "border-red-500/30 bg-red-500/20 text-red-400"
-                      : "hover:shadow-[0_18px_40px_-24px_rgba(140,84,252,0.82)]"
+                      ? "border-destructive bg-red-50 text-destructive"
+                      : ""
                 }
                 onClick={handleSave}
                 disabled={saving}
